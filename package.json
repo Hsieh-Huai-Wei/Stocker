@@ -1,0 +1,30 @@
+{
+  "name": "projectStock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint"
+  },
+  "keywords": [],
+  "author": "Hsieh Huai Wei",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "got": "^11.3.0",
+    "iconv-lite": "^0.6.1",
+    "moment": "^2.27.0",
+    "mysql": "^2.18.1",
+    "node-xlsx": "^0.15.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "request-promise-native": "^1.0.8"
+  },
+  "devDependencies": {
+    "eslint": "^7.3.1"
+  }
+}
