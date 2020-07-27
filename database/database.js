@@ -143,3 +143,52 @@ PRIMARY KEY (`id`)
 
 
 `EXdivdate` int (25) COLLATE utf8mb4_unicode_ci,
+
+USE stock;
+CREATE TABLE `provider`
+(
+ `id` int
+(25) unsigned NOT NULL AUTO_INCREMENT,
+`provider` varchar
+(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+ PRIMARY KEY
+(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+SELECT *
+FROM stock.provider;
+INSERT INTO provider
+  (provider)
+VALUES
+  ("native"),
+  ("google");
+
+USE stock;
+CREATE TABLE `user`
+(
+ `id` int
+(25) unsigned NOT NULL AUTO_INCREMENT,
+`number` varchar
+(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+`name` varchar
+(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `email` varchar
+(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `password` varchar
+(50) COLLATE utf8mb4_unicode_ci,
+`picture` varchar
+(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`provider_id` int
+(25) unsigned NOT NULL,
+`access_token` varchar
+(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `access_expired` varchar
+(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+ PRIMARY KEY
+(`id`),
+ UNIQUE KEY `email`
+(`email`),
+CONSTRAINT provider FOREIGN KEY
+(provider_id)
+REFERENCES provider (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

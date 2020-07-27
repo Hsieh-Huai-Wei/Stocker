@@ -1,49 +1,43 @@
 // GET DATA
 function filterData() {
 
-  // let newHigh;
-  // console.log(document.getElementById('newHigh').checked)
-  // if (document.getElementById('newHigh').checked) {
-  //   newHigh = 1;
-  // } else {
-  //   newHigh = 0;
-  // }
 
-  let newHigh = 1;
+  let searchStartDay = $(".searchStartDay").val();
+  let searchEndDay = $(".searchEndDay").val();
+  let upperPrice = $(".upperPrice").val();
+  let lowerPrice = $(".lowerPrice").val();
+  let graph = $("input:checked").val();
+  let countDay = $(".countDay").val();
+  let increase = $(".increase").val();
+  let decrease = $(".decrease").val();
 
-  // let searchStartDay = $('.searchStartDay ').val();
-  // let searchEndDay = $('.searchEndDay ').val();
-  let searchStartDay = "2020-01-01";
-  let searchEndDay = "2020-07-31";
-  let upperPrice = 1000;
-  let lowerPrice = 0;
-  let graph = "test";
-  let countDay = 20;
-  let upDay = 5;
-  let downDay = 5;
-  let upPrice = 12;
-  let downPrice = 15;
-  let rank = 10;
-  let cross = 1;
-  let consolidate = 9;
-  let cycle = 1;
-  let continuousRed = 6;
+  if (searchEndDay === "" || upperPrice === "" || lowerPrice === "") {
+    alert("你484有資料沒填寫RRRR!!!");
+    return;
+  } else if (graph === "reverseV") {
+    if (countDay==="") {
+      alert("你484有資料沒填寫RRRR!!!");
+      return;
+    }
+  } else if (graph === "uptrend") {
+    if (countDay === "" || increase === "") {
+      alert("你484有資料沒填寫RRRR!!!");
+      return;
+    }
+  } else if (graph === "downtrend") {
+    if (countDay === "" || lowerPrice === "") {
+      alert("你484有資料沒填寫RRRR!!!");
+      return;
+    }
+  }
 
-  // let searchStartDay = $('.searchStartDay ').val();
-  // let searchEndDay = $('.searchEndDay ').val();
-  // let upperPrice = 1000;
-  // let lowerPrice = 0;
-  // let graph = "island";
-  // let countDay = 20;
-  // let upDay = 4;
-  // let downDay = 4;
-  // let upPrice = 12;
-  // let downPrice = 15;
-  // let rank = 10;
-  // let cross = 1;
-  // let consolidate = 7;
-  // let cycle = 1;
-  // let continuousRed = 6;
+  if (graph !== "na") {
+    let y = Number(searchEndDay.split('-')[0]);
+    let m = searchEndDay.split('-')[1];
+    let d = searchEndDay.split('-')[2];
+    y = y - 1 
+    searchStartDay = `${y}` + "-" + `${m}` + "-" + `${d}`;
+  }
 
   let userFilter = {
     start: searchStartDay,
@@ -52,20 +46,17 @@ function filterData() {
     lower: lowerPrice,
     graph: graph,
     count: countDay,
-    upDay: upDay,
-    downDay: downDay,
-    increase: upPrice,
-    decrease: downPrice,
-    rank: rank,
-    High: newHigh,
-    cross: cross,
-    consolidate: consolidate,
-    cycle: cycle,
-    continuousRed: continuousRed,
-  }
+    increase: increase,
+    decrease: decrease,
+  };
+
+
   let choiceDates = searchEndDay.split('-')[0] + searchEndDay.split('-')[1] + searchEndDay.split('-')[2];
   localStorage.setItem('filterDate', choiceDates);
   console.log(userFilter)
+
+  let alerts = $("<div>").attr("class", "alters").css("text-align", "center").css("margin-top", "20px").text("Calculating...");
+  $(".description").append(alerts)
 
   fetch(`api/1.0/option2`, {
     method: 'POST',
@@ -138,3 +129,68 @@ async function getData() {
     return;
   }
 }
+
+if (localStorage.getItem("userToken")) {
+  const data = {
+    token: localStorage.getItem("userToken"),
+  };
+  fetch("api/1.0/user/profile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.error) {
+        $(".member").text(`Sign up / Log in`);
+      } else {
+        console.log(body);
+        $(".member").text(`${body.name}`);
+      }
+    });
+}
+
+function graphCheck () {
+  let radioValue = $("input:checked").val();
+
+  if (radioValue === "reverseV") {
+    $(".searchStartDay").val("");
+    $(".countDay").val("");
+    $(".countDay").attr("disabled", false);
+    $(".increase").val("NA");
+    $(".increase").attr("disabled", true);
+    $(".decrease").val("NA");
+    $(".decrease").attr("disabled", true);
+    $(".searchStartDay").attr("disabled", true);
+  } else if (radioValue === "uptrend") {
+    $(".searchStartDay").val("");
+    $(".countDay").val("");
+    $(".countDay").attr("disabled", false);
+    $(".increase").val("");
+    $(".increase").attr("disabled", false);
+    $(".decrease").val("NA");
+    $(".decrease").attr("disabled", true);
+    $(".searchStartDay").attr("disabled", true);
+  } else if (radioValue === "downtrend") {
+    $(".searchStartDay").val("");
+    $(".countDay").val("");
+    $(".countDay").attr("disabled", false);
+    $(".increase").val("NA");
+    $(".increase").attr("disabled", true);
+    $(".decrease").val("");
+    $(".decrease").attr("disabled", false);
+    $(".searchStartDay").attr("disabled", true);
+  } else {
+    $(".countDay").val("NA");
+    $(".countDay").attr("disabled", true);
+    $(".increase").val("NA");
+    $(".increase").attr("disabled", true);
+    $(".decrease").val("NA");
+    $(".decrease").attr("disabled", true);
+    $(".searchStartDay").attr("disabled", false);
+  } 
+}
+
+graphCheck();

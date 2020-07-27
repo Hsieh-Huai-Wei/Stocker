@@ -1,18 +1,28 @@
 const { transaction, commit, rollback, query } = require("../../util/dbcon");
 
-const signin = async (userSearch) => {
-  if (isNaN(Number(userSearch.stockCode))) { //輸入中文
-    const result = await query(`SELECT stock.history_price.*, stock.information.* FROM stock.history_price INNER JOIN information ON stock.history_price.stock_id = stock.information.id WHERE stock.information.name = ? AND stock.history_price.date BETWEEN ? AND ? ORDER BY date;`, [userSearch.stockCode, userSearch.startDate, userSearch.endDate]);
-    return result;
-  } else { // 輸入代碼
-    const result = await query(`SELECT stock.history_price.*, stock.information.* FROM stock.history_price INNER JOIN information ON stock.history_price.stock_id = stock.information.id WHERE stock.information.code = ? AND stock.history_price.date BETWEEN ? AND ? ORDER BY date;`, [parseInt(userSearch.stockCode), userSearch.startDate, userSearch.endDate]);
-    return result;
-  }
+const signUpCheck = async (data) => {
+  const result = await query(`SELECT * FROM user WHERE email = ?`, [data.email]);
+  return result;
+}
+
+const signUp = async (data) => {
+  const result = await query("INSERT INTO user SET number = ?, name = ?, email = ?, password = ?, picture = ?, provider_id = ?, access_token = ?, access_expired = ?", [data.id, data.name, data.email, data.pwd, data.pic, data.provider, data.token, data.date]);
+  return result;
 };
 
-const signup = async (data) => {
-  const result = await query(`SELECT * FROM stock.history_price WHERE(date between ? and ?) AND (close between ? and ?) ORDER BY stock_id, date DESC;`, [data.start, data.end, data.lower, data.upper]);
+const signInCheck = async (data) => {
+  const result = await query(`SELECT * FROM user WHERE email = ? AND password = ?`, [data.email, data.pwd]);
   return result;
+}
+
+const signInUpdate = async (data) => {
+  const result = await query(`UPDATE user SET access_token = ?, access_expired = ? WHERE email = ?`, [data.token, data.date, data.email]);
+  return result;
+};
+
+const signIn = async (data) => {
+  const result = await query(`SELECT number AS id, provider_id AS provider, name, email, picture FROM user WHERE email = ?`, [data.email]);
+    return result;
 };
 
 const profile = async (data) => {
@@ -24,7 +34,10 @@ WHERE stock.information.id = ? AND stock.history_price.date BETWEEN ? AND ?;`, [
 };
 
 module.exports = {
-  signin,
-  signup,
+  signUpCheck,
+  signInCheck,
+  signInUpdate,
+  signIn,
+  signUp,
   profile,
 };

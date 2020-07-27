@@ -1,5 +1,6 @@
 const Product = require("../models/stock_model");
 const moment = require("moment"); // calculate time
+const { normalizeUnits } = require("moment");
 
 function dateCheck(start, end) {
   console.log("start",start)
@@ -350,45 +351,58 @@ function island(userSearch, stockPricePair) {
   return finalStockPricePair;
 }
 
-function test(userSearch, stockPricePair) {
-  console.log('uuuuppppp test')
+function uptrend(userSearch, stockPricePair) {
 
   // 找到圖形符合之型態
   let graphPosition = [];
   // 對全部股票進行掃描
   for (let i = 0; i < stockPricePair.length; i++) {
-
-    console.log('i', i)
+    console.log("i", i);
     // 對單一股票的歷史價格進行掃描
-    let r = 30;
+    let r = Number(userSearch.count);
+    let increase = Number(userSearch.increase);
 
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
-
       let stockIndex = stockPricePair[i].data;
-      let firstDay = stockIndex[j]
-      let lastDay = stockIndex[j + r - 1]
+      let firstDay = stockIndex[j];
+      let lastDay = stockIndex[j + r - 1];
       let upCount = 0;
 
       let check = true;
-      for (let u = 1; u < r-1; u++) {
-        if (firstDay.close > stockIndex[j + u].close || lastDay.close < stockIndex[j + u].close) {
+      for (let u = 1; u < r - 1; u++) {
+        if (
+          firstDay.close > stockIndex[j + u].close ||
+          lastDay.close < stockIndex[j + u].close
+        ) {
           check = false;
           break;
         }
       }
 
+      if ((lastDay.close - firstDay.close) / firstDay < increase) {
+        check = false;
+        break;
+      }
+
       if (check === true) {
-        let stockIndexLength = (stockPricePair[i].data.length - j) > (r - 1) ? r : stockPricePair[i].data.length - j
+        let stockIndexLength =
+          stockPricePair[i].data.length - j > r - 1
+            ? r
+            : stockPricePair[i].data.length - j;
 
         // 從第0個到最高點是否close是否都大於第0個且m=-1佔7成
         for (k = 1; k < stockIndexLength; k++) {
-          if (firstDay.close < stockIndex[k].close && stockIndex[k].m === 1 && stockIndex[k - 1].close <= stockIndex[k].close) {
+          if (
+            firstDay.close < stockIndex[k].close &&
+            stockIndex[k].m === 1 &&
+            stockIndex[k - 1].close <= stockIndex[k].close
+          ) {
             upCount += 1;
           }
         }
 
         // console.log(6)
-        if ((upCount / r) > 0.7) {
+        if (upCount / r > 0.7) {
           // console.log('DDDDDDDD')
           let index = {};
           index.id = stockPricePair[i].id;
@@ -401,11 +415,8 @@ function test(userSearch, stockPricePair) {
           graphPosition.push(index);
 
           j = j + r;
-
         }
       }
-
-
     }
   }
   // console.log(graphPosition);
@@ -413,20 +424,20 @@ function test(userSearch, stockPricePair) {
   // return;
 
   // console.log(graphPosition);
-  console.log("D")
+  console.log("D");
   // 剔除不符合條件的 stock
   let finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
-    let item = finalStockPricePair.find(item => item.id === graphPosition[i].id);
+    let item = finalStockPricePair.find(
+      (item) => item.id === graphPosition[i].id
+    );
     if (item) {
-      item["trend"].push(
-        {
-          startDate: graphPosition[i].startDate,
-          startPrice: graphPosition[i].startPrice,
-          endDate: graphPosition[i].endDate,
-          endPrice: graphPosition[i].endPrice,
-        }
-      );
+      item["trend"].push({
+        startDate: graphPosition[i].startDate,
+        startPrice: graphPosition[i].startPrice,
+        endDate: graphPosition[i].endDate,
+        endPrice: graphPosition[i].endPrice,
+      });
     } else {
       let index = {
         id: graphPosition[i].id,
@@ -436,24 +447,127 @@ function test(userSearch, stockPricePair) {
             startPrice: graphPosition[i].startPrice,
             endDate: graphPosition[i].endDate,
             endPrice: graphPosition[i].endPrice,
-          }
+          },
         ],
-      }
+      };
       // console.log(index)
       finalStockPricePair.push(index);
     }
   }
   // console.log(finalStockPricePair)
-  console.log("OK")
+  console.log("OK");
   return finalStockPricePair;
 }
 
+function downtrend(userSearch, stockPricePair) {
+  // 找到圖形符合之型態
+  let graphPosition = [];
+  // 對全部股票進行掃描
+  for (let i = 0; i < stockPricePair.length; i++) {
+    console.log("i", i);
+    // 對單一股票的歷史價格進行掃描
+    let r = Number(userSearch.count);
+    let decrease = Number(userSearch.decrease);
 
-function graphV(userSearch, stockPricePair) {
-  console.log('graph test')
+    for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
+      let stockIndex = stockPricePair[i].data;
+      let firstDay = stockIndex[j];
+      let lastDay = stockIndex[j + r - 1];
+      let upCount = 0;
 
+      let check = true;
+      for (let u = 1; u < r - 1; u++) {
+        if (
+          firstDay.close < stockIndex[j + u].close ||
+          lastDay.close > stockIndex[j + u].close
+        ) {
+          check = false;
+          break;
+        }
+      }
 
-  // graph V
+      if ((firstDay.close - lastDay.close) / firstDay < decrease) {
+        check = false;
+        break;
+      }
+
+      if (check === true) {
+        let stockIndexLength =
+          stockPricePair[i].data.length - j > r - 1
+            ? r
+            : stockPricePair[i].data.length - j;
+
+        // 從第0個到最高點是否close是否都大於第0個且m=-1佔7成
+        for (k = 1; k < stockIndexLength; k++) {
+          if (
+            firstDay.close < stockIndex[k].close &&
+            stockIndex[k].m === -1 &&
+            stockIndex[k - 1].close >= stockIndex[k].close
+          ) {
+            upCount += 1;
+          }
+        }
+
+        // console.log(6)
+        if (upCount / r > 0.7) {
+          // console.log('DDDDDDDD')
+          let index = {};
+          index.id = stockPricePair[i].id;
+          // console.log(stockPricePair[i].id)
+          index.startDate = firstDay.date;
+          index.startPrice = firstDay.close;
+          index.endDate = lastDay.date;
+          index.endPrice = lastDay.close;
+
+          graphPosition.push(index);
+
+          j = j + r;
+        }
+      }
+    }
+  }
+  // console.log(graphPosition);
+  // console.log(graphPosition[1].startDate);
+  // return;
+
+  // console.log(graphPosition);
+  console.log("D");
+  // 剔除不符合條件的 stock
+  let finalStockPricePair = [];
+  for (let i = 0; i < graphPosition.length; i++) {
+    let item = finalStockPricePair.find(
+      (item) => item.id === graphPosition[i].id
+    );
+    if (item) {
+      item["trend"].push({
+        startDate: graphPosition[i].startDate,
+        startPrice: graphPosition[i].startPrice,
+        endDate: graphPosition[i].endDate,
+        endPrice: graphPosition[i].endPrice,
+      });
+    } else {
+      let index = {
+        id: graphPosition[i].id,
+        trend: [
+          {
+            startDate: graphPosition[i].startDate,
+            startPrice: graphPosition[i].startPrice,
+            endDate: graphPosition[i].endDate,
+            endPrice: graphPosition[i].endPrice,
+          },
+        ],
+      };
+      // console.log(index)
+      finalStockPricePair.push(index);
+    }
+  }
+  // console.log(finalStockPricePair)
+  console.log("OK");
+  return finalStockPricePair;
+}
+
+function reverseV(userSearch, stockPricePair) {
+
   // 找到圖形符合之型態
   // 對全部股票進行掃描
   // 對單一股票的歷史價格進行掃描
@@ -471,33 +585,36 @@ function graphV(userSearch, stockPricePair) {
   // 對全部股票進行掃描
   for (let i = 0; i < stockPricePair.length; i++) {
     // console.log(stockPricePair.length)
-    console.log('i',i)
+    console.log("i", i);
     // 對單一股票的歷史價格進行掃描
-    let r = 25;
-    let low = (Math.floor(r / 2)) - 2
-    let up = (Math.floor(r / 2)) + 2
-    for (let j = 0; j < stockPricePair[i].data.length-r; j++) {
-      // console.log(stockPricePair[i].data.length)
+    let r = Number(userSearch.count);
+    let low = Math.floor(r / 2) - 2;
+    let up = Math.floor(r / 2) + 2;
+    for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
 
-    // for (let j = 0; j < 60; j++) {
-      // console.log("j",j)
       let stockIndex = stockPricePair[i].data;
-      let firstDay = stockIndex[j]
-      let lastDay = stockIndex[j+r-1]
+      let firstDay = stockIndex[j];
+      let lastDay = stockIndex[j + r - 1];
       let lowCount = 0;
       let upCount = 0;
 
       let check = true;
 
-      for (let u=1; u<r-1; u++) {
-        if (firstDay.close < stockIndex[j + u].close || lastDay.close < stockIndex[j + u].close) {
+      for (let u = 1; u < r - 1; u++) {
+        if (
+          firstDay.close < stockIndex[j + u].close ||
+          lastDay.close < stockIndex[j + u].close
+        ) {
           check = false;
           break;
         }
       }
 
       for (let u = low; u < up; u++) {
-        if ((firstDay.close*5)/6 < stockIndex[j + u].close || ((lastDay.close)*5)/6 < stockIndex[j + u].close) {
+        if (
+          (firstDay.close * 5) / 6 < stockIndex[j + u].close ||
+          (lastDay.close * 5) / 6 < stockIndex[j + u].close
+        ) {
           check = false;
           break;
         }
@@ -505,13 +622,18 @@ function graphV(userSearch, stockPricePair) {
 
       if (check === true) {
         // 確認左右平衡點
-        if ((firstDay.close * 0.1) < lastDay.close && lastDay.close < (firstDay.close * 2)) {
-          // console.log('AAAAAAAAAA')
-          // console.log("j", j)
+        if (
+          firstDay.close * 0.1 < lastDay.close &&
+          lastDay.close < firstDay.close * 2
+        ) {
+
           // 找出中間的位置與close;
-          let minDay = firstDay
+          let minDay = firstDay;
           let minPosition = 0;
-          let stockIndexLength = (stockPricePair[i].data.length - j) > (r - 1) ? r : stockPricePair[i].data.length - j
+          let stockIndexLength =
+            stockPricePair[i].data.length - j > r - 1
+              ? r
+              : stockPricePair[i].data.length - j;
           for (k = 1; k < stockIndexLength; k++) {
             // console.log(stockIndex[j + k].close)
             if (minDay.close > stockIndex[j + k].close) {
@@ -519,88 +641,70 @@ function graphV(userSearch, stockPricePair) {
               minPosition = k;
             }
           }
-          // console.log("0",firstDay)
-          // console.log("1",minDay)
-          // console.log("2", lastDay)
-          // console.log("/////////////////")
+
           if (minPosition !== 0) {
-            // console.log('CCCCCCCCCC')
             // 從第0個到最低點是否close是否都小於第0個且m=-1佔7成
             for (k = 1; k < minPosition; k++) {
-              if (firstDay.close > stockIndex[k].close && stockIndex[k].m === -1 && lastDay.close > stockIndex[k].close) {
+              if (
+                firstDay.close > stockIndex[k].close &&
+                stockIndex[k].m === -1 &&
+                lastDay.close > stockIndex[k].close
+              ) {
                 lowCount += 1;
               }
             }
             // 從最低點到最後一個是否close是否都大於最低點且m=1佔7成
             for (k = minPosition; k < stockIndexLength; k++) {
-              if (minDay.close < stockIndex[k].close && stockIndex[k].m === 1 && lastDay.close >= stockIndex[k].close && firstDay.close > stockIndex[k].close) {
+              if (
+                minDay.close < stockIndex[k].close &&
+                stockIndex[k].m === 1 &&
+                lastDay.close >= stockIndex[k].close &&
+                firstDay.close > stockIndex[k].close
+              ) {
                 upCount += 1;
               }
             }
 
-            // console.log(6)
-            if ((upCount / minPosition) > 0.7 && (lowCount / minPosition) > 0.7) {
-              // console.log('DDDDDDDD')
+            if (upCount / minPosition > 0.5 && lowCount / minPosition > 0.5) {
+
               let index = {};
               index.id = stockPricePair[i].id;
-              // console.log(stockPricePair[i].id)
               index.startDate = firstDay.date;
               index.startPrice = firstDay.close;
               index.endDate = minDay.date;
               index.endPrice = minDay.close;
+              graphPosition.push(index);
 
-              graphPosition.push(index);
-              // console.log(index)
-              // console.log(graphPosition)
-              // console.log('EEEEE')
-              // let indexs = { id: stockPricePair[i].id };
-              index.startDate = minDay.date;
-              index.startPrice = minDay.close;
-              index.endDate = lastDay.date;
-              index.endPrice = lastDay.close;
-              // console.log('FFF')
-              graphPosition.push(index);
-              // console.log('GGGGG')
-              // console.log("j",j)
-              // console.log("leng", stockPricePair[i].data.length)
-              // if (j < stockPricePair[i].data.length - r - 1){
-              //   console.log('HHHHHHHH')
+              let indexs = {};
+              indexs.id = stockPricePair[i].id;
+              indexs.startDate = minDay.date;
+              indexs.startPrice = minDay.close;
+              indexs.endDate = lastDay.date;
+              indexs.endPrice = lastDay.close;
+              graphPosition.push(indexs);
+
               j = j + r;
-              //   console.log('IIIIII')
-              // } else {
-              //   j = stockPricePair[i].data.length - r -1
-              // }
+
             }
           }
         }
-
-
       }
-
-
-        // }
-      // } 
     }
   }
-  // console.log(graphPosition);
-  // console.log(graphPosition[1].startDate);
-  // return;
 
-  // console.log(graphPosition);
-  console.log("D")
   // 剔除不符合條件的 stock
   let finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
-    let item = finalStockPricePair.find(item => item.id === graphPosition[i].id);
+    let item = finalStockPricePair.find(
+      (item) => item.id === graphPosition[i].id
+    );
     if (item) {
-      item["trend"].push(
-        {
-          startDate: graphPosition[i].startDate,
-          startPrice: graphPosition[i].startPrice,
-          endDate: graphPosition[i].endDate,
-          endPrice: graphPosition[i].endPrice,
-        }
-      );
+      item["trend"].push({
+        startDate: graphPosition[i].startDate,
+        startPrice: graphPosition[i].startPrice,
+        endDate: graphPosition[i].endDate,
+        endPrice: graphPosition[i].endPrice,
+      });
     } else {
       let index = {
         id: graphPosition[i].id,
@@ -610,18 +714,55 @@ function graphV(userSearch, stockPricePair) {
             startPrice: graphPosition[i].startPrice,
             endDate: graphPosition[i].endDate,
             endPrice: graphPosition[i].endPrice,
-          }
+          },
         ],
-      }
+      };
       // console.log(index)
       finalStockPricePair.push(index);
     }
   }
   // console.log(finalStockPricePair)
-  console.log("OK")
+  console.log("OK");
   return finalStockPricePair;
 }
 
+function na(userSearch, stockPricePair) {
+
+  let graphPosition = stockPricePair;
+
+  // 剔除不符合條件的 stock
+  let finalStockPricePair = [];
+  for (let i = 0; i < graphPosition.length; i++) {
+    let item = finalStockPricePair.find(
+      (item) => item.id === graphPosition[i].id
+    );
+    if (item) {
+      item["trend"].push({
+        startDate: 0,
+        startPrice: 0,
+        endDate: 0,
+        endPrice: 0,
+      });
+    } else {
+      let index = {
+        id: graphPosition[i].id,
+        trend: [
+          {
+            startDate: 0,
+            startPrice: 0,
+            endDate: 0,
+            endPrice: 0,
+          },
+        ],
+      };
+      // console.log(index)
+      finalStockPricePair.push(index);
+    }
+  }
+  console.log(finalStockPricePair)
+  console.log("OK");
+  return finalStockPricePair;
+}
 
 function multiV(userSearch, stockPricePair) {
   console.log('graph test')
@@ -713,7 +854,7 @@ function multiV(userSearch, stockPricePair) {
   return finalStockPricePair;
 }
 
-function reverseV(userSearch, stockPricePair) {
+function graphV(userSearch, stockPricePair) {
   // 將 user 需求創成 array
   let userArr = [];
 
@@ -801,17 +942,6 @@ function reverseV(userSearch, stockPricePair) {
     }
   }
   return finalStockPricePair;
-}
-
-
-function blowOut() {
-  console.log("blowOut")
-  return 4
-}
-
-function na() {
-  console.log("na")
-  return 5
 }
 
 const singleStock = async (req, res, next) => {
@@ -1083,16 +1213,8 @@ const option2 = async (req, res, next) => {
     lower: req.body.lower,
     graph: req.body.graph,
     count: req.body.count,
-    upDay: req.body.upDay,
-    downDay: req.body.downDay,
     increase: req.body.increase,
     decrease: req.body.decrease,
-    rank: req.body.rank,
-    High: req.body.High,
-    cross: req.body.cross,
-    consolidate: req.body.consolidate,
-    cycle: req.body.cycle,
-    continuousRed: req.body.continuousRed,
   }
 
   // -------------------------------------------------------------
@@ -1109,7 +1231,6 @@ const option2 = async (req, res, next) => {
 
 
   // 先將資料預處理 id-[price] pair
-  console.log("A")
   let stockPricePair = []; // id-[price] pair
 
   for (let i = 0; i < filterInit.length; i++) {
@@ -1140,30 +1261,26 @@ const option2 = async (req, res, next) => {
       stockPricePair.push(index);
     }
   }
-  // console.log(stockPricePair);
-  // console.log(stockPricePair.length);
-
-  console.log("B")
 
   // 進行圖形分類判斷
 
   let finalStockPricePair;
-  console.log(userSearch.graph)
-  if (userSearch.graph === "reverseV") {
-    finalStockPricePair = graphV(userSearch, stockPricePair);
-  } else if (userSearch.graph === "island") {
-    finalStockPricePair = island(userSearch, stockPricePair);
-  } else if (userSearch.graph === "mulitGun") {
-    finalStockPricePair = mulitGun(userSearch, stockPricePair);
-  } else if (userSearch.graph === "blowOut") {
-    finalStockPricePair = blowOut(userSearch, stockPricePair);
+
+  if (userSearch.graph === "na") {
+    finalStockPricePair = na(userSearch, stockPricePair);
+  } else if (userSearch.graph === "reverseV") {
+    finalStockPricePair = reverseV(userSearch, stockPricePair);
+  } else if (userSearch.graph === "uptrend") {
+    finalStockPricePair = uptrend(userSearch, stockPricePair);
+  } else if (userSearch.graph === "downtrend") {
+    finalStockPricePair = downtrend(userSearch, stockPricePair);
   } else if (userSearch.graph === "test") {
     finalStockPricePair = test(userSearch, stockPricePair);
-  }  else {
-    finalStockPricePair = stockPricePair
+  } else {
+    finalStockPricePair = stockPricePair;
   }
 
-  console.log(finalStockPricePair.length)
+  console.log(finalStockPricePair)
   // 找最終符合條件的 stock 回傳
   let filterCode = []
   let result = {};
@@ -1242,8 +1359,6 @@ const option2 = async (req, res, next) => {
     }
   }
 
-  console.log("here")
-  
   for (let i = 0; i < finalStockPricePair.length; i++) {
     for (let j = 0; j < filterCode.length; j++) {
       if (finalStockPricePair[i].id === filterCode[j].stock_id){

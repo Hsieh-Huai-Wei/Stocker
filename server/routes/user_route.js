@@ -2,13 +2,13 @@ const router = require("express").Router();
 const { wrapAsync } = require("../../util/util");
 
 const {
-  signin,
-  signup,
-  profile,
+  signIn,
+  signUp,
+  getUserProfile,
 } = require("../controllers/user_controller");
 
-router.route("/user/signin").post(wrapAsync(signin));
-router.route("/user/signup").post(wrapAsync(signup));
-router.route("/user/profile").post(wrapAsync(profile));
+router.route("/user/signin").post(wrapAsync(signIn));
+router.route("/user/signup").post(wrapAsync(signUp));
+router.route("/user/profile").post(wrapAsync(getUserProfile));
 
 module.exports = router;

@@ -11,8 +11,8 @@ function addCase() {
     $("<input>").attr("type", "date").attr('class', `searchStartDay${num+1}`),
     $("<div>").attr('id', `items`).text('End Date'),
     $("<input>").attr("type", "date").attr("class", `searchEndDay${num+1}`),
-    $("<div>").attr('id', `items`).text('Principal'),
-    $("<input>").attr("type", "text").attr("class", `principal${num+1}`),
+    $("<div>").attr('id', `items`).text('Property'),
+    $("<input>").attr("type", "text").attr("class", `property${num+1}`),
     $("<div>").attr('id', `items`).text('Dealer discount'),
     $("<input>").attr("type", "text").attr("class", `discount${num+1}`),
   )
@@ -21,12 +21,12 @@ function addCase() {
     $("<div>").attr('class', `subtitle`).text('Advance option'),
     $("<div>").attr('id', `items`).attr('class', `graph`).text('Mode Choice'),
 
-    $("<div>").attr('id', `items`).append(
-      $("<label>").append(`<input type="radio" name="graph" value="nomarl">Normal`),
-      $("<label>").append(`<input type="radio" name="graph" value="macd" />MACD`),
-      $("<label>").append(`<input type="radio" name="graph" value="kd" />KD`),
-      $("<label>").append(`<input type="radio" name="graph" value="rsi" />RSI`),
-      $("<label>").append(`<input type="radio" name="graph" value="bias" />BIAS`),
+    $("<div>").attr('id', `items`).attr('class', `items${num+1}`).append(
+      $("<label>").append(`<input type="radio" name="graph${num+1}" value="nomarl" checked>Normal`),
+      $("<label>").append(`<input type="radio" name="graph${num+1}" value="macd" disabled/>MACD`),
+      $("<label>").append(`<input type="radio" name="graph${num+1}" value="kd" disabled/>KD`),
+      $("<label>").append(`<input type="radio" name="graph${num+1}" value="rsi" disabled/>RSI`),
+      // $("<label>").append(`<input type="radio" name="graph" value="bias" />BIAS`),
     ),
     $("<div>").attr('id', `items`).text('Condition Order'),
     $("<div>").attr('id', `itemss`).text('Increase(%)'),
@@ -54,27 +54,30 @@ function addCase() {
 addCase();
 
 function test() {
-  let num = $('#case').children().length;
+  let num = $("#case").children(".title").length;
 
   let result = [];
-  for (let i = 0; i < num; i++) {
-    let caseNo = `case${i + 1}`;
-    let code = $(`.search${i + 1}`).val();
-    let start = document.getElementsByClassName(`startDay${i + 1}`)[0].value;
-    let end = document.getElementsByClassName(`endDay${i + 1}`)[0].value;
+  for (let i = 1; i < num+1; i++) {
+    let caseNo = `case${i}`;
+    let code = $(`.code${i}`).val();
+    let start = $(`.searchStartDay${i}`).val();
+    let end = $(`.searchEndDay${i}`).val();
     let startDate = start.split('-')[0] + start.split('-')[1] + start.split('-')[2];
     let endDate = end.split('-')[0] + end.split('-')[1] + end.split('-')[2];
-    let property = $(`.property${i + 1}`).val();
-    let increase = $(`.increase${i + 1}`).val();
-    let buy = $(`.buy${i + 1}`).val();
-    let decrease = $(`.decrease${i + 1}`).val();
-    let sell = $(`.sell${i + 1}`).val();
-    let discount = $(`.discount${i + 1}`).val();
+    let property = $(`.property${i}`).val();
+    let discount = $(`.discount${i}`).val();
+    let graph = $("input:radio[name=graph"+`${i}`+"]:checked").val();
+    let increase = $(`.increase${i}`).val();
+    let buy = $(`.buy${i}`).val();
+    let decrease = $(`.decrease${i}`).val();
+    let sell = $(`.sell${i}`).val();
+    
     let data = {
       code: code,
       startDate: startDate,
       endDate: endDate,
       property: property,
+      graph: graph,
       increase: increase,
       buy: buy,
       decrease: decrease,
@@ -88,7 +91,7 @@ function test() {
     result.push(index)
   };
   console.log(result);
-  return;
+  // return;
   fetch(`api/1.0/backTest`, {
     method: 'POST',
     headers: new Headers({
@@ -110,8 +113,28 @@ function backTest() {
   window.location.replace('../backTest.html')
 }
 
-function kBar() { }
-function line() { }
-function finance() { }
-function news() { }
-function information() { }
+
+if (localStorage.getItem("userToken")) {
+  const data = {
+    token: localStorage.getItem("userToken"),
+  };
+  fetch("api/1.0/user/profile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.error) {
+        alert("登入逾時，請重新登入");
+        window.location.replace("/signin.html");
+      } else {
+        console.log(body);
+        $(".member").text(`${body.name}`);
+      }
+    });
+} else {
+  $(".member").text(`Sign up / Log in`);
+}

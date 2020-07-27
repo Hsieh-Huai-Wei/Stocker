@@ -1113,3 +1113,25 @@ function defaultData() {
 }
 
 defaultData()
+
+if (localStorage.getItem("userToken")) {
+  const data = {
+    token: localStorage.getItem("userToken"),
+  };
+  fetch("api/1.0/user/profile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.error) {
+        $(".member").text(`Sign up / Log in`);
+      } else {
+        console.log(body);
+        $(".member").text(`${body.name}`);
+      }
+    });
+}

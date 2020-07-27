@@ -951,7 +951,6 @@ async function move(coords, index) {
       qq.high_text.text(data[i].high);
       qq.low_text.text(data[i].low);
       qq.close_text.text(data[i].close);
-      console.log(data[i].change);
       qq.changes_text.text(data[i].change);
       qq.percentChange_text.text(data[i].percentChange);
       qq.volume_text.text(data[i].volume);
@@ -1120,8 +1119,8 @@ function renderList() {
       $("<td>").attr("class", "userChoice").append(data.inf.count),
       $("<td>").attr("class", "userChoice").append(data.inf.increase),
       $("<td>").attr("class", "userChoice").append(data.inf.decrease),
-      $("<td>").attr("class", "userChoice").append(data.inf.rank),
-      $("<td>").attr("class", "userChoice").append(data.inf.high)
+      // $("<td>").attr("class", "userChoice").append(data.inf.rank),
+      // $("<td>").attr("class", "userChoice").append(data.inf.high)
     );
     $("#userOption").append(tr);
 
@@ -1165,10 +1164,10 @@ function renderList() {
           $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].fd),
           $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].sitc),
           $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dealers),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].mc),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].mc),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
           $("<td>").attr("class", "userChoice").attr("value", `${i}`).append(btn)
         );
       $(".resultTable").append(tr);
@@ -1201,7 +1200,6 @@ function choiceStock(data) {
 
   for (let i = 0; i < optionResult.data.length; i++) {
     if (Number(optionResult.data[i].id) === choiceStock) {
-      console.log("找到了stock code");
       for (let j = 0; j < optionResult.data[i].data.length; j++) {
         let strDate = optionResult.data[i].data[j].date.toString();
         let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
@@ -1294,3 +1292,25 @@ function filterData() {
 
 
 renderList();
+
+if (localStorage.getItem("userToken")) {
+  const data = {
+    token: localStorage.getItem("userToken"),
+  };
+  fetch("api/1.0/user/profile", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.error) {
+        $(".member").text(`Sign up / Log in`);
+      } else {
+        console.log(body);
+        $(".member").text(`${body.name}`);
+      }
+    });
+}

@@ -13,12 +13,12 @@ if (localStorage.getItem("userToken")) {
     .then((body) => {
       if (body.error) {
         alert("登入逾時，請重新登入")
-        window.location.replace("/signup_signin.html");
+        window.location.replace("/signin.html");
       } else {
-        const userName = body.name;
-        const userEmail = body.email;
-        const p = document.getElementById('response');
-        p.textContent = `Name: ${userName} / Email: ${userEmail}`;
+        console.log(body)
+        $(".member").text(`${body.name}`);
+        $(".name").text(`${body.name}`)
+        $(".email").text(`${body.email}`);
       }
     });
 } else if (localStorage.getItem("fbToken")) {
@@ -38,17 +38,18 @@ if (localStorage.getItem("userToken")) {
       if (body.error) {
         // alert(body.error);
         alert("登入逾時，請重新登入")
-        window.location.replace("/signup_signin.html");
+        window.location.replace("/signin.html");
       } else {
-        const userName = body.name;
-        const userEmail = body.email;
-        const p = document.getElementById('response');
-        p.textContent = `Name: ${userName} / Email: ${userEmail}`;
+        console.log(body)
+        // const userName = body.name;
+        // const userEmail = body.email;
+        // const p = document.getElementById('response');
+        // p.textContent = `Name: ${userName} / Email: ${userEmail}`;
       }
     });
 } else {
   alert("請先登入會員");
-  window.location.replace("/signup_signin.html");
+  window.location.replace("/signin.html");
 }
 
 function option() { 
@@ -57,10 +58,26 @@ function option() {
 function backTest() { 
   window.location.replace('../backTest.html')
  }
-function kBar() { }
-function line() { }
-function finance() { }
-function news() { }
-function information() { }
 
-getData();
+function profile() {
+  $("#profile").css("color", "#ffffff")
+  $("#profile").css("border-bottom-color", "#ffffff");
+}
+
+profile();
+
+function overview() {
+  alert("Coming soon !!")
+}
+function record() {
+  alert("Coming soon !!");
+}
+function details() {
+  alert("Coming soon !!");
+}
+function profit() {
+  alert("Coming soon !!");
+}
+function backtest() {
+  alert("Coming soon !!");
+}

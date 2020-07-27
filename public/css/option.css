@@ -247,7 +247,7 @@ label {
   margin-left: 15px;
 }
 
-.countDay, .downPrice, .upPrice {
+.countDay, .decrease, .increase {
   margin-left: 15px;
 }
 
@@ -255,4 +255,9 @@ label {
   background-color: #f15e5e;
   color: #ffffff;
   cursor: pointer;
+}
+
+.alerts {
+  text-align: center;
+  margin-top: 20px;
 }
