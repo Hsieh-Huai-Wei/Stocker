@@ -1,7 +1,8 @@
 // require
 require("dotenv").config();
 const express = require("express");
-const port = 3000;
+// const port = 3000;
+const port = 5000;
 const bodyParser = require("body-parser");
 const apiVersion = "1.0";
 
