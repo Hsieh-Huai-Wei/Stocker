@@ -1,17 +1,17 @@
 function backTestResult() {
   if (localStorage.getItem('backTestToken')) {
     let data = JSON.parse(localStorage.getItem('backTestToken'))
-    console.log(data);
-    console.log(data.data.length);
-    console.log(data.data[0].case);
-    console.log(data.data[0].history);
-    console.log(data.data[0].summary);
-    console.log(data.data[0].history.length);
-    console.log(data.data[0].history[0]);
-    console.log(data.data[0].history[0].profitPercent);
-    console.log(typeof data.data[0].history[0].profitPercent);
-    console.log(data.data[0].summary.earningRate);
-    console.log(typeof data.data[0].summary.earningRate);
+    // console.log(data);
+    // console.log(data.data.length);
+    // console.log(data.data[0].case);
+    // console.log(data.data[0].history);
+    // console.log(data.data[0].summary);
+    // console.log(data.data[0].history.length);
+    // console.log(data.data[0].history[0]);
+    // console.log(data.data[0].history[0].profitPercent);
+    // console.log(typeof data.data[0].history[0].profitPercent);
+    // console.log(data.data[0].summary.earningRate);
+    // console.log(typeof data.data[0].summary.earningRate);
 
     for (let i = 0; i < data.data.length; i++) {
       let tr = $('<tr>').attr('class', `detail`).append(

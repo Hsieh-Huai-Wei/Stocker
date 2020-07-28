@@ -1,10 +1,11 @@
 // require
 require("dotenv").config();
 const express = require("express");
+const { PORT, API_VERSION} = process.env;
 // const port = 3000;
-const port = 5000;
+// const port = 5000;
 const bodyParser = require("body-parser");
-const apiVersion = "1.0";
+// const apiVersion = "1.0";
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // API routes
-app.use("/api/" + apiVersion, [
+app.use("/api/" + API_VERSION, [
   require("./server/routes/admin_route"),
   require("./server/routes/product_route"),
   require("./server/routes/stock_route"),
@@ -31,8 +32,8 @@ app.use((err, req, res, next) => {
   res.json({ error: err.message });
 });
 
-app.listen(port, () => {
-  console.log(`Express is running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Express is running on http://localhost:${PORT}`);
 });
 
 module.exports = app;
