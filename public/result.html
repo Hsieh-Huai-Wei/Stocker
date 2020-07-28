@@ -32,54 +32,106 @@
   <main>
     <div id="case">
       <div class="testResult">
-        <!-- <table class="case1">case 1
-          <tr class="detail1">
-            <th>#</th>
-            <th>發生日期</th>
-            <th>買賣</th>
-            <th>數量</th>
-            <th>價值</th>
-            <th>交易成本</th>
-            <th>資產狀況</th>
-            <th>盈虧%</th>
-          </tr>
-          <tr class="detail1">
-            <th>1</th>
-            <th>20200701</th>
-            <th>買</th>
-            <th>5張</th>
-            <th>230</th>
-            <th>0.5</th>
-            <th>988000</th>
-            <th>3%</th>
-          </tr>
-        </table> -->
-      </div>
-      <div class="summary">summary
-        <!-- <table class="summary">
-          <tr class="detail1">
-            <th>case #</th>
-            <th>總股票數量</th>
-            <th>股票市值</th>
-            <th>總交易成本</th>
-            <th>資產狀況</th>
-            <th>總盈虧%</th>
-            <th>勾選</th>
-          </tr>
-          <tr class="detail1">
-            <th>case #1</th>
-            <th>130</th>
-            <th>300</th>
-            <th>1351.015</th>
-            <th>1102031</th>
-            <th>2.97%</th>
-            <th><input id="newHigh" type="checkbox" value="1""></th>
+        <table class="detail">
+          <caption class="case1">Case #1</caption>
+          <thead>
+            <tr class="itemName">
+              <th class="number">1</th>
+              <th class="date">Date</th>
+              <th class="situation"">Trade</th>
+              <th class="count">Count</th>
+              <th class="value">Value</th>
+              <th class="cost">Cost</th>
+              <th class="property">Property</th>
+              <th class="profit">Profit</th>
             </tr>
-        </table> -->
+          </thead>
+          <tbody class="data">
+            <tr class="data">
+              <td class="number">2</td>
+              <td class="date">Date</td>
+              <td class="situation"">Trade</td>
+              <td class="count">Count</td>
+              <td class="value">Value</td>
+              <td class="cost">Cost</td>
+              <td class="property">Property</td>
+              <td class="profit">Profit</td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="detail">
+          <caption class="case2">Case #2</caption>
+          <thead>
+            <tr class="itemName">
+              <th class="number">1</th>
+              <th class="date">Date</th>
+              <th class="situation"">Trade</th>
+              <th class="count">Count</th>
+              <th class="value">Value</th>
+              <th class="cost">Cost</th>
+              <th class="property">Property</th>
+              <th class="profit">Profit</th>
+            </tr>
+          </thead>
+          <tbody class="data">
+            <tr class="data">
+              <td class="number">2</td>
+              <td class="date">Date</td>
+              <td class="situation"">Trade</td>
+              <td class="count">Count</td>
+              <td class="value">Value</td>
+              <td class="cost">Cost</td>
+              <td class="property">Property</td>
+              <td class="profit">Profit</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <div class="summary">
+        <table class="detail">
+          <caption class="summary">Summary</caption>
+          <thead>
+            <tr class="itemName">
+              <th class="number">No.</th>
+              <th class="date">Date</th>
+              <th class="situation"">Trade</th>
+              <th class="count">Count</th>
+              <th class="value">Value</th>
+              <th class="cost">Cost</th>
+              <th class="property">Property</th>
+              <th class="profit">Profit</th>
+            </tr>
+          </thead>
+          <tbody class="data">
+            <tr class="data">
+              <td class="num">case #1</td>
+              <td class="qty">qty</td>
+              <td class="income"">income</td>
+              <td class="cost">cost</td>
+              <td class="property">property</td>
+              <td class="cost">cost</td>
+              <td class="profit">profit</td>
+              <td class="save">save</td>
+            </tr>
+          </tbody>
+            <tbody class="data">
+              <tr class="data">
+                <td class="num">case #2</td>
+                <td class="qty">qty</td>
+                <td class="income"">income</td>
+                <td class=" cost">cost</td>
+                <td class="property">property</td>
+                <td class="cost">cost</td>
+                <td class="profit">profit</td>
+                <td class="save">save</td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
     <div class="btn">
-      <button type=" submit" class="submit" value="再測一次" onclick="again();">AGAIN</button>
-      <button type="submit" class="submit" value="存檔" onclick="save();">SAVE</button>
+      <button type=" submit" class="submit" value="again" onclick="again();">AGAIN</button>
+      <button type="submit" class="submit" value="save" onclick="save();">SAVE</button>
     </div>
   </main>
 

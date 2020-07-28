@@ -76,7 +76,7 @@ function backTestResult() {
   }
 }
 
-backTestResult();
+// backTestResult();
 
 function option() { 
   window.location.replace('../option.html')

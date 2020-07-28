@@ -935,6 +935,7 @@ async function draw(qq) {
 async function getData() {
   
   if ($(".search").val() !== "") {
+
     let code = $(".search").val();
     localStorage.setItem("homeCode", code);
     let start = $(".startDay").val();
@@ -947,11 +948,16 @@ async function getData() {
       code = "2330";
     }
 
+    console.log("OK")
+
+
     let userSearch = {
       stockCode: code,
       startDate: startDate,
       endDate: endDate,
     };
+
+    console.log(userSearch)
 
     fetch(`api/1.0/singleStock`, {
       method: "POST",
@@ -1023,6 +1029,51 @@ async function getData() {
         localStorage.setItem("home", datas);
         kBarRender();
       });
+  }
+}
+
+async function getDate() {
+
+  if (localStorage.getItem("homeCode")) {
+    let code = localStorage.getItem("homeCode");
+    let start = $(".startDay").val();
+    let end = $(".endDay").val();
+    let startDate =
+      start.split("-")[0] + start.split("-")[1] + start.split("-")[2];
+    let endDate = end.split("-")[0] + end.split("-")[1] + end.split("-")[2];
+    let userSearch = {
+      stockCode: code,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    fetch(`api/1.0/singleStock`, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(userSearch),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.error) {
+          alert(body.error);
+          return;
+        }
+        for (let i = 0; i < body.data.length; i++) {
+          let strDate = body.data[i].date.toString();
+          let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
+          let m = strDate[4] + strDate[5] + "/";
+          let d = strDate[6] + strDate[7];
+          body.data[i].date = new Date(y + m + d);
+        }
+
+        let datas = JSON.stringify(body.data);
+        localStorage.setItem("home", datas);
+        kBarRender();
+      });
+  } else {
+    alert("尚未選擇股票")
   }
 }
 
@@ -1111,7 +1162,6 @@ function defaultData() {
     getData();
   }
 }
-
 defaultData()
 
 if (localStorage.getItem("userToken")) {
