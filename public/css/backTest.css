@@ -6,7 +6,7 @@
 body {
   margin: 0px;
   font-size: 16px;
-  font-family: "Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
+  font-family: "Noto Sans TC", "微軟正黑體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
 }
@@ -149,6 +149,8 @@ header > .profile > .memberImg img {
 
 /* --------------------------------- */
 
+
+
 main {
   display: flex;
   flex-direction: row;
@@ -158,10 +160,14 @@ main {
   margin: 20px auto;
 }
 
+#case {
+  width: 100%;
+}
+
 .title {
   flex: 1 1 100%;
   text-align: center;
-  font-size: 2.8em;
+  font-size: 2.0em;
   height: 77px;
   margin-bottom: 0px;
   padding-top: 15px;
@@ -171,7 +177,7 @@ main {
   text-align: center;
   font-size: 0.25em;
   height: 15px;
-  max-width: 850px;
+  max-width: 730px;
   margin: 0px auto;
   line-height: 15px;
   padding-bottom: 5px;
@@ -181,7 +187,7 @@ main {
 .userOption {
   display: flex;
   margin: 20px auto;
-  width: 100%;
+  flex: 1 1 100%;
   padding-bottom: 20px;
   border-bottom: 1px solid #656565;
 }
@@ -190,37 +196,79 @@ main {
 .advance,
 .description {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* max-width: 200px; */
   width: 100%;
-  padding: 20px;
+  padding: 20px 100px;
 }
 
 .subtitle {
   font-size: 1.2em;
-  margin-bottom: 15px;
+  margin: 0px auto;
   border-bottom: 1px solid #ccc;
-  width: 180px;
+  width: 100px;
+  text-align: center;
+  flex: 1 1 100%;
 }
 
-#items {
+.base > .subtitle {
+  margin-bottom: 15px;
+}
+
+.advance > .subtitle {
+  margin-bottom: 5px;
+}
+
+.items {
   display: flex;
   flex-wrap: wrap;
+  width: 145px;
   margin-top: 10px;
   margin-bottom: 10px;
+  /* margin-left: 80px; */
 }
 
-input {
+.base > input {
   border: 1px solid #ccc;
   background-color: #ccc;
-  margin: 5px 0px;
+  margin-top: 10px;
+  padding-left: 5px;
+  /* margin-right: 50px; */
+  width: 110px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.itemss {
+  display: flex;
+  flex-wrap: wrap;
+  width: 105px;
+  height: 30px;
+  /* margin-left: 90px; */
+  /* margin-top: 10px; */
+}
+
+.advance > input {
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  padding-left: 5px;
+  /* margin-right: 80px; */
+  width: 110px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.advance > .subtitle {
+  height: 26px;
 }
 
 .advance {
   border-left: 1.5px solid #ccc;
-  border-right: 1.5px solid #ccc;
+  /* border-right: 1.5px solid #ccc; */
 }
 
-label {
+/* label {
   width: 150px;
   margin: 5px 0px;
   margin-left: 15px;
@@ -233,11 +281,11 @@ label {
   margin-bottom: 40px;
   background-color: #ccc;
   border-radius: 8px;
-}
+} */
 
 .submit {
-  width: 70px;
-  height: 30px;
+  width: 96px;
+  height: 40px;
   background-color: #5b9bc3;
   border: 1.5px solid #ffffff;
   color: #ffffff;
@@ -245,9 +293,9 @@ label {
   margin: 0px auto;
 }
 
-#itemss {
+/* #itemss {
   margin-left: 15px;
-}
+} */
 
 .countDay, .downPrice, .upPrice {
   margin-left: 15px;
@@ -260,7 +308,19 @@ label {
   max-height: 20px;
 }
 
-.submit {
+.test:hover {
+  /* background-color: #f15e5e; */
+  background-color: #5b9bc3;
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  border: 2px solid;
+  color: #ffffff;
+  cursor: pointer;
+  cursor: pointer;
+}
+
+/* .submit {
   margin-right: 35px;
   width: 100px;
   align-items: center;
@@ -269,5 +329,17 @@ label {
 button:hover {
   background-color: #f15e5e;
   color: #ffffff;
+  cursor: pointer;
+} */
+
+.add {
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
   cursor: pointer;
 }

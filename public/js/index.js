@@ -675,7 +675,6 @@ async function volumeRender() {
     parseDate[i].date = new Date(oldDate);
     data.push(parseDate[i]);
   }
-  console.log(data);
   qq.ohlcSelection
     .append("g")
     .attr("class", "volume")
@@ -762,7 +761,6 @@ async function kBarRender() {
 
   qq.x.domain(techan.scale.plot.time(data).domain());
   qq.y.domain(techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain());
-
   qq.yPercent.domain(
     techan.scale.plot.percent(qq.y, accessor(data[indicatorPreRoll])).domain()
   );
@@ -791,7 +789,6 @@ async function kBarRender() {
   zoomableInit = qq.x.zoomable().domain([indicatorPreRoll, data.length]).copy(); // Zoom in a little to hide indicator preroll
   yInit = qq.y.copy();
   yPercentInit = qq.yPercent.copy();
-  console.log("kbarOK");
   draw(qq);
 }
 
@@ -931,150 +928,138 @@ async function draw(qq) {
   qq.svg.select("g.tradearrow").call(qq.tradearrow.refresh);
 }
 
+let currentCode = "2330";
+let currentName = "台積電";
+
 // NAV GET DATA
 async function getData() {
-  
   if ($(".search").val() !== "") {
-
-    let code = $(".search").val();
-    localStorage.setItem("homeCode", code);
-    let start = $(".startDay").val();
-    let end = $(".endDay").val();
-    let startDate =
-      start.split("-")[0] + start.split("-")[1] + start.split("-")[2];
-    let endDate = end.split("-")[0] + end.split("-")[1] + end.split("-")[2];
-
-    if (code === "") {
-      code = "2330";
+    if ($(".search").val() !== currentCode || $(".search").val() !== currentName) {
+      let code = $(".search").val();
+      let today = new Date();
+      let ey = (today.getFullYear()).toString();
+      let em = (today.getMonth() + 1).toString();
+      if (em.length === 1) {
+        em = "0" + em;
+      }
+      let ed = (today.getDate()).toString();
+      if (ed.length === 1) {
+        ed = "0" + ed;
+      }
+      let endDate = ey + "-" + em + "-" + ed;
+      let sy = (today.getFullYear() - 1).toString()
+      let startDate = sy + "-" + em + "-" + ed;
+      let userSearch = {
+        stockCode: code,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      fetch(`api/1.0/singleStock`, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(userSearch),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.error) {
+            alert(body.error);
+            $(".search").val("");
+            return;
+          }
+          for (let i = 0; i < body.data.length; i++) {
+            let strDate = body.data[i].date.toString();
+            let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
+            let m = strDate[4] + strDate[5] + "/";
+            let d = strDate[6] + strDate[7];
+            body.data[i].date = new Date(y + m + d);
+          }
+          currentCode = body.data[0].code;
+          currentName = body.data[0].name;
+          let datas = JSON.stringify(body.data);
+          localStorage.setItem("home", datas);
+          kBarRender();
+        });
     }
-
-    console.log("OK")
-
-
-    let userSearch = {
-      stockCode: code,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
-    console.log(userSearch)
-
-    fetch(`api/1.0/singleStock`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(userSearch),
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        if (body.error) {
-          alert(body.error);
-          return;
-        }
-        for (let i = 0; i < body.data.length; i++) {
-          let strDate = body.data[i].date.toString();
-          let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-          let m = strDate[4] + strDate[5] + "/";
-          let d = strDate[6] + strDate[7];
-          body.data[i].date = new Date(y + m + d);
-        }
-
-        let datas = JSON.stringify(body.data);
-        localStorage.setItem("home", datas);
-        kBarRender();
-      });
-  } else if (localStorage.getItem("home")) {
-    kBarRender();
-  } else {
-    let code = localStorage.getItem("homeCode");
-    let start = $(".startDay").val();
-    let end = $(".endDay").val();
-    let startDate =
-      start.split("-")[0] + start.split("-")[1] + start.split("-")[2];
-    let endDate = end.split("-")[0] + end.split("-")[1] + end.split("-")[2];
-
-    if (code === "") {
-      code = "2330";
-    }
-
-    let userSearch = {
-      stockCode: code,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
-    fetch(`api/1.0/singleStock`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(userSearch),
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        if (body.error) {
-          alert(body.error);
-          return;
-        }
-        for (let i = 0; i < body.data.length; i++) {
-          let strDate = body.data[i].date.toString();
-          let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-          let m = strDate[4] + strDate[5] + "/";
-          let d = strDate[6] + strDate[7];
-          body.data[i].date = new Date(y + m + d);
-        }
-
-        let datas = JSON.stringify(body.data);
-        localStorage.setItem("home", datas);
-        kBarRender();
-      });
   }
 }
 
 async function getDate() {
 
-  if (localStorage.getItem("homeCode")) {
-    let code = localStorage.getItem("homeCode");
-    let start = $(".startDay").val();
+  let startDate;
+  let endDate;
+
+  if ($(".startDay").val() !== "" && $(".endDay").val() !=="") {
+    startDate = $(".startDay").val();
+    endDate = $(".endDay").val();
+    if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1]))<1) {
+      alert("輸入範圍太小")
+    }
+  } else if ($(".startDay").val() === "" && $(".endDay").val() !== "") {
     let end = $(".endDay").val();
-    let startDate =
-      start.split("-")[0] + start.split("-")[1] + start.split("-")[2];
-    let endDate = end.split("-")[0] + end.split("-")[1] + end.split("-")[2];
-    let userSearch = {
-      stockCode: code,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
-    fetch(`api/1.0/singleStock`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(userSearch),
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        if (body.error) {
-          alert(body.error);
-          return;
-        }
-        for (let i = 0; i < body.data.length; i++) {
-          let strDate = body.data[i].date.toString();
-          let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-          let m = strDate[4] + strDate[5] + "/";
-          let d = strDate[6] + strDate[7];
-          body.data[i].date = new Date(y + m + d);
-        }
-
-        let datas = JSON.stringify(body.data);
-        localStorage.setItem("home", datas);
-        kBarRender();
-      });
+    let sy = ((end.split("-")[0])-1).toString();
+    let sm = ((end.split("-")[1])).toString();
+    let sd = ((end.split("-")[2])).toString();
+    startDate = sy+"-"+sm+"-"+sd;
+    endDate = $(".endDay").val();
+  } else if ($(".startDay").val() !== "" && $(".endDay").val() === "") {
+    let today = new Date();
+    let ey = (today.getFullYear()).toString();
+    let em = (today.getMonth() + 1).toString();
+    if (em.length === 1) {
+      em = "0" + em;
+    }
+    let ed = (today.getDate()).toString();
+    if (ed.length === 1) {
+      ed = "0" + ed;
+    }
+    endDate = ey + "-" + em + "-" + ed;
+    startDate = $(".startDay").val();
+    if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1])) < 1) {
+      alert("輸入範圍太小")
+    }
   } else {
-    alert("尚未選擇股票")
+    alert("請填寫日期");
+    return;
   }
+
+  let code = currentCode;
+   
+  let userSearch = {
+    stockCode: code,
+    startDate: startDate,
+    endDate: endDate,
+  };
+
+
+  fetch(`api/1.0/singleStock`, {
+    method: "POST",
+    headers: new Headers({
+      "Content-Type": "application/json",
+    }),
+    body: JSON.stringify(userSearch),
+  })
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.error) {
+        alert(body.error);
+        $(".search").val("");
+        return;
+      }
+      for (let i = 0; i < body.data.length; i++) {
+        let strDate = body.data[i].date.toString();
+        let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
+        let m = strDate[4] + strDate[5] + "/";
+        let d = strDate[6] + strDate[7];
+        body.data[i].date = new Date(y + m + d);
+      }
+      currentCode = body.data[0].code;
+      currentName = body.data[0].name;
+      let datas = JSON.stringify(body.data);
+      localStorage.setItem("home", datas);
+      kBarRender();
+    });
 }
 
 function option() {
@@ -1125,7 +1110,6 @@ function indicate() {
   }
 }
 
-
 // $("body").click((e)=>{
 //   console.log($(e.target).is($('#indicator')))
 //   console.log($('.indicator').has($(e.target)))
@@ -1155,33 +1139,54 @@ function indicate() {
 
 
 function defaultData() {
-  if (!localStorage.getItem("homeCode")) {
-    localStorage.setItem("homeCode", "2330");
+  $(".search").val("2330")
     getData();
-  } else {
-    getData();
-  }
 }
+
 defaultData()
 
-if (localStorage.getItem("userToken")) {
-  const data = {
-    token: localStorage.getItem("userToken"),
-  };
-  fetch("api/1.0/user/profile", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.error) {
-        $(".member").text(`Sign up / Log in`);
-      } else {
-        console.log(body);
-        $(".member").text(`${body.name}`);
-      }
-    });
+
+function userCheck () {
+  if (localStorage.getItem("userToken")) {
+    const data = {
+      token: localStorage.getItem("userToken"),
+    };
+    fetch("api/1.0/user/profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.error) {
+          $(".member").text(`Sign up / Log in`);
+        } else {
+          console.log(body);
+          $(".member").text(`${body.name}`);
+        }
+      });
+  } else {
+    $(".member").text("Log in / Sign Up")
+  }
 }
+
+userCheck()
+
+$(function () {
+  $(document).tooltip({
+    position: {
+      my: "center bottom-20",
+      at: "center top",
+      using: function (position, feedback) {
+        $(this).css(position);
+        $("<div>")
+          .addClass("arrow")
+          .addClass(feedback.vertical)
+          .addClass(feedback.horizontal)
+          .appendTo(this);
+      }
+    }
+  });
+});

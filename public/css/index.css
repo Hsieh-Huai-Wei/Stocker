@@ -6,7 +6,7 @@
 body {
   margin: 0px;
   font-size: 16px;
-  font-family: "Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
+  font-family: "Noto Sans TC", "微軟正黑體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
 }
@@ -105,6 +105,13 @@ header > .feature > input.backtest {
   background-position: 90% center;
   background-color: #262626;
   color: #ffffff;
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
 }
 
 header > .profile {
@@ -318,12 +325,24 @@ main {
 }
 
 .submit {
-  width: 60px;
-  height: 25px;
-  border: 1px solid #ffffff;
+  background-color: #5b9bc3;
+  border: 1.5px solid #ffffff;
   color: #ffffff;
-  background-color: #656565;
-  border-radius: 2px;
+  border-radius: 8px;
+  margin: 0px auto;
+  width: 65px;
+  height: 30px;
+}
+
+.submit:hover {
+  /* background-color: #f15e5e; */
+  background-color: #5b9bc3;
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  border: 2px solid;
+  color: #ffffff;
+  cursor: pointer;
 }
 
 button:hover,
@@ -638,3 +657,49 @@ border-radius: 20px;
 }
 
 
+  .ui-tooltip, .arrow:after {
+    background: red;
+    border: 2px solid white;
+  }
+  .ui-tooltip {
+    padding: 10px 20px;
+    color: white;
+    border-radius: 20px;
+    font: bold 14px "Helvetica Neue", Sans-Serif;
+    text-transform: uppercase;
+    box-shadow: 0 0 7px black;
+  }
+  .arrow {
+    width: 70px;
+    height: 16px;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    margin-left: -35px;
+    bottom: -16px;
+  }
+  .arrow.top {
+    top: -16px;
+    bottom: auto;
+  }
+  .arrow.left {
+    left: 20%;
+  }
+  .arrow:after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: -20px;
+    width: 25px;
+    height: 25px;
+    box-shadow: 6px 5px 9px -9px black;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    tranform: rotate(45deg);
+  }
+  .arrow.top:after {
+    bottom: -20px;
+    top: auto;
+  }

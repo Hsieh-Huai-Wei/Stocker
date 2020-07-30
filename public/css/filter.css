@@ -541,7 +541,7 @@ path.zero {
 .analysis path,
 .analysis circle {
   stroke: rgb(52, 186, 248);
-  stroke-width: 0.8;
+  stroke-width: 3.8;
 }
 
 .trendline circle {
@@ -550,11 +550,11 @@ path.zero {
 }
 
 .mouseover .trendline path {
-  stroke-width: 1.2;
+  stroke-width: 4.5;
 }
 
 .mouseover .trendline circle {
-  stroke-width: 1;
+  stroke-width: 4;
   display: inline;
 }
 
@@ -666,7 +666,7 @@ caption {
   padding: 8px;
 }
 
-.infor, .resultTable {
+/* .infor, .resultTable {
   border: 1px solid #656565;
 }
 
@@ -687,7 +687,27 @@ caption {
 .infor tr th:last-child{border-right:none;}
 .infor tr td:last-child{border-right:none;}
 .resultTable tr th:last-child{border-right:none;}
-.resultTable tr td:last-child{border-right:none;}
+.resultTable tr td:last-child{border-right:none;} */
+
+
+table {
+  /* width: 100%; */
+  table-layout:fixed;
+  text-align:center;
+  border-collapse: collapse;
+}
+
+th, td {
+  vertical-align:middle;
+  padding: 10px 0px;
+  border: 1px solid #ffffff; 
+  font-size: 0.8em;
+}
+
+th {
+  background-color: #565656;
+}
+
 
 .userChoice button {
   width: 45px;
@@ -700,9 +720,41 @@ caption {
   font-size: 1em;
 }
 
-.userOption td:hover {
+.resultTable td:first-child:hover {
   background-color: #ffffff7a;
   color: #ffffff;
   cursor: pointer;
 }
 
+.resultTable td:nth-child(2):hover {
+  background-color: #ffffff7a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.save {
+  width: 48px;
+  height: 33px;
+  background-color: #5b9bc3;
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+  border-radius: 8px;
+  margin-left: 741px;
+  font-size: 0.8em;
+
+}
+
+.save:hover {
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  cursor: pointer;
+  background-color: #5b9bc3;
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
+}

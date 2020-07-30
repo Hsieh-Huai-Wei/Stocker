@@ -173,21 +173,21 @@ main {
   /* border: 1px solid #656565; */
   border-radius: 30px;
   padding-left: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
 }
 
 .graph {
   display: flex;
   margin-bottom: 20px;
-  margin-right: auto;
+  margin:0px auto 20px auto;
   height: 50px;
   max-width: 935px;
-  width: 620px;
+  width: 680px;
 }
 
 .graph > button {
   color: #656565;
-  width: 120px;
+  width: 500px;
   height: 60px;
   margin-top: auto;
   border-bottom: 1px solid #656565;
@@ -200,11 +200,13 @@ main {
 
 .context {
   width: 935px;
+  border-radius: 20px;
 }
 
 .profile {
   display: flex;
   width: 600px;
+  border-radius: 20px;
 }
 
 .picture {
@@ -216,15 +218,18 @@ main {
 }
 
 .picture > img{
-  margin-top: 15px;
+  margin-top: 33px;
   width: 170px;
   height: 170px;
   border: 2px solid #ffffff;
   border-radius: 85px;
+  margin-left: 10px;
 }
 
 .information {
   width: 400px;
+  margin-bottom: 30px;
+  margin-left: 18px;
 }
 
 .item {
@@ -237,7 +242,10 @@ main {
   margin: 0px 20px;
   width: 200px;
   background: #656565;
+  height: 30px;  
+  border-radius: 8px;
   padding-left: 10px;
+  padding-top: 7px;
 }
 
 button:hover,
@@ -251,4 +259,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-image: url(../imgs/calendar.png);
   width: 17px;
   height: 17px;
+}
+
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
 }

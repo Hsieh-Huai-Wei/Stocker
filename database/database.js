@@ -192,3 +192,20 @@ CONSTRAINT provider FOREIGN KEY
 (provider_id)
 REFERENCES provider (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+USE stock;
+CREATE TABLE `filter_history`
+(
+`id` int (25) unsigned NOT NULL AUTO_INCREMENT,
+`user_id` int (25) unsigned NOT NULL,
+`stock_code` int (25) unsigned NOT NULL,
+`trend` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`start` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`end` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`upper` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`lower` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`graph` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`count` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+PRIMARY KEY (`id`),
+CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -1,43 +1,65 @@
 // GET DATA
 function filterData() {
 
+  let searchEndDay="";
+  let countDays = "";
+  let increase = "";
+  let decrease = "";
 
-  let searchStartDay = $(".searchStartDay").val();
-  let searchEndDay = $(".searchEndDay").val();
-  let upperPrice = $(".upperPrice").val();
-  let lowerPrice = $(".lowerPrice").val();
+  if ($("#countDays").val() === "") {
+    countDays = "25"
+  } else {
+    countDays = $("#countDays").val();
+  }
+
+  if ($(".searchEndDay").val()==="") {
+    let today = new Date();
+    let ey = (today.getFullYear()).toString();
+    let em = (today.getMonth() + 1).toString();
+    if (em.length === 1) {
+      em = "0" + em;
+    }
+    let ed = (today.getDate()).toString();
+    if (ed.length === 1) {
+      ed = "0" + ed;
+    }
+    searchEndDay = ey + "-" + em + "-" + ed;
+  } else {
+    searchEndDay = $(".searchEndDay").val();
+  }
+
+  if ($(".upperPrice").val() === "") {
+    upperPrice = "1000"
+  } else {
+    upperPrice = $(".upperPrice").val();
+  }
+
+  if ($(".lowerPrice").val() === "") {
+    lowerPrice = "100"
+  } else {
+    lowerPrice = $(".lowerPrice").val();
+  }
+
+  if ($("#increase").val() === "") {
+    increase = "5"
+  } else {
+    increase = $("#increase").val();
+  }
+
+  if ($("#decrease").val() === "") {
+    decrease = "5"
+  } else {
+    decrease = $("#decrease").val();
+  }
+
   let graph = $("input:checked").val();
-  let countDay = $(".countDay").val();
-  let increase = $(".increase").val();
-  let decrease = $(".decrease").val();
 
-  if (searchEndDay === "" || upperPrice === "" || lowerPrice === "") {
-    alert("你484有資料沒填寫RRRR!!!");
-    return;
-  } else if (graph === "reverseV") {
-    if (countDay==="") {
-      alert("你484有資料沒填寫RRRR!!!");
-      return;
-    }
-  } else if (graph === "uptrend") {
-    if (countDay === "" || increase === "") {
-      alert("你484有資料沒填寫RRRR!!!");
-      return;
-    }
-  } else if (graph === "downtrend") {
-    if (countDay === "" || lowerPrice === "") {
-      alert("你484有資料沒填寫RRRR!!!");
-      return;
-    }
-  }
+  let y = Number(searchEndDay.split('-')[0]);
+  let m = searchEndDay.split('-')[1];
+  let d = searchEndDay.split('-')[2];
+  y = y - 1 
+  let searchStartDay = `${y}` + "-" + `${m}` + "-" + `${d}`;
 
-  if (graph !== "na") {
-    let y = Number(searchEndDay.split('-')[0]);
-    let m = searchEndDay.split('-')[1];
-    let d = searchEndDay.split('-')[2];
-    y = y - 1 
-    searchStartDay = `${y}` + "-" + `${m}` + "-" + `${d}`;
-  }
 
   let userFilter = {
     start: searchStartDay,
@@ -45,18 +67,17 @@ function filterData() {
     upper: upperPrice,
     lower: lowerPrice,
     graph: graph,
-    count: countDay,
+    count: countDays,
     increase: increase,
     decrease: decrease,
   };
-
+  console.log(userFilter)
 
   let choiceDates = searchEndDay.split('-')[0] + searchEndDay.split('-')[1] + searchEndDay.split('-')[2];
   localStorage.setItem('filterDate', choiceDates);
-  console.log(userFilter)
 
-  let alerts = $("<div>").attr("class", "alters").css("text-align", "center").css("margin-top", "20px").text("Calculating...");
-  $(".description").append(alerts)
+  // let alerts = $("<div>").attr("class", "alters").css("text-align", "center").css("margin-top", "20px").text("Calculating...");
+  $(".submit").val("計算中").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
 
   fetch(`api/1.0/option2`, {
     method: 'POST',
@@ -66,11 +87,15 @@ function filterData() {
     body: JSON.stringify(userFilter),
   }).then((res) => res.json())
     .then((body) => {
-      console.log(body);
-
-      let data = JSON.stringify(body)
-      localStorage.setItem('optionResult', data);
-      window.location.replace('/filter.html');
+      if (body.data.length === 0) {
+        $(".alters").remove()
+        alert("無相符的股票，請重新選擇條件");
+        $(".submit").val("送出").attr("disabled", false)
+      } else {
+        let data = JSON.stringify(body)
+        localStorage.setItem('optionResult', data);
+        window.location.replace('/filter.html');
+      }
     });
 }
 
@@ -130,6 +155,65 @@ async function getData() {
   }
 }
 
+
+// function graphCheck () {
+//   let radioValue = $("input:checked").val();
+
+//   if (radioValue === "reverseV") {
+//     if ($(".reverseV").children().length < 3) {
+//       $(".increase").remove()
+//       $(".decrease").remove()
+//       $("#increase").remove()
+//       $("#decrease").remove()
+//       $(".countDays").remove()
+//       $("#countDays").remove()
+//       let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
+//       let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+//       $(".reverseV").append(countDays)
+//       $(".reverseV").append(inputs)
+//     }  
+//   } else if (radioValue === "uptrend") {
+//     if ($(".uptrend").children().length < 3) {
+//       $(".countDays").remove()
+//       $("#countDays").remove()
+//       $(".decrease").remove()
+//       $("#decrease").remove()
+//       let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
+//       let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+//       let input = $("<input>").attr("id", "increase").attr("type", "text").attr("placeholder", "ex. 5")
+//       let increase = $("<div>").attr("id", "itemss").attr("class", "increase").text("上漲 %")
+//       $(".uptrend").append(countDays)
+//       $(".uptrend").append(inputs)
+//       $(".uptrend").append(increase)
+//       $(".uptrend").append(input)
+//     }
+//   } else if (radioValue === "downtrend") {
+//     if ($(".downtrend").children().length < 3) {
+//       $(".countDays").remove()
+//       $("#countDays").remove()
+//       $(".increase").remove()
+//       $("#increase").remove()
+//       let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
+//       let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+//       let input = $("<input>").attr("id", "decrease").attr("type", "text").attr("placeholder", "ex. 5")
+//       let decrease = $("<div>").attr("id", "itemss").attr("class", "decrease").text("下跌 %")
+//       $(".downtrend").append(countDays)
+//       $(".downtrend").append(inputs)
+//       $(".downtrend").append(decrease)
+//       $(".downtrend").append(input)
+//     }
+//   } else {
+//     $(".countDays").remove()
+//     $("#countDays").remove()
+//     $(".increase").remove()
+//     $(".decrease").remove()
+//     $("#increase").remove()
+//     $("#decrease").remove()
+//   } 
+// }
+
+// graphCheck();
+
 if (localStorage.getItem("userToken")) {
   const data = {
     token: localStorage.getItem("userToken"),
@@ -144,53 +228,55 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        $(".member").text(`Sign up / Log in`);
+        alert("登入逾時，請重新登入");
+        window.location.replace("/signin.html");
       } else {
         console.log(body);
         $(".member").text(`${body.name}`);
       }
     });
+} else {
+  alert("請登入會員")
+  window.location.replace("/signin.html");
 }
 
-function graphCheck () {
-  let radioValue = $("input:checked").val();
 
+function graphCheck() {
+  let radioValue = $("input:checked").val();
+  let optional = $("<div>").attr("class", "optional")
   if (radioValue === "reverseV") {
-    $(".searchStartDay").val("");
-    $(".countDay").val("");
-    $(".countDay").attr("disabled", false);
-    $(".increase").val("NA");
-    $(".increase").attr("disabled", true);
-    $(".decrease").val("NA");
-    $(".decrease").attr("disabled", true);
-    $(".searchStartDay").attr("disabled", true);
+    $(".optional").remove()
+    let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
+    let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+    optional.append(countDays)
+    optional.append(inputs)
+    $(".dif").append(optional)
   } else if (radioValue === "uptrend") {
-    $(".searchStartDay").val("");
-    $(".countDay").val("");
-    $(".countDay").attr("disabled", false);
-    $(".increase").val("");
-    $(".increase").attr("disabled", false);
-    $(".decrease").val("NA");
-    $(".decrease").attr("disabled", true);
-    $(".searchStartDay").attr("disabled", true);
+    $(".optional").remove()
+    let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
+    let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+    let input = $("<input>").attr("id", "increase").attr("type", "text").attr("placeholder", "ex. 5")
+    let increase = $("<div>").attr("id", "itemss").attr("class", "increase").text("上漲 %")
+    optional.append(countDays)
+    optional.append(inputs)
+    optional.append(increase)
+    optional.append(input)
+    $(".dif").append(optional)
   } else if (radioValue === "downtrend") {
-    $(".searchStartDay").val("");
-    $(".countDay").val("");
-    $(".countDay").attr("disabled", false);
-    $(".increase").val("NA");
-    $(".increase").attr("disabled", true);
-    $(".decrease").val("");
-    $(".decrease").attr("disabled", false);
-    $(".searchStartDay").attr("disabled", true);
+    $(".optional").remove()
+    let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
+    let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+    let input = $("<input>").attr("id", "decrease").attr("type", "text").attr("placeholder", "ex. 5")
+    let decrease = $("<div>").attr("id", "itemss").attr("class", "decrease").text("下跌 %")
+    optional.append(countDays)
+    optional.append(inputs)
+    optional.append(decrease)
+    optional.append(input)
+    $(".dif").append(optional)
   } else {
-    $(".countDay").val("NA");
-    $(".countDay").attr("disabled", true);
-    $(".increase").val("NA");
-    $(".increase").attr("disabled", true);
-    $(".decrease").val("NA");
-    $(".decrease").attr("disabled", true);
-    $(".searchStartDay").attr("disabled", false);
-  } 
+    $(".optional").remove()
+    $(".dif").append(optional)
+  }
 }
 
 graphCheck();

@@ -28,8 +28,8 @@ function signUp () {
   // };
 
   const data = {
-    name: "琦玉老師",
-    email: "onePunchMan@test.com",
+    name: "test",
+    email: "test@test.com",
     pwd: "123456",
   };
 
@@ -64,7 +64,7 @@ function signIn () {
   // };
 
   const data = {
-    email: "onePunchMan@test.com",
+    email: "test@test.com",
     pwd: "123456",
   };
 

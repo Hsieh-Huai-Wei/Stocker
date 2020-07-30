@@ -8,45 +8,45 @@ function dateCheck(start, end) {
   return new Promise((resolve, reject) => {
     console.log("OK")
     // 日期都沒填寫
-    if (start === '' && end === '') {
-      console.log('all no')
-      let today = moment().format("YYYY/MM/DD"); //string
-      let endString = today.split('/')[0] + today.split('/')[1] + today.split('/')[2]
-      const startCount = moment([endString]).subtract(180, "days").format("YYYYMMDD");
-      let result = {
-        start: parseInt(today),
-        end: parseInt(startCount),
-      }
-      resolve(result);
-      return;
-      // 只填寫 end date
-    } else if (start === '' && end !== '') {
-      console.log('end')
-      const endString = end.split('-')
-      let endcount = endString[0] + '/' + endString[1] + '/' + endString[2]
-      const startCount = moment([endcount]).subtract(180, "days").format("YYYYMMDD");
-      let endTime = endString[0] + endString[1] + endString[2]
-      let result = {
-        start: parseInt(startCount),
-        end: parseInt(endTime),
-      }
-      resolve(result);
-      return;
+    // if (start === '' && end === '') {
+    //   console.log('all no')
+    //   let today = moment().format("YYYY/MM/DD"); //string
+    //   let endString = today.split('/')[0] + today.split('/')[1] + today.split('/')[2]
+    //   const startCount = moment([endString]).subtract(180, "days").format("YYYYMMDD");
+    //   let result = {
+    //     start: parseInt(today),
+    //     end: parseInt(startCount),
+    //   }
+    //   resolve(result);
+    //   return;
+    //   // 只填寫 end date
+    // } else if (start === '' && end !== '') {
+    //   console.log('end')
+    //   const endString = end.split('-')
+    //   let endcount = endString[0] + '/' + endString[1] + '/' + endString[2]
+    //   const startCount = moment([endcount]).subtract(180, "days").format("YYYYMMDD");
+    //   let endTime = endString[0] + endString[1] + endString[2]
+    //   let result = {
+    //     start: parseInt(startCount),
+    //     end: parseInt(endTime),
+    //   }
+    //   resolve(result);
+    //   return;
 
-      // 只填寫 start date
-    } else if (start !== '' && end === '') {
-      console.log('start')
-      const startString = start.split('-')
-      const startTime = startString[0] + startString[1] + startString[2]
-      const endString = moment().format("YYYYMMDD"); //string
-      let result = {
-        start: parseInt(startTime),
-        end: Number(endString),
-      }
-      resolve(result);
-      return;
+    //   // 只填寫 start date
+    // } else if (start !== '' && end === '') {
+    //   console.log('start')
+    //   const startString = start.split('-')
+    //   const startTime = startString[0] + startString[1] + startString[2]
+    //   const endString = moment().format("YYYYMMDD"); //string
+    //   let result = {
+    //     start: parseInt(startTime),
+    //     end: Number(endString),
+    //   }
+    //   resolve(result);
+    //   return;
 
-    } else {
+    // } else {
       console.log('all ok')
       const startString = start.split('-')
       const startTime = startString[0] + startString[1] + startString[2]
@@ -58,7 +58,7 @@ function dateCheck(start, end) {
       }
       resolve(result);
       return;
-    }
+    // }
   })
 }
 
@@ -468,7 +468,7 @@ function downtrend(userSearch, stockPricePair) {
     // 對單一股票的歷史價格進行掃描
     let r = Number(userSearch.count);
     let decrease = Number(userSearch.decrease);
-
+    
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
       let stockIndex = stockPricePair[i].data;
       let firstDay = stockIndex[j];
@@ -509,7 +509,7 @@ function downtrend(userSearch, stockPricePair) {
         }
 
         // console.log(6)
-        if (upCount / r > 0.7) {
+        if (upCount / r > 0.5) {
           // console.log('DDDDDDDD')
           let index = {};
           index.id = stockPricePair[i].id;
@@ -587,6 +587,7 @@ function reverseV(userSearch, stockPricePair) {
     // console.log(stockPricePair.length)
     console.log("i", i);
     // 對單一股票的歷史價格進行掃描
+    console.log(userSearch)
     let r = Number(userSearch.count);
     let low = Math.floor(r / 2) - 2;
     let up = Math.floor(r / 2) + 2;
@@ -947,46 +948,14 @@ function graphV(userSearch, stockPricePair) {
 const singleStock = async (req, res, next) => {
   let userSearch = {
     stockCode: req.body.stockCode,
-    startDate: parseInt(req.body.startDate),
-    endDate: parseInt(req.body.endDate),
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
   };
-
-
-  if (isNaN(userSearch.startDate) && isNaN(userSearch.endDate)) {
-    let endString = moment().format("YYYY/MM/DD"); //string
-    let end = endString.split('/')[0] + endString.split('/')[1] + endString.split('/')[2]
-    const start = moment([endString]).subtract(33, "days").format("YYYYMMDD"); 
-    userSearch.startDate= parseInt(start);
-    userSearch.endDate= parseInt(end);
-
-  } else if (isNaN(userSearch.startDate) && !(isNaN(userSearch.endDate))) {
-    const end = userSearch.endDate
-    const endString = end.toString()
-    let endcount = endString[0] + endString[1] + endString[2] + endString[3] + '/' + endString[4] + endString[5] + '/'  + endString[6] + endString[7]
-
-    const start = moment([endcount]).subtract(63, "days").format("YYYYMMDD");
-    userSearch.startDate = parseInt(start);
-    userSearch.endDate = parseInt(end);
-  } else if (!(isNaN(userSearch.startDate)) && isNaN(userSearch.endDate)) {
-    const endString = moment().format("YYYYMMDD"); //string
-    const end = Number(endString)
-    const startUser = userSearch.startDate 
-    const startSting = startUser.toString();
-    let startcount = startSting[0] + startSting[1] + startSting[2] + startSting[3] + '/' + startSting[4] + startSting[5] + '/' + startSting[6] + startSting[7];
-    const start = Number(moment([startcount]).add(-28, "days").format("YYYYMMDD"));
-    userSearch.startDate = parseInt(start);
-    userSearch.endDate = parseInt(end);
-  } else {
-    const startUser = userSearch.startDate
-    const startSting = startUser.toString();
-    let startcount = startSting[0] + startSting[1] + startSting[2] + startSting[3] + '/' + startSting[4] + startSting[5] + '/' + startSting[6] + startSting[7];
-    const start = Number(moment([startcount]).add(-28, "days").format("YYYYMMDD"));
-    const end = userSearch.endDate
-    userSearch.startDate = parseInt(start);
-    userSearch.endDate = parseInt(end);
-  }
-
-  console.log(userSearch); // string
+  
+  const startString = (moment(userSearch.startDate).subtract(50,"day").format("YYYYMMDD"));
+  const endString = (moment(userSearch.endDate).format("YYYYMMDD"));
+  userSearch.startDate = Number(startString);
+  userSearch.endDate = Number(endString);
   let historyPrice = await Product.singleStock(userSearch);
   if (historyPrice.length !== 0) {
     let data = [];
@@ -1651,11 +1620,7 @@ const option2island = async (req, res, next) => {
 
 
 const backTest = async (req, res, next) => {
-  // console.log(req.body);
-  // console.log(req.body.length);
-  // console.log(req.body[0]);
-  // console.log(req.body[0].id);
-  // console.log(req.body[0].data);
+
   let data = []
   for (let i = 0; i < req.body.length; i++) {
 
@@ -1668,68 +1633,186 @@ const backTest = async (req, res, next) => {
     console.log(caseInf)
     let caseResult = await Product.backTest(caseInf);
     //帶入參數
+    let propertyInit = parseInt(stockData.property);
     let property = parseInt(stockData.property);
-    let increase = parseInt(stockData.increase);
-    let decrease = parseInt(stockData.decrease);
-    let buy = parseInt(stockData.buy);
-    let sell = parseInt(stockData.sell);
+
+    let increaseAct = stockData.increaseAct; // 漲 要買還是賣
+    let decreaseAct = stockData.decreaseAct; // 跌 要買還是賣
+    let increase = parseInt(stockData.increase); //漲 %
+    let decrease = parseInt(stockData.decrease); //跌 %
+    let increaseCount = parseInt(stockData.increaseCount); // 張
+    let decreaseCount = parseInt(stockData.decreaseCount); // 張
+
     let discount = (parseInt(stockData.discount)) / 100;
     let buyCostPercent = 0.001425;
     let sellCostPercent = 0.003;
+
+
+
     let stock = 0;
     let tradeCost = 0;
     let history = [];
+
     for (let i = 0; i < caseResult.length; i++) {
-      let list = {};
-      if (property > 0 && caseResult[i].changes >= increase) {
-        // 購買手續費
-        let buyCost = caseResult[i].close * buy * buyCostPercent * discount;
+      console.log("今日漲跌為: ",caseResult[i].changes)
+      if (caseResult[i].changes >= increase) {
+        if (increaseAct === "buy" && property > caseResult[i].close) {
+          console.log("漲要買 ")
+          console.log("資金為 ", property)
+          let list = {};
+          // console.log(0)
+          // 購買手續費
+          let buyCost = caseResult[i].close * increaseCount * buyCostPercent * discount;
+          // console.log(1)
+          list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2)
+          // console.log(2)
+          // 累積交易成本
+          tradeCost += buyCost;
+          // console.log(3)
+          // 庫存stock數量
+          stock += increaseCount;
+          // console.log(4)
+          // 總資產扣除
+          property = property - buyCost - (caseResult[i].close * increaseCount)
+          // console.log(5)
+          list.information = caseResult[i].date;
+          list.situation = increaseAct;
+          list.price = caseResult[i].close
+          list.stock = stock
+          list.value = caseResult[i].close;
+          list.tradeCost = Number((buyCost).toFixed(2))
+          list.property = Number((property + (caseResult[i].close * stock)).toFixed(2))
+          history.push(list)
+        } else if (increaseAct === "sell" && stock > 0) {
+          console.log("漲要賣 ")
+          console.log("股票庫存為 ", property)
+          let list = {};
+          // 賣出手續費
+          let sellCost = (caseResult[i].close * increaseCount * buyCostPercent * discount) + (caseResult[i].close * increaseCount * sellCostPercent);
 
-        list.profitPercent = Number(((((property - buyCost) / property) * 100) - 100).toFixed(2))
+          list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2)
 
-        // 累積交易成本
-        tradeCost += buyCost;
-        // 庫存stock數量
-        stock += buy;
+          // 累積交易成本
+          tradeCost += sellCost;
+          // 庫存stock數量
+          stock -= increaseCount;
 
-        // 總資產扣除
-        property = property - buyCost - (caseResult[i].close * buy)
+          // 總資產扣除
+          property = property - sellCost + (caseResult[i].close * increaseCount);
 
-        list.information = caseResult[i].date;
-        list.situation = "buy";
-        list.price = caseResult[i].close
-        list.stock = stock
-        list.value = caseResult[i].close * buy;
-        list.tradeCost = Number((buyCost).toFixed(2))
-        list.property = Number((property + (caseResult[i].close * stock)).toFixed(2))
-        history.push(list)
-      } else if (caseResult[i].changes >= decrease && stock > 0) {
+          list.information = caseResult[i].date;
+          list.situation = increaseAct;
+          list.price = caseResult[i].close
+          list.stock = stock
+          list.value = caseResult[i].close;
+          list.tradeCost = Number((sellCost).toFixed(2))
+          list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
+          history.push(list)
+        }
 
-        // 賣出手續費
-        let sellCost = (caseResult[i].close * sell * buyCostPercent * discount) + (caseResult[i].close * sell * sellCostPercent);
+      } else if (caseResult[i].changes <= decrease) {
+        if (decreaseAct === "buy" && property > caseResult[i].close) {
+          console.log("跌要買 ")
+          console.log("資金為 ", property)
+          let list = {};
+          // 購買手續費
+          let buyCost = caseResult[i].close * decreaseCount * buyCostPercent * discount;
+          list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2)
+          // 累積交易成本
+          tradeCost += buyCost;
+          // 庫存stock數量
+          stock += decreaseCount;
 
-        list.profitPercent = Number(((((property - sellCost) / property) * 100) - 100).toFixed(2))
+          // 總資產扣除
+          property = property - buyCost - (caseResult[i].close * decreaseCount)
 
-        // 累積交易成本
-        tradeCost += sellCost;
-        // 庫存stock數量
-        stock -= sell;
+          list.information = caseResult[i].date;
+          list.situation = decreaseAct;
+          list.price = caseResult[i].close
+          list.stock = stock
+          list.value = caseResult[i].close;
+          list.tradeCost = Number((buyCost).toFixed(2))
+          list.property = Number((property + (caseResult[i].close * stock)).toFixed(2))
+          history.push(list)
+        } else if (decreaseAct === "sell" && stock > 0) {
+          console.log("跌要賣 ")
+          console.log("股票庫存為 ", property)
+          let list = {};
+          // 賣出手續費
+          let sellCost = (caseResult[i].close * decreaseCount * buyCostPercent * discount) + (caseResult[i].close * decreaseCount * sellCostPercent);
 
-        // 總資產扣除
-        property = property - sellCost + (caseResult[i].close * sell);
+          list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2)
 
-        list.information = caseResult[i].date;
-        list.situation = "sell";
-        list.price = caseResult[i].close
-        list.stock = stock
-        list.value = caseResult[i].close * sell;
-        list.tradeCost = Number((sellCost).toFixed(2))
-        list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
-        history.push(list)
-      } else {
+          // 累積交易成本
+          tradeCost += sellCost;
+          // 庫存stock數量
+          stock -= decreaseCount;
+
+          // 總資產扣除
+          property = property - sellCost + (caseResult[i].close * decreaseCount);
+
+          list.information = caseResult[i].date;
+          list.situation = decreaseAct;
+          list.price = caseResult[i].close
+          list.stock = stock
+          list.value = caseResult[i].close;
+          list.tradeCost = Number((sellCost).toFixed(2))
+          list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
+          history.push(list)
+        }
 
       }
     }
+
+
+    // for (let i = 0; i < caseResult.length; i++) {
+    //   let list = {};
+    //   if (property > 0 && caseResult[i].changes >= decrease) {
+    //     console.log("資產",property)
+    //     // 購買手續費
+    //     let buyCost = caseResult[i].close * buy * buyCostPercent * discount;
+    //     list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2)
+    //     // 累積交易成本
+    //     tradeCost += buyCost;
+    //     // 庫存stock數量
+    //     stock += buy;
+
+    //     // 總資產扣除
+    //     property = property - buyCost - (caseResult[i].close * buy)
+
+    //     list.information = caseResult[i].date;
+    //     list.situation = "buy";
+    //     list.price = caseResult[i].close
+    //     list.stock = stock
+    //     list.value = caseResult[i].close;
+    //     list.tradeCost = Number((buyCost).toFixed(2))
+    //     list.property = Number((property + (caseResult[i].close * stock)).toFixed(2))
+    //     history.push(list)
+    //   } else if (caseResult[i].changes >= increase && stock > 0) {
+
+    //     // 賣出手續費
+    //     let sellCost = (caseResult[i].close * sell * buyCostPercent * discount) + (caseResult[i].close * sell * sellCostPercent);
+
+    //     list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2)
+
+    //     // 累積交易成本
+    //     tradeCost += sellCost;
+    //     // 庫存stock數量
+    //     stock -= sell;
+
+    //     // 總資產扣除
+    //     property = property - sellCost + (caseResult[i].close * sell);
+
+    //     list.information = caseResult[i].date;
+    //     list.situation = "sell";
+    //     list.price = caseResult[i].close
+    //     list.stock = stock
+    //     list.value = caseResult[i].close;
+    //     list.tradeCost = Number((sellCost).toFixed(2))
+    //     list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
+    //     history.push(list)
+    //   }
+    // }
     // console.log("股票庫存", stock);
     // console.log("資產總額",profit);
     // console.log("交易成本", tradeCost)
@@ -1740,6 +1823,7 @@ const backTest = async (req, res, next) => {
       case: stockData,
       summary: {
         finalStock: stock,
+        stockValue: (caseResult[len - 1].close),
         totalAssets: Number(((property + (stock * caseResult[len - 1].close))).toFixed(2)),
         tradeCost: Number((tradeCost).toFixed(2)),
         earningRate: Number(((((property + (stock * caseResult[len - 1].close)) - parseInt(stockData.property)) / parseInt(stockData.property)) * 100).toFixed(2)),

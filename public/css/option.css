@@ -156,12 +156,13 @@ main {
   width: 930px;
   height: 100%;
   margin: 20px auto;
+  border-bottom: 1px solid #ccc;
 }
 
 .title {
   flex: 1 1 100%;
   text-align: center;
-  font-size: 2.8em;
+  font-size: 2.0em;
   height: 77px;
   margin-bottom: 0px;
   padding-top: 15px;
@@ -188,9 +189,11 @@ main {
 .advance,
 .description {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   width: 100%;
-  padding: 20px;
+  padding: 20px 35px;
+  height: 300px;
 }
 
 .subtitle {
@@ -198,44 +201,105 @@ main {
   margin-bottom: 15px;
   border-bottom: 1px solid #ccc;
   width: 180px;
+  text-align: center;
+  flex: 1 1 100%;
+  height: 35px;
 }
 
-#items {
+.items {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  width: 100px;
+  /* margin-top: 10px; */
+  /* margin-bottom: 10px; */
 }
 
-input {
+.itemss {
+  width: 220px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 265px;
+  margin-top: 21px;
+}
+
+
+
+label {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* margin-right: 10px; */
+  width: 105px;
+  height: 35px;
+  padding-top: 10px;
+  margin-right: 5px;
+  /* padding-left: 4px; */
+}
+
+label > input {
+  width: 10px;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+label > .itemss {
+  flex: 1 1 100%;
+}
+
+.optional {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 120px;
+  width: 100%;
+  border-top: 1px solid #ccc;
+}
+
+#countDays, #decrease, #increase {
+  width: 100px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   background-color: #ccc;
-  margin: 5px 0px;
+  margin-top: 20px;
+  padding-left: 5px;
+  /* margin-right: 50px; */
+  /* width: 110px; */
+  height: 25px;
+  border-radius: 5px;
 }
+
+.searchEndDay, .upperPrice, .lowerPrice {
+  border: 1px solid #ccc;
+  background-color: #ccc;
+  /* margin-top: 10px; */
+  padding-left: 5px;
+  /* margin-right: 50px; */
+  width: 110px;
+  height: 25px;
+  border-radius: 5px;
+}
+
 
 .advance {
   border-left: 1.5px solid #ccc;
   border-right: 1.5px solid #ccc;
+  /* height: 510px; */
 }
 
-label {
-  width: 100%;
-  margin: 5px 0px;
-  margin-left: 15px;
-}
 
 .graphNote {
-  width: 265px;
-  height: 265px;
-  margin-top: 20px;
-  margin-bottom: 40px;
+  width:  265px;
+  height: 190px;
+  margin-top: 27px;
+  margin-bottom: 25px;
   background-color: #ccc;
   border-radius: 8px;
 }
 
 .submit {
   width: 70px;
-  height: 30px;
+  height: 37px;
   background-color: #5b9bc3;
   border: 1.5px solid #ffffff;
   color: #ffffff;
@@ -244,7 +308,10 @@ label {
 }
 
 #itemss {
-  margin-left: 15px;
+  width: 80px;
+  margin-left: 18px;
+  margin-top: 19px;
+  height: 30px;
 }
 
 .countDay, .decrease, .increase {
@@ -252,7 +319,11 @@ label {
 }
 
 .submit:hover {
-  background-color: #f15e5e;
+  /* background-color: #f15e5e; */
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  border: 2px solid;
   color: #ffffff;
   cursor: pointer;
 }
@@ -260,4 +331,11 @@ label {
 .alerts {
   text-align: center;
   margin-top: 20px;
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
 }

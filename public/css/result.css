@@ -170,19 +170,7 @@ main {
   flex-direction: column;
 }
 
-table {
-  width: 100%;
-  table-layout:fixed;
-  text-align:center;
-}
 
-th, td {
-  vertical-align:middle;
-  padding: 10px 0px;
-  /* border-bottom: 1px solid #656565;
-  border-right: 1px solid #656565; */
-  /* border: 1px solid #656565; */
-}
 
 caption {
   font-size: 1.3em;
@@ -194,23 +182,48 @@ caption {
   border: 1px solid #656565;
 } */
 
+
+table {
+  width: 100%;
+  table-layout:fixed;
+  text-align:center;
+  border-collapse: collapse;
+}
+
+th, td {
+  vertical-align:middle;
+  padding: 10px 0px;
+  border: 1px solid #ffffff; 
+  font-size: 0.8em;
+}
+
+th {
+  background-color: #565656;
+}
+
+caption {
+  text-decoration:underline;
+}
+
 .summary th, .testResult th, .detail th {
   border: 1px solid #656565;
-  border-left: none;
-  border-top: none;
+  border-bottom: 1px solid #656565;
 }
 
 .summary td, .testResult td, .detail td {
   border: 1px solid #656565;
-  border-left: none;
-  border-top: none;
-  border-bottom: none;
   font-size: 0.8em;
 }
 
-.detail tr th:last-child{border-right:none;}
-.data tr td:last-child{border-right:none;}
-.summary tr th:last-child{border-right:none;}
+/* .summary tr th:last-child{border-right:#1f77b4  1px solid;}
+.testResult tr td:last-child{border-right:#1f77b4 1px solid;}
+.detail tr th:last-child{border-right:#1f77b4  1px solid;}
+.data tr td:last-child{border-right:#1f77b4  1px solid;}
+
+.summary tr th:first-child{border-left:#1f77b4  1px solid;}
+.testResult tr td:first-child{border-left:#1f77b4 1px solid;}
+.detail tr th:first-child{border-left:#1f77b4  1px solid;}
+.data tr td:first-child{border-left:#1f77b4  1px solid;} */
 
 
 #summary {
@@ -219,23 +232,26 @@ caption {
 
 
 input, select, textarea{ 
-    color: #ffffff; 
+  color: #ffffff; 
 } 
 
 .btn {
   display: flex;
-  justify-content: start;
+  flex-direction: row-reverse;
+  max-width: 935px;
+  margin: 0px auto;
+
 }
 
 .submit {
-  width: 70px;
-  height: 25px;
+  width: 89px;
+  height: 38px;
   background-color: #5b9bc3;
   border: 1.5px solid #ffffff;
   color: #ffffff;
   border-radius: 8px;
-  margin-left: auto;
-  font-size: 1em;
+  margin-left: 23px;
+  font-size: 0.6em;
 }
 
 table >.case tr {
@@ -322,3 +338,25 @@ path.volume.equal {
     fill: #DDDDDD;
 }
 
+.again:hover {
+
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  border: 2px solid;
+  color: #ffffff;
+  cursor: pointer;
+
+}
+
+.save {
+  /* margin-right: 30px; */
+  cursor: pointer;
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
+}

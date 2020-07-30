@@ -4,52 +4,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title>Stocker - 首頁</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <link rel="stylesheet" href="./css/homePage.css" />
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-  <!-- <script src="plotly-latest.min.js"></script> -->
+  <script src="./js/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </head>
 
 <body>
   <header>
     <div class="logo">
-      <a href="./homePage.html"><img src="./imgs/slogan.JPG" /></a>
+      <a href="./homePage.html"><img src="./imgs/logo.png" /></a>
     </div>
     <div class="feature">
-      <input type="text" class="search" name="tag" onclick="getData()"/>
-      <input type="button" class="option" value="篩選模式" onclick="option()">
-      <input type="button" class="backtest" value="回測模式" onclick="backTest()">
+      <!-- <input type="text" class="search" name="tag" onclick="getData()" />
+      <input type="button" class="option" value="趨勢觀測" onclick="option()">
+      <input type="button" class="backtest" value="歷史回測" onclick="backTest()"> -->
     </div>
     <div class="profile">
-      <a href="profile.html" class="item member"><img src="./imgs/member.png" /></a>
+      <div class="member"></div>
+      <a href="profile.html" class="memberImg"><img src="./imgs/member.png" /></a>
     </div>
   </header>
   <main>
-    <div class="main">
-      <div id="navBar">我是跑馬燈</div>
-      <div class="btn">
-        <div class="graph">
-          <button id='kBar' onclick="kBar()">K棒</button>
-          <button id='line' onclick="line()">趨勢線</button>
-          <button id='finance' onclick="finance()">財報</button>
-          <button id='news' onclick="news()">新聞</button>
-          <button id='information' onclick="information()">資料</button>
-        </div>
-        <div class="date">
-          <input type="date" class="startDay" />
-          <p>-</p>
-          <input type="date" class="endDay" />
-          <input type="button" class="submit" value="Submit" onclick="getData()" />
-        </div>
+    <div class="intro">
+      <div class="container">
+        <div class="title">個股查詢</div>
+        <a class="link" href="./index.html"><img class="bg" src="./imgs/basic.jpg" alt=""></a>
+        <div class="content">- 個股歷史價格查詢</br>- 技術線圖</br>- MACD</br>- RSI</div>
       </div>
-      <div id="select" class="info_block"></div>
+      <div class="container">
+        <div class="title">趨勢觀測</div>
+        <a class="link" href="./option.html"><img class="bg" src="./imgs/trend.jpg" alt=""></a>
+        <div class="content">- 個人化技術型態篩選</br>- 找出屬於您的技術股票</div>
+      </div>
+      <div class="container">
+        <div class="title">歷史回測</div>
+        <a class="link" href="./backTest.html"><img class="bg" src="./imgs/backtest.jpg" alt=""></a>
+        <div class="content">- 讓您回到過去</br>-不斷測試</br>-找出適合您的投資策略</div>
+      </div>
     </div>
   </main>
-
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="./js/techan.min.js"></script>
+  <script src="http://techanjs.org/techan.min.js"></script>
   <script type="text/javascript" src="./js/homePage.js"></script>
+
   <body>
 
 </html>

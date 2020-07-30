@@ -26,10 +26,12 @@ const signIn = async (data) => {
 };
 
 const profile = async (data) => {
-  const result = await query(`SELECT stock.history_price.*, stock.information.code, stock.information.name , stock.legal.FD, stock.legal.SITC, stock.legal.Dealers, stock.legal.total FROM stock.information
-INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id
-INNER JOIN stock.legal ON stock.legal.stock_id = stock.information.id AND stock.legal.date = stock.history_price.date
-WHERE stock.information.id = ? AND stock.history_price.date BETWEEN ? AND ?;`, [data.id, data.start, data.end]);
+  const result = await query(`SELECT number AS id, provider_id AS provider, name, email, picture FROM user WHERE email = ? AND access_token = ?`, [data.email, data.token]);
+  return result;
+};
+
+const profiles = async (data) => {
+  const result = await query(`SELECT id, number, provider_id AS provider, name, email, picture FROM user WHERE email = ? AND access_token = ?`, [data.email, data.token]);
   return result;
 };
 
@@ -40,4 +42,5 @@ module.exports = {
   signIn,
   signUp,
   profile,
+  profiles,
 };

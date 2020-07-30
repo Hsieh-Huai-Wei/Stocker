@@ -1,54 +1,58 @@
 function addCase() {
+
   let num = $("#case").children(".title").length;
   console.log(num)
-  let title = $('<div>').attr('class', `title`).text(`BackTest Condition Form - Case #${num + 1}`).append($("<div>").attr('class', `note`));
+  if (num<5) {
 
-  let base = $('<div>').attr('class', `base`).append(
-    $("<div>").attr('class', `subtitle`).text('Base option'),
-    $("<div>").attr('id', `items`).text('Stock Code / Name'),
-    $("<input>").attr("type", "text").attr('class', `code${num+1}`),
-    $("<div>").attr('id', `items`).text('Start Date'),
-    $("<input>").attr("type", "date").attr('class', `searchStartDay${num+1}`),
-    $("<div>").attr('id', `items`).text('End Date'),
-    $("<input>").attr("type", "date").attr("class", `searchEndDay${num+1}`),
-    $("<div>").attr('id', `items`).text('Property'),
-    $("<input>").attr("type", "text").attr("class", `property${num+1}`),
-    $("<div>").attr('id', `items`).text('Dealer discount'),
-    $("<input>").attr("type", "text").attr("class", `discount${num+1}`),
-  )
+    let title = $('<div>').attr('class', `title`).text(`歷史回測條件單 #${num + 1}`).append($("<div>").attr('class', `note`));
 
-  let advance = $('<div>').attr('class', `advance`).append(
-    $("<div>").attr('class', `subtitle`).text('Advance option'),
-    $("<div>").attr('id', `items`).attr('class', `graph`).text('Mode Choice'),
+    let base = $('<div>').attr('class', `base`).append(
+      $("<div>").attr('class', `subtitle`).text('基本設定'),
+      $("<div>").attr('class', `items`).text('股票名稱/代碼'),
+      $("<input>").attr("type", "text").attr('class', `code${num + 1}`).attr("placeholder", "ex. 2330"),
+      $("<div>").attr('class', `items`).text('開始日期'),
+      $("<input>").attr("type", "date").attr('class', `searchStartDay${num + 1}`),
+      $("<div>").attr('class', `items`).text('結束日期'),
+      $("<input>").attr("type", "date").attr("class", `searchEndDay${num + 1}`),
+      $("<div>").attr('class', `items`).text('資金(單位:千)'),
+      $("<input>").attr("type", "text").attr("class", `property${num + 1}`).attr("placeholder", "ex. 100000"),
+      $("<div>").attr('class', `items`).text('券商折扣(%)'),
+      $("<input>").attr("type", "text").attr("class", `discount${num + 1}`).attr("placeholder", "ex. 40"),
+    )
 
-    $("<div>").attr('id', `items`).attr('class', `items${num+1}`).append(
-      $("<label>").append(`<input type="radio" name="graph${num+1}" value="nomarl" checked>Normal`),
-      $("<label>").append(`<input type="radio" name="graph${num+1}" value="macd" disabled/>MACD`),
-      $("<label>").append(`<input type="radio" name="graph${num+1}" value="kd" disabled/>KD`),
-      $("<label>").append(`<input type="radio" name="graph${num+1}" value="rsi" disabled/>RSI`),
-      // $("<label>").append(`<input type="radio" name="graph" value="bias" />BIAS`),
-    ),
-    $("<div>").attr('id', `items`).text('Condition Order'),
-    $("<div>").attr('id', `itemss`).text('Increase(%)'),
-    $("<input>").attr("type", "text").attr("class", `increase${num+1}`),
-    $("<div>").attr('id', `itemss`).text('Buy'),
-    $("<input>").attr("type", "text").attr("class", `buy${num+1}`),
-    $("<div>").attr('id', `itemss`).text('Decrease(%)'),
-    $("<input>").attr("type", "text").attr("class", `decrease${num+1}`),
-    $("<div>").attr('id', `itemss`).text('Sell'),
-    $("<input>").attr("type", "text").attr("class", `sell${num+1}`),
-  )
+    let inputIncreaseBuy = $("<input>").attr("class", `increase${num + 1}`).attr("name", `increase${num + 1}`).attr("type", "radio").attr("value", "buy").add("<div>"+"買"+"</div>");
+    let inputIncreaseSell = $("<input>").attr("class", `increase${num + 1}`).attr("name", `increase${num + 1}`).attr("type", "radio").attr("value", "sell").add("<div>" + "賣" + "</div>");
+    let inputDecreaseBuy = $("<input>").attr("class", `decrease${num + 1}`).attr("name", `decrease${num + 1}`).attr("type", "radio").attr("value", "buy").add("<div>" + "買" + "</div>");
+    let inputDecreaseSell = $("<input>").attr("class", `decrease${num + 1}`).attr("name", `decrease${num + 1}`).attr("type", "radio").attr("value", "sell").add("<div>" + "賣" + "</div>");
 
-  let description = $('<div>').attr('class', `description`).append(
-    $("<div>").attr('class', `subtitle`).text('Description'),
-    $("<div>").attr('class', `graphNote`),
-  )
+    inputIncreaseSell.attr("checked", "checked")
+    inputDecreaseBuy.attr("checked", "checked")
 
-  let userOption = $("<div>").attr('class', "userOption")
-  userOption.append(base).append(advance).append(description);
-  $("#case").append(title);
-  $("#case").append(userOption);
+    let advance = $('<div>').attr('class', `advance`).append(
+      $("<div>").attr('class', `subtitle`).text('交易策略'),
+      $("<div>").attr('class', `itemss`).text('上漲(%)'),
+      $("<input>").attr("type", "text").attr("class", `increase${num + 1}`).attr("placeholder", "ex. 5"),
 
+      $("<div>").attr('class', `itemss increase${num + 1}`).append(inputIncreaseBuy).append(inputIncreaseSell),
+
+      $("<input>").attr("type", "text").attr("class", `increaseText${num + 1}`).attr("name", `increase`).attr("placeholder", "ex. 5"),
+
+      $("<div>").attr('class', `itemss`).text('下跌(%)'),
+      $("<input>").attr("type", "text").attr("class", `decrease${num + 1}`).attr("placeholder", "ex. 3"),
+
+      $("<div>").attr('class', `itemss decrease${num + 1}`).append(inputDecreaseBuy).append(inputDecreaseSell),
+
+      $("<input>").attr("type", "text").attr("class", `decreaseText${num + 1}`).attr("name", `decrease`).attr("placeholder", "ex. 1"),
+
+    )
+
+    let userOption = $("<div>").attr('class', "userOption")
+    userOption.append(base).append(advance)
+    $("#case").append(title);
+    $("#case").append(userOption);
+  } else {
+    $(".add").text("超過新增上限").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
+  }
 }
 
 addCase();
@@ -59,30 +63,49 @@ function test() {
   let result = [];
   for (let i = 1; i < num+1; i++) {
     let caseNo = `case${i}`;
+
     let code = $(`.code${i}`).val();
     let start = $(`.searchStartDay${i}`).val();
     let end = $(`.searchEndDay${i}`).val();
     let startDate = start.split('-')[0] + start.split('-')[1] + start.split('-')[2];
     let endDate = end.split('-')[0] + end.split('-')[1] + end.split('-')[2];
+
     let property = $(`.property${i}`).val();
     let discount = $(`.discount${i}`).val();
-    let graph = $("input:radio[name=graph"+`${i}`+"]:checked").val();
-    let increase = $(`.increase${i}`).val();
-    let buy = $(`.buy${i}`).val();
-    let decrease = $(`.decrease${i}`).val();
-    let sell = $(`.sell${i}`).val();
     
+    let increaseAct = $(`.increase${i}:checked`).val()
+    let increase = $(`.increase${i}`).val();
+    let increaseCount = $(`.increaseText${i}`).val();
+    let decreaseAct = $(`.decrease${i}:checked`).val()
+    let decrease = $(`.decrease${i}`).val();
+    let decreaseCount = $(`.decreaseText${i}`).val();
+    
+    // let caseNo = `case1`;
+    // let code = "1101";
+    // let startDate = "20190101"
+    // let endDate = "20200701"
+    // let property = 10000;
+    // let discount = 40;
+    // let graph = $("input:radio[name=graph" + `${i}` + "]:checked").val();
+    // let increaseAct = "sell"
+    // let increase = 5;
+    // let increaseCount = 5;
+    // let decreaseAct = "buy"
+    // let decrease = 3;
+    // let decreaseCount = 3;
+
     let data = {
       code: code,
       startDate: startDate,
       endDate: endDate,
       property: property,
-      graph: graph,
-      increase: increase,
-      buy: buy,
-      decrease: decrease,
-      sell: sell,
       discount: discount,
+      increaseAct: increaseAct,
+      increase: increase,
+      increaseCount: increaseCount,
+      decreaseAct: decreaseAct,
+      decrease: decrease,
+      decreaseCount: decreaseCount,
     }
     let index = {
       id: caseNo,
@@ -90,8 +113,8 @@ function test() {
     }
     result.push(index)
   };
-  console.log(result);
-  // return;
+  $(".test").text("計算中").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
+  // console.log(result)
   fetch(`api/1.0/backTest`, {
     method: 'POST',
     headers: new Headers({
@@ -100,8 +123,10 @@ function test() {
     body: JSON.stringify(result),
   }).then((res) => res.json())
     .then((body) => {
+      console.log(body)
       let data = JSON.stringify(body)
       localStorage.setItem('backTestToken', data);
+      // return;
       window.location.replace('/result.html');
     });
 }
@@ -136,5 +161,23 @@ if (localStorage.getItem("userToken")) {
       }
     });
 } else {
-  $(".member").text(`Sign up / Log in`);
+  alert("請登入會員")
+  window.location.replace("/signin.html");
 }
+
+
+// function check() {
+//   if () {
+//     let a = $(".increaseBuys").val()
+//     console.log(a)
+//   } else {
+//     let a = $(".increaseSell").val()
+//     console.log(a)
+//   }
+// }
+
+// if (document.getElementById('increaseBuy').checked) {
+//   console.log("buy")
+// } else if (document.getElementById('increaseSell').checked) {
+//   console.log("sell")
+// }

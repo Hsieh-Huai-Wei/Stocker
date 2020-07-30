@@ -1109,13 +1109,23 @@ function renderList() {
     let date = localStorage.getItem("filterDate");
     console.log(data);
 
+    let graph = "";
+    if (data.inf.graph === "reverseV") {
+      graph = "V型反轉";
+    } else if (data.inf.graph === "uptrend") {
+      graph = "上升趨勢線";
+    } else if (data.inf.graph === "downtrend") {
+      graph = "下跌趨勢線";
+    } else {
+      graph = "無";
+    }
     // user search condition
     var tr = $("<tr>").attr("class", `userOption`).append(
       $("<td>").attr("class", "userChoice").append(data.inf.start),
       $("<td>").attr("class", "userChoice").append(data.inf.end),
       $("<td>").attr("class", "userChoice").append(data.inf.upper),
       $("<td>").attr("class", "userChoice").append(data.inf.lower),
-      $("<td>").attr("class", "userChoice").append(data.inf.graph),
+      $("<td>").attr("class", "userChoice").append(graph),
       $("<td>").attr("class", "userChoice").append(data.inf.count),
       $("<td>").attr("class", "userChoice").append(data.inf.increase),
       $("<td>").attr("class", "userChoice").append(data.inf.decrease),
@@ -1142,11 +1152,7 @@ function renderList() {
     for (let i = 0; i < data.data.length; i++) {
       let priceLen = target + 1;
       let code = data.data[i].data[priceLen - 1].code;
-      let btn = $("<button>")
-        .text("Apply")
-        .click(function () {
-          backTest(code);
-        });
+      let inputCheck = $("<input>").attr('class', `save${i}`).attr("value", `${code}`).attr("type", "checkbox")
       var tr = $("<tr>")
         .attr("class", `userOption`)
         .append(
@@ -1168,7 +1174,7 @@ function renderList() {
           // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
           // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
           // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
-          $("<td>").attr("class", "userChoice").attr("value", `${i}`).append(btn)
+          $("<td>").attr("class", "userChoice").attr("value", `${i}`).append(inputCheck)
         );
       $(".resultTable").append(tr);
     }
@@ -1307,10 +1313,61 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        $(".member").text(`Sign up / Log in`);
+        alert("登入逾時，請重新登入");
+        window.location.replace("/signin.html");
       } else {
         console.log(body);
         $(".member").text(`${body.name}`);
       }
     });
+} else {
+  alert("請登入會員")
+  window.location.replace("/signin.html");
+}
+
+function save() {
+  $(".save").attr("disabled", true)
+  if (localStorage.getItem("optionResult")) {
+    let dataString = localStorage.getItem("optionResult");
+    let data = JSON.parse(dataString)
+    let num = data.data.length
+    let results = {};
+    results.data = [];
+    for (let i=0; i<num; i++) {
+      for (let j=0; j< num; j++) {
+        if ($(`.save${i}:checked`).val() === data.data[j].id) {
+          let code = $(`.save${i}:checked`).val();
+          console.log("找到了", code)
+          let result = {
+            id: data.data[j].id,
+            trend: data.data[j].trend,
+          }
+          results.data.push(result)
+        }
+      }
+    }
+    results.user = localStorage.getItem("userToken");
+    results.inf = data.inf;
+    if (results.data.length === 0) {
+      alert("請勾選要儲存的股票")
+      return;
+    }
+    console.log(results)
+    fetch("api/1.0/saveFilter", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(results),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        $(".save").attr("disabled", false)
+        if (body.error) {
+          alert(body.error);
+        } else {
+          alert("儲存OK")
+        }
+      });
+  }
 }

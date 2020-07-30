@@ -75,7 +75,13 @@ header > .feature input.search {
   background-position: 95% center;
   background-color: #262626;
   color: #ffffff;
+  
 }
+
+
+
+/*webkit瀏覽器專用*/
+.search ::-webkit-input-placeholder { color: red; }
 
 header > .feature > input.option {
   width: 110px;
@@ -179,7 +185,7 @@ main {
 
 .sign-up-container, .sign-in-container {
 	padding-top: 20px;
-	border: 1px solid #656565;
+  border: 1px solid #656565;
 }
 
 .sign-up-container, .sign-in-container, .section, h1 {
@@ -195,8 +201,15 @@ main {
 	color: #ffffff;
 	width: 280px;
 	height: 20px;
-	border: 1px solid transparent;
+  border: 1px solid transparent;
+  height: 30px;  
+  border-radius: 8px;
+  padding-left: 10px;
 }
+
+
+
+
 
 .sign-in-container > .section > a {
 	margin-top: 50px;
@@ -259,3 +272,16 @@ span {
 	border-radius: 8px;
 }
 
+
+::-webkit-input-placeholder { /* Chrome, Safari */
+
+  color: #ccc;
+
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
+}

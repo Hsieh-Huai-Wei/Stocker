@@ -1,3 +1,20 @@
+let today = new Date();
+let ey = (today.getFullYear()).toString();
+let em = (today.getMonth() + 1).toString();
+if (em.length === 1) {
+  em = "0" + em;
+}
+let ed = (today.getDate()).toString();
+if (ed.length === 1) {
+  ed = "0" + ed;
+}
+endDate = ey + "-" + em + "-" + ed;
+
+let c = "rgba(51, 51, 51, 0.902)";
+let r = "red";
+let g = "green";
+
+
 function backTestResult() {
   if (localStorage.getItem('backTestToken')) {
     let data = JSON.parse(localStorage.getItem('backTestToken'))
@@ -14,60 +31,140 @@ function backTestResult() {
     // console.log(typeof data.data[0].summary.earningRate);
 
     for (let i = 0; i < data.data.length; i++) {
-      let tr = $('<tr>').attr('class', `detail`).append(
-        $("<th>").attr('class', 'number').text("#"),
-        $("<th>").attr('class', 'date').text("Date"),
-        $("<th>").attr('class', 'situation').text("Trade"),
-        $("<th>").attr('class', 'count').text("Count"),
-        $("<th>").attr('class', 'value').text("Value"),
-        $("<th>").attr('class', 'cost').text("Cost"),
-        $("<th>").attr('class', 'property').text("Property"),
-        $("<th>").attr('class', 'profit').text("profit"),
-      );
-      let caseNum = $('<table>').attr('class', `case`).text(`case ${i + 1}`).append(tr)
-      for (let j = 0; j < data.data[i].history.length; j++) {
-        let tr = $('<tr>').attr('class', `detail`).append(
-          $("<th>").attr('class', 'number').append("<p>" + `${j + 1}` + "</p>"),
-          $("<th>").attr('class', 'date').append("<p>" + data.data[i].history[j].information + "</p>"),
-          $("<th>").attr('class', 'situation').append("<p>" + data.data[i].history[j].situation + "</p>"),
-          $("<th>").attr('class', 'count').append("<p>" + data.data[i].history[j].stock + "</p>"),
-          $("<th>").attr('class', 'value').append("<p>" + data.data[i].history[j].value + "</p>"),
-          $("<th>").attr('class', 'cost').append("<p>" + data.data[i].history[j].tradeCost + "</p>"),
-          $("<th>").attr('class', 'property').append("<p>" + data.data[i].history[j].property + "</p>"),
-          $("<th>").attr('class', 'profit').append("<p>" + data.data[i].history[j].profitPercent + "</p>"),
-        );
-        caseNum.append(tr)
-      }
 
-      $(".testResult").append(caseNum)
+
+      let tr = $('<tr>').attr('class', `itemName`).append(
+        $("<th>").attr('class', 'number').text("#"),
+        $("<th>").attr('class', 'date').text("日期"),
+        $("<th>").attr('class', 'situation').text("委託狀況"),
+        $("<th>").attr('class', 'count').text("張數"),
+        $("<th>").attr('class', 'value').text("股價"),
+        $("<th>").attr('class', 'cost').text("交易成本"),
+        $("<th>").attr('class', 'property').text("資產狀況"),
+        $("<th>").attr('class', 'profit').text("獲利"),
+      );
+      let thead = $("<thead>").append(tr);
+      let caption = $("<caption>").attr("class", `case${i+1}`).text(`Case #${i+1}`)
+      let table = $("<table>").attr("class", "detail");
+      // let tbody = $("<tbody>").attr("class", "data");
+      table.append(caption);
+      table.append(thead)
+      // table.append(tbody)
+
+
+      let tbody = $('<tbody>').attr('class', `detail${i+1}`)
+      for (let j = 0; j < data.data[i].history.length; j++) {
+        let tr;
+        if (data.data[i].history[j].situation === "buy") {
+          let profitPercentFont = data.data[i].history[j].profitPercent
+          if (profitPercentFont[0] !== "-") {
+            tr = $('<tr>').attr('class', `detail${i + 1}`).append(
+              $("<td>").attr('class', 'number').css("background-color", c).append(`${j + 1}`),
+              $("<td>").attr('class', 'date').css("background-color", c).append(data.data[i].history[j].information),
+              $("<td>").attr('class', 'situation').css("background-color", c).append(data.data[i].history[j].situation),
+              $("<td>").attr('class', 'count').css("background-color", c).append(data.data[i].history[j].stock),
+              $("<td>").attr('class', 'value').css("background-color", c).append(data.data[i].history[j].value),
+              $("<td>").attr('class', 'cost').css("background-color", c).append(data.data[i].history[j].tradeCost),
+              $("<td>").attr('class', 'property').css("background-color", c).append(data.data[i].history[j].property),
+              $("<td>").attr('class', 'profit').css("background-color", c).css("color", r).append(data.data[i].history[j].profitPercent),
+            );
+          } else {
+            tr = $('<tr>').attr('class', `detail${i + 1}`).append(
+              $("<td>").attr('class', 'number').css("background-color", c).append(`${j + 1}`),
+              $("<td>").attr('class', 'date').css("background-color", c).append(data.data[i].history[j].information),
+              $("<td>").attr('class', 'situation').css("background-color", c).append(data.data[i].history[j].situation),
+              $("<td>").attr('class', 'count').css("background-color", c).append(data.data[i].history[j].stock),
+              $("<td>").attr('class', 'value').css("background-color", c).append(data.data[i].history[j].value),
+              $("<td>").attr('class', 'cost').css("background-color", c).append(data.data[i].history[j].tradeCost),
+              $("<td>").attr('class', 'property').css("background-color", c).append(data.data[i].history[j].property),
+              $("<td>").attr('class', 'profit').css("background-color", c).css("color", g).append(data.data[i].history[j].profitPercent),
+            );
+          }
+
+        } else {
+          let profitPercentFont = data.data[i].history[j].profitPercent
+          if (profitPercentFont[0] !== "-") {
+            tr = $('<tr>').attr('class', `detail${i + 1}`).append(
+              $("<td>").attr('class', 'number').append(`${j + 1}`),
+              $("<td>").attr('class', 'date').append(data.data[i].history[j].information),
+              $("<td>").attr('class', 'situation').append(data.data[i].history[j].situation),
+              $("<td>").attr('class', 'count').append(data.data[i].history[j].stock),
+              $("<td>").attr('class', 'value').append(data.data[i].history[j].value),
+              $("<td>").attr('class', 'cost').append(data.data[i].history[j].tradeCost),
+              $("<td>").attr('class', 'property').append(data.data[i].history[j].property),
+              $("<td>").attr('class', 'profit').css("color", r).append(data.data[i].history[j].profitPercent),
+            );
+          } else {
+            tr = $('<tr>').attr('class', `detail${i + 1}`).append(
+              $("<td>").attr('class', 'number').append(`${j + 1}`),
+              $("<td>").attr('class', 'date').append(data.data[i].history[j].information),
+              $("<td>").attr('class', 'situation').append(data.data[i].history[j].situation),
+              $("<td>").attr('class', 'count').append(data.data[i].history[j].stock),
+              $("<td>").attr('class', 'value').append(data.data[i].history[j].value),
+              $("<td>").attr('class', 'cost').append(data.data[i].history[j].tradeCost),
+              $("<td>").attr('class', 'property').append(data.data[i].history[j].property),
+              $("<td>").attr('class', 'profit').css("color", g).append(data.data[i].history[j].profitPercent),
+            );
+          }
+        }
+        tbody.append(tr)
+      }
+      table.append(tbody)
+
+      $(".testResult").append(table)
     }
 
-    let tr = $('<tr>').attr('class', `detail`).append(
-      $("<th>").attr('class', 'case').text(`Case #`),
-      $("<th>").attr('class', 'qty').text("Stock qty"),
-      $("<th>").attr('class', 'income').text("Income"),
-      $("<th>").attr('class', 'cost').text("Trade cost"),
-      $("<th>").attr('class', 'property').text("Property"),
-      $("<th>").attr('class', 'profit').text("Profit"),
-      $("<th>").attr('class', 'save').text("Save"),
-    );
 
-    let summaryNum = $('<table>').attr('class', `detail`).append(tr)
+
+    // let tr = $('<tr>').attr('class', `detail`).append(
+    //   $("<th>").attr('class', 'case').text(`Case #`),
+    //   $("<th>").attr('class', 'qty').text("Stock qty"),
+    //   $("<th>").attr('class', 'income').text("Income"),
+    //   $("<th>").attr('class', 'cost').text("Trade cost"),
+    //   $("<th>").attr('class', 'property').text("Property"),
+    //   $("<th>").attr('class', 'profit').text("Profit"),
+    //   $("<th>").attr('class', 'save').text("Save"),
+    // );
+
+    // let summaryNum = $('<table>').attr('class', `detail`).append(tr)
 
     for (let i = 0; i < data.data.length; i++) {
-      let tr = $('<tr>').attr('class', `detail`).append(
-        $("<th>").attr('class', 'case').append("<p>" + `case #${i + 1}` + "</p>"),
-        $("<th>").attr('class', 'qty').append("<p>" + data.data[i].summary.finalStock + "</p>"),
-        $("<th>").attr('class', 'income').append("<p>" + data.data[i].summary.income + "</p>"),
-        $("<th>").attr('class', 'cost').append("<p>" + data.data[i].summary.tradeCost + "</p>"),
-        $("<th>").attr('class', 'property').append("<p>" + data.data[i].summary.totalAssets + "</p>"),
-        $("<th>").attr('class', 'profit').append("<p>" + data.data[i].summary.earningRate + "</p>"),
-        $("<input>").attr('class', 'save').attr("type", "checkbox")
-      );
-      summaryNum.append(tr)
+      let earningRateFont = (data.data[i].summary.earningRate).toString()
+      if (earningRateFont[0] !== "-") {
+        let inputCheck = $("<input>").attr('class', `save${i + 1}`).attr("type", "checkbox").attr("value", `case${i+1}`)
+        let tr = $('<tr>').attr('class', `summaryData${i + 1}`).append(
+          $("<td>").attr('class', 'case').append(`case #${i + 1}`),
+          $("<td>").attr('class', 'code').append(data.data[i].case.code),
+          $("<td>").attr('class', 'date').append(data.data[i].case.startDate + "</br>" + "~" + "</br>" + data.data[i].case.endDate),
+          $("<td>").attr('class', 'qty').append(data.data[i].summary.finalStock),
+          $("<td>").attr('class', 'qty').append(data.data[i].summary.stockValue),
+          $("<td>").attr('class', 'income').append(data.data[i].summary.tradeCost),
+          $("<td>").attr('class', 'cost').append(data.data[i].summary.totalAssets),
+          $("<td>").attr('class', 'property').append(data.data[i].summary.income),
+          $("<td>").attr('class', 'profit').css("color", r).append(data.data[i].summary.earningRate),
+          $("<td>").attr('class', 'save').append(inputCheck)
+        );
+        $(".summaryData").append(tr)
+      } else {
+        let inputCheck = $("<input>").attr('class', `save${i + 1}`).attr("type", "checkbox")
+        let tr = $('<tr>').attr('class', `summaryData${i + 1}`).append(
+          $("<td>").attr('class', 'case').append(`case #${i + 1}`),
+          $("<td>").attr('class', 'code').append(data.data[i].case.code),
+          $("<td>").attr('class', 'date').append(data.data[i].case.startDate + "</br>" + "~" + "</br>" + data.data[i].case.endDate),
+          $("<td>").attr('class', 'qty').append(data.data[i].summary.finalStock),
+          $("<td>").attr('class', 'qty').append(data.data[i].summary.stockValue),
+          $("<td>").attr('class', 'income').append(data.data[i].summary.tradeCost),
+          $("<td>").attr('class', 'cost').append(data.data[i].summary.totalAssets),
+          $("<td>").attr('class', 'property').append(data.data[i].summary.income),
+          $("<td>").attr('class', 'profit').css("color", g).append(data.data[i].summary.earningRate),
+          $("<td>").attr('class', 'save').append(inputCheck)
+        );
+        $(".summaryData").append(tr)
+      }
+
     }
 
-    $(".summary").append(summaryNum)
+    // $(".summary").append(summaryNum)
 
   } else {
 
@@ -76,7 +173,7 @@ function backTestResult() {
   }
 }
 
-// backTestResult();
+backTestResult();
 
 function option() { 
   window.location.replace('../option.html')
@@ -84,13 +181,8 @@ function option() {
 function backTest() { 
   window.location.replace('../backTest.html')
  }
-function kBar() { }
-function line() { }
-function finance() { }
-function news() { }
-function information() { }
 
-getData();
+// getData();
 
 if (localStorage.getItem("userToken")) {
   const data = {
@@ -106,10 +198,22 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        $(".member").text(`Sign up / Log in`);
+        alert("登入逾時，請重新登入");
+        window.location.replace("/signin.html");
       } else {
         console.log(body);
         $(".member").text(`${body.name}`);
       }
     });
+} else {
+  alert("請登入會員")
+  window.location.replace("/signin.html");
+}
+
+function save(){
+  alert("Coming soon !!")
+}
+
+function again() {
+  window.location.replace('../backTest.html')
 }

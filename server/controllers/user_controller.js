@@ -217,16 +217,17 @@ const getUserProfile = async (req, res) => {
   decode = jwt.verify(req.body.token, secret)
   if (decode.exp > signInDate) {
     console.log("沒過期");
-    const sql = `SELECT number AS id, provider_id AS provider, name, email, picture FROM user WHERE email = "${decode.userEmail}" AND access_token = "${req.body.token}"`;
-    con.query(sql, function (err, result) {
-      if (err) { console.log(err) }
-      if (result.length === 0) {
-        res.status(404).json({ error: "email is not exist !" });
-        return;
-      } else {
-        res.status(200).json(result[0]);
-      }
-    });
+    let data = {
+      email: decode.userEmail,
+      token: req.body.token,
+    };
+    let result = await User.profile(data)
+    if (result.length === 0) {
+      res.status(404).json({ error: "email is not exist !" });
+      return;
+    } else {
+      res.status(200).json(result[0]);
+    }
   } else {
     res.status(404).json({ error: "登入逾時，請重新登入" });
   }
