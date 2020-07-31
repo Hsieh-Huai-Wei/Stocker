@@ -1,4 +1,20 @@
+localStorage.setItem("page", "backTest");
+
 function addCase() {
+
+  let today = new Date();
+  let ey = today.getFullYear().toString();
+  let em = (today.getMonth() + 1).toString();
+  if (em.length === 1) {
+    em = "0" + em;
+  }
+  let ed = today.getDate().toString();
+  if (ed.length === 1) {
+    ed = "0" + ed;
+  }
+  let endDate = ey + "-" + em + "-" + ed;
+  let sy = (today.getFullYear() - 1).toString();
+  let startDate = sy + "-" + em + "-" + ed;
 
   let num = $("#case").children(".title").length;
   console.log(num)
@@ -11,9 +27,9 @@ function addCase() {
       $("<div>").attr('class', `items`).text('股票名稱/代碼'),
       $("<input>").attr("type", "text").attr('class', `code${num + 1}`).attr("placeholder", "ex. 2330"),
       $("<div>").attr('class', `items`).text('開始日期'),
-      $("<input>").attr("type", "date").attr('class', `searchStartDay${num + 1}`),
+      $("<input>").attr("type", "date").attr('class', `searchStartDay${num + 1}`).val(startDate),
       $("<div>").attr('class', `items`).text('結束日期'),
-      $("<input>").attr("type", "date").attr("class", `searchEndDay${num + 1}`),
+      $("<input>").attr("type", "date").attr("class", `searchEndDay${num + 1}`).val(endDate),
       $("<div>").attr('class', `items`).text('資金(單位:千)'),
       $("<input>").attr("type", "text").attr("class", `property${num + 1}`).attr("placeholder", "ex. 100000"),
       $("<div>").attr('class', `items`).text('券商折扣(%)'),
@@ -51,7 +67,7 @@ function addCase() {
     $("#case").append(title);
     $("#case").append(userOption);
   } else {
-    $(".add").text("超過新增上限").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
+    $(".add").text("已達上限").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
   }
 }
 
@@ -153,16 +169,48 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        alert("登入逾時，請重新登入");
-        window.location.replace("/signin.html");
+        swal("登入逾時，請重新登入", {
+          buttons: {
+            cancel: "不要!",
+            catch: {
+              text: "好哦!",
+              value: "catch",
+            },
+          },
+        }).then((value) => {
+          switch (value) {
+            case "catch":
+              window.location.replace("../signin.html");
+              break;
+
+            default:
+              window.location.replace("../index.html");
+          }
+        });
       } else {
-        console.log(body);
+        $(".memberLink").attr("href", "./profile.html");
         $(".member").text(`${body.name}`);
       }
     });
 } else {
-  alert("請登入會員")
-  window.location.replace("/signin.html");
+  swal("請登入會員，激活此功能", {
+    buttons: {
+      cancel: "不要!",
+      catch: {
+        text: "好哦!",
+        value: "catch",
+      },
+    },
+  }).then((value) => {
+    switch (value) {
+      case "catch":
+        window.location.replace("../signin.html");
+        break;
+
+      default:
+        window.location.replace("../index.html");
+    }
+  });
 }
 
 
@@ -189,3 +237,8 @@ $(".search").on("keypress", function (e) {
     window.location.replace("../basic.html");
   }
 });
+
+function pageCheck() {
+  localStorage.setItem("page", "profile");
+  window.location.replace("../profile.html");
+}

@@ -1,3 +1,5 @@
+localStorage.setItem("page", "result");
+
 let today = new Date();
 let ey = (today.getFullYear()).toString();
 let em = (today.getMonth() + 1).toString();
@@ -198,16 +200,48 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        alert("登入逾時，請重新登入");
-        window.location.replace("/signin.html");
+        swal("登入逾時，請重新登入", {
+          buttons: {
+            cancel: "不要!",
+            catch: {
+              text: "好哦!",
+              value: "catch",
+            },
+          },
+        }).then((value) => {
+          switch (value) {
+            case "catch":
+              window.location.replace("../signin.html");
+              break;
+
+            default:
+              window.location.replace("../index.html");
+          }
+        });
       } else {
-        console.log(body);
+        $(".memberLink").attr("href", "./profile.html");
         $(".member").text(`${body.name}`);
       }
     });
 } else {
-  alert("請登入會員")
-  window.location.replace("/signin.html");
+  swal("請登入會員，激活此功能", {
+    buttons: {
+      cancel: "不要!",
+      catch: {
+        text: "好哦!",
+        value: "catch",
+      },
+    },
+  }).then((value) => {
+    switch (value) {
+      case "catch":
+        window.location.replace("../signin.html");
+        break;
+
+      default:
+        window.location.replace("../index.html");
+    }
+  });
 }
 
 function save(){
@@ -225,3 +259,8 @@ $(".search").on("keypress", function (e) {
     window.location.replace("../basic.html");
   }
 });
+
+function pageCheck() {
+  localStorage.setItem("page", "profile");
+  window.location.replace("../profile.html");
+}

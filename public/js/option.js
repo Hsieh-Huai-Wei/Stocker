@@ -1,3 +1,5 @@
+localStorage.setItem("page", "option");
+
 // GET DATA
 function filterData() {
 
@@ -89,7 +91,7 @@ function filterData() {
     .then((body) => {
       if (body.data.length === 0) {
         $(".alters").remove()
-        alert("無相符的股票，請重新選擇條件");
+        swal("無相符的股票，請重新選擇條件");
         $(".submit").val("送出").attr("disabled", false)
       } else {
         let data = JSON.stringify(body)
@@ -236,16 +238,48 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        alert("登入逾時，請重新登入");
-        window.location.replace("/signin.html");
+        swal("登入逾時，請重新登入", {
+          buttons: {
+            cancel: "不要!",
+            catch: {
+              text: "好哦!",
+              value: "catch",
+            },
+          },
+        }).then((value) => {
+          switch (value) {
+            case "catch":
+              window.location.replace("../signin.html");
+              break;
+
+            default:
+              window.location.replace("../index.html");
+          }
+        });
       } else {
-        console.log(body);
+        $(".memberLink").attr("href", "./profile.html");
         $(".member").text(`${body.name}`);
       }
     });
 } else {
-  alert("請登入會員")
-  window.location.replace("/signin.html");
+  swal("請登入會員，激活此功能", {
+    buttons: {
+      cancel: "不要!",
+      catch: {
+        text: "好哦!",
+        value: "catch",
+      },
+    },
+  }).then((value) => {
+    switch (value) {
+      case "catch":
+        window.location.replace("../signin.html");
+        break;
+
+      default:
+        window.location.replace("../index.html");
+    }
+  });
 }
 
 
@@ -288,3 +322,26 @@ function graphCheck() {
 }
 
 graphCheck();
+
+function pageCheck() {
+  localStorage.setItem("page", "profile");
+  window.location.replace("../profile.html");
+}
+
+
+function today () {
+  let now = new Date();
+  let ey = now.getFullYear().toString();
+  let em = (now.getMonth() + 1).toString();
+  if (em.length === 1) {
+    em = "0" + em;
+  }
+  let ed = now.getDate().toString();
+  if (ed.length === 1) {
+    ed = "0" + ed;
+  }
+  searchEndDay = ey + "-" + em + "-" + ed;
+  $(".searchEndDay").val(searchEndDay);
+}
+
+today()

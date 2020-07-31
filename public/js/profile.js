@@ -12,12 +12,28 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        alert("登入逾時，請重新登入")
-        window.location.replace("/signin.html");
+        swal("登入逾時，請重新登入", {
+          buttons: {
+            cancel: "不要!",
+            catch: {
+              text: "好哦!",
+              value: "catch",
+            },
+          },
+        }).then((value) => {
+          switch (value) {
+            case "catch":
+              window.location.replace("../signin.html");
+              break;
+
+            default:
+              window.location.replace("../index.html");
+          }
+        });
       } else {
-        console.log(body)
+        console.log(body);
         $(".member").text(`${body.name}`);
-        $(".name").text(`${body.name}`)
+        $(".name").text(`${body.name}`);
         $(".email").text(`${body.email}`);
       }
     });
@@ -48,8 +64,24 @@ if (localStorage.getItem("userToken")) {
       }
     });
 } else {
-  alert("請先登入會員");
-  window.location.replace("/signin.html");
+  swal("請登入會員", {
+    buttons: {
+      cancel: "不要!",
+      catch: {
+        text: "好哦!",
+        value: "catch",
+      },
+    },
+  }).then((value) => {
+    switch (value) {
+      case "catch":
+        window.location.replace("../signin.html");
+        break;
+
+      default:
+        window.location.replace("../index.html");
+    }
+  });
 }
 
 function option() { 

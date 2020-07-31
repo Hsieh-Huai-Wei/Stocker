@@ -1,3 +1,5 @@
+localStorage.setItem("page", "filter");
+
 var dim = {
   // 繪圖區
   width: 930,
@@ -1106,7 +1108,7 @@ function indicate() {
 
 
 function renderList() {
-  if (localStorage.getItem("optionResult") && localStorage.getItem("filterDate")) {
+  if (localStorage.getItem("optionResult")) {
     let data = JSON.parse(localStorage.getItem("optionResult"));
     let date = localStorage.getItem("filterDate");
     console.log(data);
@@ -1182,8 +1184,25 @@ function renderList() {
     }
     console.log("D")
   } else {
-    alert("還沒有選過篩選條件哦!");
-    window.location.replace("./option.html");
+    swal("還沒有選過篩選條件哦!", {
+      buttons: {
+        // cancel: "不要!",
+        catch: {
+          text: "好哦!",
+          value: "catch",
+        },
+      },
+    }).then((value) => {
+      switch (value) {
+        case "catch":
+          window.location.replace("./option.html");
+          break;
+
+        default:
+          window.location.replace("./option.html");
+          break;
+      }
+    });
   }
 }
 
@@ -1315,16 +1334,48 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        alert("登入逾時，請重新登入");
-        window.location.replace("/signin.html");
+        swal("登入逾時，請重新登入", {
+          buttons: {
+            cancel: "不要!",
+            catch: {
+              text: "好哦!",
+              value: "catch",
+            },
+          },
+        }).then((value) => {
+          switch (value) {
+            case "catch":
+              window.location.replace("../signin.html");
+              break;
+
+            default:
+              window.location.replace("../index.html");
+          }
+        });
       } else {
-        console.log(body);
+        $(".memberLink").attr("href", "./profile.html");
         $(".member").text(`${body.name}`);
       }
     });
 } else {
-  alert("請登入會員")
-  window.location.replace("/signin.html");
+  swal("請登入會員，激活此功能", {
+    buttons: {
+      cancel: "不要!",
+      catch: {
+        text: "好哦!",
+        value: "catch",
+      },
+    },
+  }).then((value) => {
+    switch (value) {
+      case "catch":
+        window.location.replace("../signin.html");
+        break;
+
+      default:
+        window.location.replace("../index.html");
+    }
+  });
 }
 
 function save() {
@@ -1351,7 +1402,8 @@ function save() {
     results.user = localStorage.getItem("userToken");
     results.inf = data.inf;
     if (results.data.length === 0) {
-      alert("請勾選要儲存的股票")
+      $(".save").attr("disabled", false);
+      swal("請勾選要儲存的股票");
       return;
     }
     console.log(results)
@@ -1366,10 +1418,15 @@ function save() {
       .then((body) => {
         $(".save").attr("disabled", false)
         if (body.error) {
-          alert(body.error);
+          swal(body.error);
         } else {
-          alert("儲存OK")
+          swal("儲存成功", "已加入您個人歷史紀錄", "success");
         }
       });
   }
+}
+
+function pageCheck() {
+  localStorage.setItem("page", "profile");
+  window.location.replace("../profile.html");
 }

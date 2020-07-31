@@ -43,7 +43,7 @@ function signUp () {
     .then((res) => res.json())
     .then((body) => {
       if (body.status !== undefined) {
-        alert(body.msg);
+        swal(body.msg);
       } else {
         const token = body.data.access_token;
         localStorage.setItem("userToken", token);
@@ -78,11 +78,31 @@ function signIn () {
     .then((res) => res.json())
     .then((body) => {
       if (body.status !== undefined) {
-        alert(body.msg);
+        swal(body.msg);
       } else {
+        
         const token = body.data.access_token;
         localStorage.setItem("userToken", token);
-        window.location.replace("/profile.html");
+        console.log(localStorage.getItem("page"));
+        console.log(localStorage.getItem("page") === "index");
+        if (localStorage.getItem("page")) {
+          let page = localStorage.getItem("page")
+          if (page === "index"){
+            window.location.replace("/index.html");
+          } else if (page === "basic"){
+            window.location.replace("/basic.html");
+          } else if (page === "option") {
+            window.location.replace("/option.html");
+          } else if (page === "filter"){
+            window.location.replace("/filter.html");
+          } else if (page === "backTest") {
+            window.location.replace("/backTest.html");
+          } else if (page === "result"){
+            window.location.replace("/result.html");
+          }
+        } else {
+          window.location.replace("/profile.html");
+        }
       }
     });
 
@@ -117,3 +137,8 @@ $(".search").on("keypress", function (e) {
     window.location.replace("../basic.html");
   }
 });
+
+function pageCheck() {
+  localStorage.setItem("page", "profile");
+  window.location.replace("../profile.html");
+}

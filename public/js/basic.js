@@ -1,3 +1,5 @@
+localStorage.setItem("page", "basic");
+
 var dim = {
   // 繪圖區
   width: 930,
@@ -956,6 +958,8 @@ async function getData() {
         startDate: startDate,
         endDate: endDate,
       };
+      $(".startDay").val(startDate);
+      $(".endDay").val(endDate);
       fetch(`api/1.0/singleStock`, {
         method: "POST",
         headers: new Headers({
@@ -966,7 +970,7 @@ async function getData() {
         .then((res) => res.json())
         .then((body) => {
           if (body.error) {
-            alert(body.error);
+            swal(body.error);
             $(".search").val("");
             return;
           }
@@ -996,7 +1000,7 @@ async function getDate() {
     startDate = $(".startDay").val();
     endDate = $(".endDay").val();
     if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1]))<1) {
-      alert("輸入範圍太小")
+      swal("找尋範圍太小，MACD 與 RSI 將無法正確顯示");
     }
   } else if ($(".startDay").val() === "" && $(".endDay").val() !== "") {
     let end = $(".endDay").val();
@@ -1019,10 +1023,10 @@ async function getDate() {
     endDate = ey + "-" + em + "-" + ed;
     startDate = $(".startDay").val();
     if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1])) < 1) {
-      alert("輸入範圍太小")
+      swal("找尋範圍太小，MACD 與 RSI 將無法正確顯示");
     }
   } else {
-    alert("請填寫日期");
+    swal("請填寫日期");
     return;
   }
 
@@ -1033,7 +1037,8 @@ async function getDate() {
     startDate: startDate,
     endDate: endDate,
   };
-
+  $(".startDay").val(startDate);
+  $(".endDay").val(endDate);
 
   fetch(`api/1.0/singleStock`, {
     method: "POST",
@@ -1045,7 +1050,7 @@ async function getDate() {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        alert(body.error);
+        swal(body.error);
         $(".search").val("");
         return;
       }
@@ -1178,14 +1183,17 @@ function userCheck () {
       .then((res) => res.json())
       .then((body) => {
         if (body.error) {
+          $(".memberLink").attr("href", "./signin.html");
           $(".member").text(`Sign up / Log in`);
         } else {
           console.log(body);
+          $(".memberLink").attr("href", "./profile.html");
           $(".member").text(`${body.name}`);
         }
       });
   } else {
-    $(".member").text("Log in / Sign Up")
+    $(".memberLink").attr("href", "./signin.html");
+    $(".member").text(`Sign up / Log in`);
   }
 }
 
@@ -1207,3 +1215,8 @@ $(function () {
     }
   });
 });
+
+function pageCheck() {
+  localStorage.setItem("page", "profile");
+  window.location.replace("../profile.html");
+}

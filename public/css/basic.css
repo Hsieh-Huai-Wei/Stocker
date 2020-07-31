@@ -132,7 +132,7 @@ header > .profile > .rank {
   font-size: 1em;
 }
 
-header > .profile > .member {
+header > .profile > a > .member {
   white-space: nowrap;
   width: auto;
   min-width: 40px;
@@ -152,6 +152,7 @@ header > .profile > .memberImg img {
   width: auto;
   height: 20px;
   margin-right: 8px;
+  margin-left: 10px;
 }
 /* main */
 main {
@@ -244,7 +245,7 @@ main {
   margin-right: 10px;
   font-size: 1em;
   padding-left: 3px;
-  padding-top: 5px;
+  padding-top: 2px;
 }
 /* 
 #chart, #candle, #line {
@@ -659,67 +660,37 @@ border-radius: 20px;
 
 /* ----------------------------------------- */
 
-.ui-tooltip, .arrow:after {
-  background: #ec7676; /*橢圓背景*/
-  border: 2px solid #ffffff; /*橢圓邊框*/
-  
+.swal-overlay--show-modal .swal-modal {
+  opacity: 1;
+  pointer-events: auto;
+  box-sizing: border-box;
+  -webkit-animation: showSweetAlert .3s;
+  animation: showSweetAlert .3s;
+  will-change: transform;
+  border: 1px solid #656565;
 }
 
-.ui-tooltip {
-  padding: 10px 20px; /*橢圓寬度*/
-  color: #ffffff; /*文字顏色*/
-  
-  /* background-color: #ec7676; */
-  border-radius: 20px; /*橢圓圓角*/
-  font: bold 14px "Helvetica Neue", Sans-Serif;
-  text-transform: uppercase;
-  box-shadow: 0 0 7px black;
-}
-.arrow {
-  width: 70px;  /*箭頭寬度*/
-  height: 16px; /*橢圓高度*/
-  overflow: hidden; /*箭頭是否被遮住*/
-  position: absolute;
-  left: 50%;
-  margin-left: -35px;
-  bottom: -16px;
-}
-.arrow.top {
-  top: -16px;
-  bottom: auto;
-}
-.arrow.left {
-  left: 20%;
-}
-.arrow:after {
-  content: "";
-  position: absolute;
-  left: 20px;
-  top: -20px;
-  width: 25px;
-  height: 25px;
-  box-shadow: 6px 5px 9px -9px black;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  tranform: rotate(45deg);
-}
-.arrow.top:after {
-  bottom: -20px;
-  top: auto;
+.swal-modal {
+  width: 360px;
+  background-color: #323232;
+  border-radius: 13px;
 }
 
-.ui-tooltip .ui-tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: red;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
+.swal-text:first-child {
+    margin-top: 40px;
+    margin-bottom: 25px;
+}
 
-    /* 定位 */
-    position: absolute;
-    z-index: 1;
+.swal-text {
+  width: 240px;
+  background-color: #323232;
+  color: #ffffff;
+  text-align: center;
+}
+
+.swal-button {
+  width: 85px;
+  padding: 4px 24px;
+  max-width: 150px;
+  margin-left: 10px;
 }

@@ -125,7 +125,7 @@ header > .profile > .rank {
   font-size: 1em;
 }
 
-header > .profile > .member {
+header > .profile > a > .member {
   white-space: nowrap;
   width: auto;
   min-width: 40px;
@@ -145,6 +145,7 @@ header > .profile > .memberImg img {
   width: auto;
   height: 20px;
   margin-right: 8px;
+  margin-left: 10px;
 }
 
 /* main */

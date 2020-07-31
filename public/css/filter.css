@@ -125,7 +125,7 @@ header > .profile > .rank {
   font-size: 1em;
 }
 
-header > .profile > .member {
+header > .profile > a > .member {
   white-space: nowrap;
   width: auto;
   min-width: 40px;
@@ -145,6 +145,7 @@ header > .profile > .memberImg img {
   width: auto;
   height: 20px;
   margin-right: 8px;
+  margin-left: 10px;
 }
 /* main */
 main {
@@ -757,4 +758,83 @@ header > .feature > input.option:hover {
 }
 header > .feature > input.backtest:hover {
   cursor: pointer;
+}
+
+.swal-overlay--show-modal .swal-modal {
+  opacity: 1;
+  pointer-events: auto;
+  box-sizing: border-box;
+  -webkit-animation: showSweetAlert .3s;
+  animation: showSweetAlert .3s;
+  will-change: transform;
+  border: 1px solid #656565;
+}
+
+.swal-modal {
+  width: 360px;
+  background-color: #323232;
+  border-radius: 13px;
+}
+
+.swal-text:first-child {
+    margin-top: 40px;
+    margin-bottom: 25px;
+}
+
+.swal-text {
+  width: 240px;
+  background-color: #323232;
+  color: #ffffff;
+  text-align: center;
+}
+
+.swal-button {
+  width: 85px;
+  padding: 4px 24px;
+  max-width: 150px;
+  margin-left: 10px;
+}
+
+.swal-title {
+  color: #ffffff;
+  background-color: #323232;
+}
+
+.swal-icon--success:before {
+  background-color: #323232;
+  /* display: none; */
+}
+
+.swal-icon--success:after {
+  background-color: #323232;
+  /* display: none; */
+}
+
+.swal-icon--success__ring {
+  background: rgba(50,50,50, 0.0);
+  color: red; 
+  /* display: none; */
+  /* background-color: red; */
+  border-color: rgb(8, 230, 126);
+  opacity: 0.3;
+}
+
+.swal-icon--success__hide-corners {
+  background-color: #323232;
+  /* display: none; */
+}
+
+.swal-icon--success__line--tip {
+  background: rgb(8, 230, 126);
+  /* display: none; */
+}
+
+.swal-icon--success__line--long {
+  background: rgb(8, 230, 126);
+  /* display: none; */
+}
+
+.swal-icon--success {
+    border-color: rgb(8, 230, 126);
+    background-color: #323232;
 }
