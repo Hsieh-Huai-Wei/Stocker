@@ -181,3 +181,11 @@ if (localStorage.getItem("userToken")) {
 // } else if (document.getElementById('increaseSell').checked) {
 //   console.log("sell")
 // }
+
+$(".search").on("keypress", function (e) {
+  if (e.key === "Enter") {
+    let code = $(".search").val();
+    localStorage.setItem("homeCode", code)
+    window.location.replace("../basic.html");
+  }
+});

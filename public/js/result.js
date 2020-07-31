@@ -217,3 +217,11 @@ function save(){
 function again() {
   window.location.replace('../backTest.html')
 }
+
+$(".search").on("keypress", function (e) {
+  if (e.key === "Enter") {
+    let code = $(".search").val();
+    localStorage.setItem("homeCode", code)
+    window.location.replace("../basic.html");
+  }
+});

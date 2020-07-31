@@ -106,54 +106,62 @@ function backTest() {
   window.location.replace('../backTest.html')
 }
 
-// NAV GET DATA
-async function getData() {
-  if ($(".search").val() !== "") {
+$(".search").on("keypress", function (e) {
+  if (e.key === "Enter") {
     let code = $(".search").val();
-    localStorage.setItem("homeCode", code);
-    let startDate =""
-    let endDate =""
-
-    if (code === "") {
-      code = "2330";
-    }
-
-    let userSearch = {
-      stockCode: code,
-      startDate: startDate,
-      endDate: endDate,
-    };
-
-    fetch(`api/1.0/singleStock`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(userSearch),
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        if (body.error) {
-          alert(body.error);
-          return;
-        }
-        for (let i = 0; i < body.data.length; i++) {
-          let strDate = body.data[i].date.toString();
-          let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-          let m = strDate[4] + strDate[5] + "/";
-          let d = strDate[6] + strDate[7];
-          body.data[i].date = new Date(y + m + d);
-        }
-
-        let datas = JSON.stringify(body.data);
-        localStorage.setItem("home", datas);
-        window.location.replace("/index.html")
-      });
-
-  } else {
-    return;
+    localStorage.setItem("homeCode", code)
+    window.location.replace("../basic.html");
   }
-}
+});
+
+// NAV GET DATA
+// async function getData() {
+//   if ($(".search").val() !== "") {
+//     let code = $(".search").val();
+//     localStorage.setItem("homeCode", code);
+//     let startDate =""
+//     let endDate =""
+
+//     if (code === "") {
+//       code = "2330";
+//     }
+
+//     let userSearch = {
+//       stockCode: code,
+//       startDate: startDate,
+//       endDate: endDate,
+//     };
+
+//     fetch(`api/1.0/singleStock`, {
+//       method: "POST",
+//       headers: new Headers({
+//         "Content-Type": "application/json",
+//       }),
+//       body: JSON.stringify(userSearch),
+//     })
+//       .then((res) => res.json())
+//       .then((body) => {
+//         if (body.error) {
+//           alert(body.error);
+//           return;
+//         }
+//         for (let i = 0; i < body.data.length; i++) {
+//           let strDate = body.data[i].date.toString();
+//           let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
+//           let m = strDate[4] + strDate[5] + "/";
+//           let d = strDate[6] + strDate[7];
+//           body.data[i].date = new Date(y + m + d);
+//         }
+
+//         let datas = JSON.stringify(body.data);
+//         localStorage.setItem("home", datas);
+//         window.location.replace("/index.html")
+//       });
+
+//   } else {
+//     return;
+//   }
+// }
 
 
 // function graphCheck () {

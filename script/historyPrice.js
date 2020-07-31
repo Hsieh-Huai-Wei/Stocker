@@ -91,7 +91,7 @@ async function sleep(millis) {
 async function run() {
   try {
     // for (let i = 0; i < 1; i++) {
-    for (let i = 1; i < 17; i++) {
+    for (let i = 1; i < 15; i++) {
       const date = moment().subtract(i, "days").format("YYYYMMDD");
       console.log(date);
       const URL = `https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=${date}&type=ALLBUT0999`;

@@ -343,3 +343,10 @@ header > .feature > input.option:hover {
 header > .feature > input.backtest:hover {
   cursor: pointer;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-image: url(../imgs/calendarB.png);
+  width: 17px;
+  height: 17px;
+  /* margin-right: 5px; */
+}

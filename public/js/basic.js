@@ -675,7 +675,6 @@ async function volumeRender() {
     parseDate[i].date = new Date(oldDate);
     data.push(parseDate[i]);
   }
-  console.log(data);
   qq.ohlcSelection
     .append("g")
     .attr("class", "volume")
@@ -692,7 +691,7 @@ function renderInfor(data) {
   $(".name").remove();
   $(".price").remove();
   $(".change").remove();
-  console.log(data)
+
   let len = data.length;
   let infor = data[len - 1];
   let name = $("<div>")
@@ -735,53 +734,19 @@ async function kBarRender() {
   d3.select(".graph123").remove();
   qq = await d3init();
 
-  let localData = localStorage.getItem("choiceStockData");
-  let trendDatas = localStorage.getItem("choiceStockTrend");
-  let datas = JSON.parse(localData);
-  let trendData = JSON.parse(trendDatas);
+  let localData = localStorage.getItem("home");
 
-  await renderInfor(datas);
+  let parseDate = JSON.parse(localData);
+
+  await renderInfor(parseDate);
 
   let data = [];
 
-  for (let i = 0; i < datas.length; i++) {
-    let oldDate = datas[i].date;
-    datas[i].date = new Date(oldDate);
-    data.push(datas[i]);
+  for (let i = 0; i < parseDate.length; i++) {
+    let oldDate = parseDate[i].date;
+    parseDate[i].date = new Date(oldDate);
+    data.push(parseDate[i]);
   }
-
-  let trend = [];
-  for (let i = 0; i < trendData.length; i++) {
-
-    let startOldDates = (trendData[i].startDate).toString();
-    let endOldDates = (trendData[i].endDate).toString();
-    let startDate = startOldDates[0] + startOldDates[1] + startOldDates[2] + startOldDates[3] + '/' + startOldDates[4] + startOldDates[5] + '/' + startOldDates[6] + startOldDates[7];
-    let endDate = endOldDates[0] + endOldDates[1] + endOldDates[2] + endOldDates[3] + '/' + endOldDates[4] + endOldDates[5] + '/' + endOldDates[6] + endOldDates[7];
-
-    trendData[i].startDate = new Date(startDate);
-    trendData[i].endDate = new Date(endDate);
-    trendData[i].startPrice = trendData[i].startPrice;
-    trendData[i].endPrice = trendData[i].endPrice;
-
-    trend.push(trendData[i]);
-  }
-  console.log(trend)
-  let trendlineData = [];
-  for (let i = 0; i < trend.length; i++) {
-    let index = {
-      start: {
-        date: trend[i].startDate,
-        value: trend[i].startPrice,
-      },
-      end: {
-        date: trend[i].endDate,
-        value: trend[i].endPrice,
-      }
-    }
-    trendlineData.push(index)
-  }
-
-  console.log(trendlineData)
 
   qq.ohlcSelection
     .append("g")
@@ -796,7 +761,6 @@ async function kBarRender() {
 
   qq.x.domain(techan.scale.plot.time(data).domain());
   qq.y.domain(techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain());
-
   qq.yPercent.domain(
     techan.scale.plot.percent(qq.y, accessor(data[indicatorPreRoll])).domain()
   );
@@ -820,13 +784,11 @@ async function kBarRender() {
   qq.svg.select("g.crosshair.ohlc").call(qq.ohlcCrosshair).call(qq.zoom);
   qq.svg.select("g.crosshair.macd").call(qq.macdCrosshair).call(qq.zoom);
   qq.svg.select("g.crosshair.rsi").call(qq.rsiCrosshair).call(qq.zoom);
-  qq.svg.select("g.trendlines").datum(trendlineData).call(qq.trendline).call(qq.trendline.drag);
 
   // Stash for zooming
   zoomableInit = qq.x.zoomable().domain([indicatorPreRoll, data.length]).copy(); // Zoom in a little to hide indicator preroll
   yInit = qq.y.copy();
   yPercentInit = qq.yPercent.copy();
-  console.log("kbarOK");
   draw(qq);
 }
 
@@ -843,51 +805,16 @@ async function closeRender() {
   d3.select(".graph123").remove();
   qq = await d3init();
 
-  let localData = localStorage.getItem("choiceStockData");
-  let trendDatas = localStorage.getItem("choiceStockTrend");
-  let datas = JSON.parse(localData);
-  let trendData = JSON.parse(trendDatas);
+  let localData = localStorage.getItem("home");
+
+  let parseDate = JSON.parse(localData);
 
   let data = [];
-
-  for (let i = 0; i < datas.length; i++) {
-    let oldDate = datas[i].date;
-    datas[i].date = new Date(oldDate);
-    data.push(datas[i]);
+  for (let i = 0; i < parseDate.length; i++) {
+    let oldDate = parseDate[i].date;
+    parseDate[i].date = new Date(oldDate);
+    data.push(parseDate[i]);
   }
-
-  let trend = [];
-  for (let i = 0; i < trendData.length; i++) {
-
-    let startOldDates = (trendData[i].startDate).toString();
-    let endOldDates = (trendData[i].endDate).toString();
-    let startDate = startOldDates[0] + startOldDates[1] + startOldDates[2] + startOldDates[3] + '/' + startOldDates[4] + startOldDates[5] + '/' + startOldDates[6] + startOldDates[7];
-    let endDate = endOldDates[0] + endOldDates[1] + endOldDates[2] + endOldDates[3] + '/' + endOldDates[4] + endOldDates[5] + '/' + endOldDates[6] + endOldDates[7];
-
-    trendData[i].startDate = new Date(startDate);
-    trendData[i].endDate = new Date(endDate);
-    trendData[i].startPrice = trendData[i].startPrice;
-    trendData[i].endPrice = trendData[i].endPrice;
-
-    trend.push(trendData[i]);
-  }
-  console.log(trend)
-  let trendlineData = [];
-  for (let i = 0; i < trend.length; i++) {
-    let index = {
-      start: {
-        date: trend[i].startDate,
-        value: trend[i].startPrice,
-      },
-      end: {
-        date: trend[i].endDate,
-        value: trend[i].endPrice,
-      }
-    }
-    trendlineData.push(index)
-  }
-
-  console.log(trendlineData)
 
   qq.ohlcSelection
     .append("g")
@@ -924,7 +851,7 @@ async function closeRender() {
   qq.svg.select("g.crosshair.ohlc").call(qq.ohlcCrosshair).call(qq.zoom);
   qq.svg.select("g.crosshair.macd").call(qq.macdCrosshair).call(qq.zoom);
   qq.svg.select("g.crosshair.rsi").call(qq.rsiCrosshair).call(qq.zoom);
-  qq.svg.select("g.trendlines").datum(trendlineData).call(qq.trendline).call(qq.trendline.drag);
+
   // Stash for zooming
   zoomableInit = qq.x.zoomable().domain([indicatorPreRoll, data.length]).copy(); // Zoom in a little to hide indicator preroll
   yInit = qq.y.copy();
@@ -935,9 +862,9 @@ async function closeRender() {
 
 //設定當移動的時候要顯示的文字
 async function move(coords, index) {
-  let datas = localStorage.getItem("choiceStockData");
+  let datas = localStorage.getItem("home");
   let data = JSON.parse(datas);
-  
+
   var i;
   for (i = 0; i < data.length; i++) {
     if (coords.x.toString() === new Date(data[i].date).toString()) {
@@ -1001,70 +928,153 @@ async function draw(qq) {
   qq.svg.select("g.tradearrow").call(qq.tradearrow.refresh);
 }
 
+let currentCode = "2330";
+let currentName = "台積電";
+
 // NAV GET DATA
-// async function getData() {
-//   if ($(".search").val() !== "") {
-//     let code = $(".search").val();
-//     localStorage.setItem("homeCode", code);
-//     let startDate = "";
-//     let endDate = "";
+async function getData() {
+  if ($(".search").val() !== "") {
+    let searchCode = $(".search").val()
+    localStorage.setItem("homeCode", searchCode)
+    if ($(".search").val() !== currentCode || $(".search").val() !== currentName) {
+      let code = $(".search").val();
+      let today = new Date();
+      let ey = (today.getFullYear()).toString();
+      let em = (today.getMonth() + 1).toString();
+      if (em.length === 1) {
+        em = "0" + em;
+      }
+      let ed = (today.getDate()).toString();
+      if (ed.length === 1) {
+        ed = "0" + ed;
+      }
+      let endDate = ey + "-" + em + "-" + ed;
+      let sy = (today.getFullYear() - 1).toString()
+      let startDate = sy + "-" + em + "-" + ed;
+      let userSearch = {
+        stockCode: code,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      fetch(`api/1.0/singleStock`, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(userSearch),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.error) {
+            alert(body.error);
+            $(".search").val("");
+            return;
+          }
+          for (let i = 0; i < body.data.length; i++) {
+            let strDate = body.data[i].date.toString();
+            let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
+            let m = strDate[4] + strDate[5] + "/";
+            let d = strDate[6] + strDate[7];
+            body.data[i].date = new Date(y + m + d);
+          }
+          currentCode = body.data[0].code;
+          currentName = body.data[0].name;
+          let datas = JSON.stringify(body.data);
+          localStorage.setItem("home", datas);
+          kBarRender();
+        });
+    }
+  }
+}
 
-//     if (code === "") {
-//       code = "2330";
-//     }
+async function getDate() {
 
-//     let userSearch = {
-//       stockCode: code,
-//       startDate: startDate,
-//       endDate: endDate,
-//     };
+  let startDate;
+  let endDate;
 
-//     fetch(`api/1.0/singleStock`, {
-//       method: "POST",
-//       headers: new Headers({
-//         "Content-Type": "application/json",
-//       }),
-//       body: JSON.stringify(userSearch),
-//     })
-//       .then((res) => res.json())
-//       .then((body) => {
-//         if (body.error) {
-//           alert(body.error);
-//           return;
-//         }
-//         for (let i = 0; i < body.data.length; i++) {
-//           let strDate = body.data[i].date.toString();
-//           let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-//           let m = strDate[4] + strDate[5] + "/";
-//           let d = strDate[6] + strDate[7];
-//           body.data[i].date = new Date(y + m + d);
-//         }
+  if ($(".startDay").val() !== "" && $(".endDay").val() !=="") {
+    startDate = $(".startDay").val();
+    endDate = $(".endDay").val();
+    if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1]))<1) {
+      alert("輸入範圍太小")
+    }
+  } else if ($(".startDay").val() === "" && $(".endDay").val() !== "") {
+    let end = $(".endDay").val();
+    let sy = ((end.split("-")[0])-1).toString();
+    let sm = ((end.split("-")[1])).toString();
+    let sd = ((end.split("-")[2])).toString();
+    startDate = sy+"-"+sm+"-"+sd;
+    endDate = $(".endDay").val();
+  } else if ($(".startDay").val() !== "" && $(".endDay").val() === "") {
+    let today = new Date();
+    let ey = (today.getFullYear()).toString();
+    let em = (today.getMonth() + 1).toString();
+    if (em.length === 1) {
+      em = "0" + em;
+    }
+    let ed = (today.getDate()).toString();
+    if (ed.length === 1) {
+      ed = "0" + ed;
+    }
+    endDate = ey + "-" + em + "-" + ed;
+    startDate = $(".startDay").val();
+    if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1])) < 1) {
+      alert("輸入範圍太小")
+    }
+  } else {
+    alert("請填寫日期");
+    return;
+  }
 
-//         let datas = JSON.stringify(body.data);
-//         localStorage.setItem("home", datas);
-//         window.location.replace("/index.html");
-//       });
-//   } else {
-//     return;
-//   }
-// }
+  let code = currentCode;
+   
+  let userSearch = {
+    stockCode: code,
+    startDate: startDate,
+    endDate: endDate,
+  };
 
+
+  fetch(`api/1.0/singleStock`, {
+    method: "POST",
+    headers: new Headers({
+      "Content-Type": "application/json",
+    }),
+    body: JSON.stringify(userSearch),
+  })
+    .then((res) => res.json())
+    .then((body) => {
+      if (body.error) {
+        alert(body.error);
+        $(".search").val("");
+        return;
+      }
+      for (let i = 0; i < body.data.length; i++) {
+        let strDate = body.data[i].date.toString();
+        let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
+        let m = strDate[4] + strDate[5] + "/";
+        let d = strDate[6] + strDate[7];
+        body.data[i].date = new Date(y + m + d);
+      }
+      currentCode = body.data[0].code;
+      currentName = body.data[0].name;
+      let datas = JSON.stringify(body.data);
+      localStorage.setItem("home", datas);
+      kBarRender();
+    });
+}
 
 function option() {
   window.location.replace("../option.html");
 }
 
-function backTest(code) {
-  localStorage.setItem("backCode", code);
+function backTest() {
   window.location.replace("../backTest.html");
 }
 
-
 $(".search").on("keypress", function (e) {
   if (e.key === "Enter") {
-    let code = $(".search").val();
-    localStorage.setItem("homeCode", code)
-    window.location.replace("../basic.html");
+    getData();
   }
 });
 
@@ -1094,282 +1104,106 @@ function checkMA() {
 }
 
 function indicate() {
-  let display = $(".indicate").css("display");
+  let display = $('.indicate').css("display");
   if (display === "none") {
-    $(".indicate").css("display", "block");
+    $('.indicate').css("display", "block")
   } else {
-    $(".indicate").css("display", "none");
+    $('.indicate').css("display", "none")
   }
 }
 
-// --------------------------------------------
+// $("body").click((e)=>{
+//   console.log($(e.target).is($('#indicator')))
+//   console.log($('.indicator').has($(e.target)))
+  
+//   if ( $('.indicator').has($(e.target)).length > 0){
+//     console.log('===========================inside=============================')
+//     $('.indicator').css("display", "block")
+//   }else{
+//     if ($(e.target).is($('#indicator')) && $('.indicator').css("display")=="block"){
+//       console.log('=========================btn hide=============================')
+//       $('.indicator').css("display", "none")
+//     }else{
+//       $('.indicator').css("display", "block")
+//     }
+//   }
+// })
+
+// $("body").click((e) => {
+//   if ($(e.target).attr('class') == 'indicator' || $(e.target).attr('id') == 'indicator') {
+//     console.log('===========================inside=============================')
+//     $('.indicator').css("display", "block")
+//   } else {
+//     $('.indicator').css("display", "none")
+//   }
+
+// })
 
 
-function renderList() {
-  if (localStorage.getItem("optionResult") && localStorage.getItem("filterDate")) {
-    let data = JSON.parse(localStorage.getItem("optionResult"));
-    let date = localStorage.getItem("filterDate");
-    console.log(data);
+// function defaultData() {
+//   $(".search").val("2330")
+//     getData();
+// }
 
-    let graph = "";
-    if (data.inf.graph === "reverseV") {
-      graph = "V型反轉";
-    } else if (data.inf.graph === "uptrend") {
-      graph = "上升趨勢線";
-    } else if (data.inf.graph === "downtrend") {
-      graph = "下跌趨勢線";
-    } else {
-      graph = "無";
-    }
-    // user search condition
-    var tr = $("<tr>").attr("class", `userOption`).append(
-      $("<td>").attr("class", "userChoice").append(data.inf.start),
-      $("<td>").attr("class", "userChoice").append(data.inf.end),
-      $("<td>").attr("class", "userChoice").append(data.inf.upper),
-      $("<td>").attr("class", "userChoice").append(data.inf.lower),
-      $("<td>").attr("class", "userChoice").append(graph),
-      $("<td>").attr("class", "userChoice").append(data.inf.count),
-      $("<td>").attr("class", "userChoice").append(data.inf.increase),
-      $("<td>").attr("class", "userChoice").append(data.inf.decrease),
-      // $("<td>").attr("class", "userChoice").append(data.inf.rank),
-      // $("<td>").attr("class", "userChoice").append(data.inf.high)
-    );
-    $("#userOption").append(tr);
-
-    let target = 0;
-    for (let i = 0; i < data.data[0].data.length; i++) {
-      if (data.data[0].data[i].date.toString() === date) {
-        target += i;
-        break;
-      }
-    }
-    console.log("A")
-    let currentDate = $("<div>").attr("id", "cDate").append(`${date}`);
-    $("#currentDate").append(currentDate);
-
-    for (let i = 0; i < data.data.length; i++) {
-      $("#recommend").remove();
-    }
-    console.log("B")
-    for (let i = 0; i < data.data.length; i++) {
-      let priceLen = target + 1;
-      let code = data.data[i].data[priceLen - 1].code;
-      let inputCheck = $("<input>").attr('class', `save${i}`).attr("value", `${code}`).attr("type", "checkbox")
-      var tr = $("<tr>")
-        .attr("class", `userOption`)
-        .append(
-          $("<td>").attr("class", "userChoice").attr("class", `code${i}`).click(function () {
-              `${choiceStock(data.data[i].data)}`;
-            }).append(data.data[i].data[priceLen - 1].code),
-          $("<td>").attr("class", "userChoice").click(function () {
-              `${choiceStock(data.data[i].data)}`;
-            }).append(data.data[i].data[priceLen - 1].name),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].close),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].percentChange),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].volume),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].industry),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].total),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].fd),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].sitc),
-          $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dealers),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].mc),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
-          $("<td>").attr("class", "userChoice").attr("value", `${i}`).append(inputCheck)
-        );
-      $(".resultTable").append(tr);
-    }
-    console.log("D")
+function defaultData() {
+  if (localStorage.getItem("homeCode")) {
+    let code = localStorage.getItem("homeCode")
+    currentCode = code;
+    $(".search").val(code)
+    getData();
   } else {
-    alert("還沒有選過篩選條件哦!");
-    window.location.replace("./option.html");
+    localStorage.setItem("homeCode", "2330")
+    currentCode = "2330";
+    currentName = "台積電";
+    $(".search").val("2330")
+    getData();
   }
 }
 
-function choiceStock(data) {
-  // if (localStorage.getItem('currentStock')) {
-  //   if (localStorage.getItem('currentStock') === data[0].code) {
-  //     console.log('依樣')
-  //     return;
-  //   } else {
-  //     console.log('不一樣')
-  //     localStorage.setItem('currentStock', data[0].code)
-  //   }
-  // } else {
-  //   console.log('沒東西')
-  localStorage.setItem("filterCode", data[0].code);
-  // }
-
-  let optionStock = localStorage.getItem('optionResult');
-  let optionResult = JSON.parse(optionStock);
-  let choice = localStorage.getItem("filterCode");
-  let choiceStock = JSON.parse(choice);
-
-  for (let i = 0; i < optionResult.data.length; i++) {
-    if (Number(optionResult.data[i].id) === choiceStock) {
-      for (let j = 0; j < optionResult.data[i].data.length; j++) {
-        let strDate = optionResult.data[i].data[j].date.toString();
-        let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-        let m = strDate[4] + strDate[5] + "/";
-        let d = strDate[6] + strDate[7];
-        optionResult.data[i].data[j].date = new Date(y + m + d);
-      }
-      for (let j = 0; j < optionResult.data[i].trend.length; j++) {
-        for (let k = 0; k < optionResult.data[i].trend[j].length; k++) {
-          let startDate = optionResult.data[i].trend[j][k].startDate.toString();
-          let endDate = optionResult.data[i].trend[j][k].endDate.toString();
-          let sy =
-            startDate[0] + startDate[1] + startDate[2] + startDate[3] + "/";
-          let sm = startDate[4] + startDate[5] + "/";
-          let sd = startDate[6] + startDate[7];
-          let ey = endDate[0] + endDate[1] + endDate[2] + endDate[3] + "/";
-          let em = endDate[4] + endDate[5] + "/";
-          let ed = endDate[6] + endDate[7];
-          optionResult.data[i].trend[j][k].startDate = new Date(sy + sm + sd);
-          optionResult.data[i].trend[j][k].endDate = new Date(ey + em + ed);
-        }
-      }
+defaultData()
 
 
-      $(".name").remove();
-      $(".price").remove();
-      $(".change").remove();
-
-      let len = optionResult.data[0].data.length;
-      let infor = optionResult.data[0].data[len - 1];
-      let name = $("<div>")
-        .attr("class", "name")
-        .append(`${infor.name}(${infor.code}.TW)`);
-      let price = $("<div>")
-        .attr("class", "price")
-        .append(`${infor.close}`)
-        .css("color", "#ffffff");
-      let change = $("<div>")
-        .attr("class", "change")
-        .append(`${infor.change}` + " " + `(${infor.percentChange}%)`);
-
-      if (infor.change[0] !== "-") {
-        change.css("color", "red");
-      } else if (infor.change[0] === "0") {
-        change.css("color", "#ffffff");
-      } else {
-        change.css("color", "green");
-      }
-      $(".info").append(name).append(price).append(change);
-
-      console.log(optionResult.data[i]);
-      let choiceStockData = JSON.stringify(optionResult.data[i].data);
-      localStorage.setItem("choiceStockData", choiceStockData);
-      let choiceStockTrend = JSON.stringify(optionResult.data[i].trend);
-      localStorage.setItem("choiceStockTrend", choiceStockTrend);
-      break;
-    }
-  }
-  // console.log(choice)
-  kBarRender()
-}
-
-function filterData() {
-  let code = localStorage.getItem('currentStock');
-  let start = $(".startDay").val();
-  let end = $(".endDay").val();
-  let startDate =
-    start.split("-")[0] + start.split("-")[1] + start.split("-")[2];
-  let endDate = end.split("-")[0] + end.split("-")[1] + end.split("-")[2];
-
-  let userSearch = {
-    stockCode: code,
-    startDate: startDate,
-    endDate: endDate,
-  };
-
-  fetch(`api/1.0/singleStock`, {
-    method: "POST",
-    headers: new Headers({
-      "Content-Type": "application/json",
-    }),
-    body: JSON.stringify(userSearch),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      console.log(body.data)
-      kBarRender();
-    });
-}
-
-
-renderList();
-
-if (localStorage.getItem("userToken")) {
-  const data = {
-    token: localStorage.getItem("userToken"),
-  };
-  fetch("api/1.0/user/profile", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.error) {
-        alert("登入逾時，請重新登入");
-        window.location.replace("/signin.html");
-      } else {
-        console.log(body);
-        $(".member").text(`${body.name}`);
-      }
-    });
-} else {
-  alert("請登入會員")
-  window.location.replace("/signin.html");
-}
-
-function save() {
-  $(".save").attr("disabled", true)
-  if (localStorage.getItem("optionResult")) {
-    let dataString = localStorage.getItem("optionResult");
-    let data = JSON.parse(dataString)
-    let num = data.data.length
-    let results = {};
-    results.data = [];
-    for (let i=0; i<num; i++) {
-      for (let j=0; j< num; j++) {
-        if ($(`.save${i}:checked`).val() === data.data[j].id) {
-          let code = $(`.save${i}:checked`).val();
-          console.log("找到了", code)
-          let result = {
-            id: data.data[j].id,
-            trend: data.data[j].trend,
-          }
-          results.data.push(result)
-        }
-      }
-    }
-    results.user = localStorage.getItem("userToken");
-    results.inf = data.inf;
-    if (results.data.length === 0) {
-      alert("請勾選要儲存的股票")
-      return;
-    }
-    console.log(results)
-    fetch("api/1.0/saveFilter", {
+function userCheck () {
+  if (localStorage.getItem("userToken")) {
+    const data = {
+      token: localStorage.getItem("userToken"),
+    };
+    fetch("api/1.0/user/profile", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(results),
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((body) => {
-        $(".save").attr("disabled", false)
         if (body.error) {
-          alert(body.error);
+          $(".member").text(`Sign up / Log in`);
         } else {
-          alert("儲存OK")
+          console.log(body);
+          $(".member").text(`${body.name}`);
         }
       });
+  } else {
+    $(".member").text("Log in / Sign Up")
   }
 }
+
+userCheck()
+
+$(function () {
+  $(document).tooltip({
+    position: {
+      my: "center bottom-20",
+      at: "center top",
+      using: function (position, feedback) {
+        $(this).css(position);
+        $("<div>")
+          .addClass("arrow")
+          .addClass(feedback.vertical)
+          .addClass(feedback.horizontal)
+          .appendTo(this);
+      }
+    }
+  });
+});
