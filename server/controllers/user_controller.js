@@ -9,15 +9,15 @@ const signUp = async (req, res) => {
   const expirationDate = Math.floor(Date.now() / 1000) + 30; // 30 sec
   const signInDate = Math.floor(Date.now() / 1000);
   if (!req.body.name) {
-    res.json({ status: 404, msg: "User name cannot be empty" });
+    res.json({ status: 404, msg: "使用者名稱不得為空!" });
     // return;
     const err = new Error("verify fail");
     err.status = 403;
     next(err);
   } else if (!req.body.email) {
-    res.json({ status: 404, msg: "Email cannot be empty" });
+    res.json({ status: 404, msg: "信箱不可為空!" });
   } else if (!req.body.pwd || req.body.pwd.length < 6) {
-    res.json({ status: 404, msg: "Password cannot be empty or length less 6" });
+    res.json({ status: 404, msg: "密碼長度小於6位數!" });
   } else {
 
     let data = {
@@ -29,7 +29,7 @@ const signUp = async (req, res) => {
     let checkAccount = await User.signUpCheck(data);
 
     if (checkAccount.length > 0) {
-      res.json({ status: 404, msg: "account is already exist !!" });
+      res.json({ status: 404, msg: "帳號已存在!" });
     } else {
 
       const randomID = Math.floor(Math.random() * 10000) + 1;
@@ -79,11 +79,11 @@ const signIn = async (req, res) => {
   const expirationDate = Math.floor(Date.now() / 1000) + 3600; // 60 min
   const signInDate = Math.floor(Date.now() / 1000);
   if (!req.body.email) {
-    res.json({ status: 404, msg: "Email cannot be empty" });
+    res.json({ status: 404, msg: "信箱不可為空!" });
     return
   } else if (!req.body.pwd || req.body.pwd.length < 6) {
     // throw new Error("Password cannot be empty or length less 6");
-    res.json({ status: 404, msg: "Password cannot be empty or length less 6" });
+    res.json({ status: 404, msg: "密碼長度小於6位數!" });
     return
   } else {
     const userPwd = crypto
@@ -100,7 +100,7 @@ const signIn = async (req, res) => {
     if (checkAccount.length === 0) {
       res.json({
         status: 404,
-        msg: "email is not exist or password incorrect !",
+        msg: "信箱不存在或密碼錯誤!",
       });
     } else {
       const token = jwt.sign(
@@ -223,13 +223,13 @@ const getUserProfile = async (req, res) => {
     };
     let result = await User.profile(data)
     if (result.length === 0) {
-      res.status(404).json({ error: "email is not exist !" });
+      res.status(404).json({ error: "信箱不存在!" });
       return;
     } else {
       res.status(200).json(result[0]);
     }
   } else {
-    res.status(404).json({ error: "登入逾時，請重新登入" });
+    res.status(404).json({ error: "登入逾時，請重新登入!" });
   }
 };
 

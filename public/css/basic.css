@@ -1,6 +1,6 @@
 * {
   /* border: solid 1px red; */
-  background-color: #262626;
+
 }
 
 body {
@@ -9,6 +9,7 @@ body {
   font-family: "Noto Sans TC", "微軟正黑體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
+  background-color: #262626;
 }
 
 /* header */
@@ -246,6 +247,7 @@ main {
   font-size: 1em;
   padding-left: 3px;
   padding-top: 2px;
+  background-color: #262626;
 }
 /* 
 #chart, #candle, #line {
@@ -264,6 +266,7 @@ main {
   margin-right: 25px;
   font-size: 1em;
   padding-top: 5px;
+  background-color: #262626;
 }
 
 .indicate {
@@ -308,6 +311,7 @@ main {
   border: 1px solid #ffffff;
   border-radius: 10px;
   font-size: 0.9em;
+  background-color: #262626;
 }
 
 .dash {
@@ -323,6 +327,7 @@ main {
 
 .date input.endDay {
   margin-right: 20px;
+  background-color: #262626;
 }
 
 .submit {
@@ -693,4 +698,13 @@ border-radius: 20px;
   padding: 4px 24px;
   max-width: 150px;
   margin-left: 10px;
+}
+
+
+/* --------------------------- */
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
 }

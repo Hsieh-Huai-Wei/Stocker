@@ -1,6 +1,6 @@
 * {
   /* border: dotted 1px red; */
-  background-color: #262626;
+
 }
 
 body {
@@ -9,6 +9,7 @@ body {
   font-family: "Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
+  background-color: #262626;
 }
 
 /* header */
@@ -231,10 +232,10 @@ main {
   opacity: 1; /* Firefox */
 }
 
-span {
+/* span {
 	background-color: #323232;
 	font-size: 0.9em;
-}
+} */
 
 .overlay-left, .overlay-right  {
 	max-width: 452px;
@@ -242,7 +243,8 @@ span {
 	padding: 70px 30px;
 	border: 1px solid #ffffff;
 	border-radius: 30px;
-	height: 260px;
+  height: 260px;
+  background-color: #262626;
 }
 
 .overlay-left {
@@ -284,4 +286,12 @@ header > .feature > input.option:hover {
 }
 header > .feature > input.backtest:hover {
   cursor: pointer;
+}
+
+/* --------------------------- */
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
 }

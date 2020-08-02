@@ -595,7 +595,7 @@ async function d3init() {
 }
 
 async function smaAndema() {
-  let localData = localStorage.getItem("home");
+  let localData = localStorage.getItem("choiceStockData");
   let parseDate = JSON.parse(localData);
 
   let data = [];
@@ -668,7 +668,7 @@ async function volumeCancel() {
 }
 
 async function volumeRender() {
-  let localData = localStorage.getItem("home");
+  let localData = localStorage.getItem("choiceStockData");
   let parseDate = JSON.parse(localData);
 
   let data = [];
@@ -677,7 +677,6 @@ async function volumeRender() {
     parseDate[i].date = new Date(oldDate);
     data.push(parseDate[i]);
   }
-  console.log(data);
   qq.ohlcSelection
     .append("g")
     .attr("class", "volume")
@@ -1184,24 +1183,14 @@ function renderList() {
     }
     console.log("D")
   } else {
-    swal("還沒有選過篩選條件哦!", {
-      buttons: {
-        // cancel: "不要!",
-        catch: {
-          text: "好哦!",
-          value: "catch",
-        },
-      },
-    }).then((value) => {
-      switch (value) {
-        case "catch":
-          window.location.replace("./option.html");
-          break;
-
-        default:
-          window.location.replace("./option.html");
-          break;
-      }
+    Swal.fire({
+      title: "還沒有選過篩選條件哦!",
+      icon: "warning",
+      confirmButtonText: "好哦!",
+      reverseButtons: true,
+      allowOutsideClick: false,
+    }).then((result) => {
+      window.location.replace("./option.html");
     });
   }
 }
@@ -1334,22 +1323,22 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        swal("登入逾時，請重新登入", {
-          buttons: {
-            cancel: "不要!",
-            catch: {
-              text: "好哦!",
-              value: "catch",
-            },
-          },
-        }).then((value) => {
-          switch (value) {
-            case "catch":
-              window.location.replace("../signin.html");
-              break;
-
-            default:
-              window.location.replace("../index.html");
+        Swal.fire({
+          title: "登入逾時，請重新登入",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "好哦!",
+          cancelButtonText: "不要!",
+          reverseButtons: true,
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            window.location.replace("../signin.html");
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            window.location.replace("../index.html");
           }
         });
       } else {
@@ -1358,22 +1347,19 @@ if (localStorage.getItem("userToken")) {
       }
     });
 } else {
-  swal("請登入會員，激活此功能", {
-    buttons: {
-      cancel: "不要!",
-      catch: {
-        text: "好哦!",
-        value: "catch",
-      },
-    },
-  }).then((value) => {
-    switch (value) {
-      case "catch":
-        window.location.replace("../signin.html");
-        break;
-
-      default:
-        window.location.replace("../index.html");
+  Swal.fire({
+    title: "請登入會員，激活此功能",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "好哦!",
+    cancelButtonText: "不要!",
+    reverseButtons: true,
+    allowOutsideClick: false,
+  }).then((result) => {
+    if (result.value) {
+      window.location.replace("../signin.html");
+    } else {
+      window.location.replace("../index.html");
     }
   });
 }
@@ -1403,7 +1389,12 @@ function save() {
     results.inf = data.inf;
     if (results.data.length === 0) {
       $(".save").attr("disabled", false);
-      swal("請勾選要儲存的股票");
+      Swal.fire({
+        title: "請勾選要儲存的股票",
+        icon: "error",
+        confirmButtonText: "好哦!",
+        reverseButtons: true,
+      });
       return;
     }
     console.log(results)
@@ -1418,9 +1409,20 @@ function save() {
       .then((body) => {
         $(".save").attr("disabled", false)
         if (body.error) {
-          swal(body.error);
+          Swal.fire({
+            title: body.error,
+            icon: "error",
+            confirmButtonText: "好哦!",
+            reverseButtons: true,
+          });
         } else {
-          swal("儲存成功", "已加入您個人歷史紀錄", "success");
+          Swal.fire({
+            icon: "success",
+            title: "儲存成功",
+            text: "已加入您個人歷史紀錄",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       });
   }
@@ -1430,3 +1432,12 @@ function pageCheck() {
   localStorage.setItem("page", "profile");
   window.location.replace("../profile.html");
 }
+
+$(".chart").change(function () {
+  var t = $(this).val();
+  if (t === "candle") {
+    kBarRender();
+  } else if (t === "line") {
+    closeRender();
+  }
+});

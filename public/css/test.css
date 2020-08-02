@@ -1,0 +1,62 @@
+@import '~sweetalert2/src/variables';
+ @import './animations';
+ @import '~sweetalert2/src/sweetalert2';
+ .swal2-header {
+	 flex-direction: row;
+	 flex-wrap: wrap;
+	 justify-content: flex-start;
+	 margin-bottom: 8px;
+}
+ .swal2-title {
+	 font-weight: 300;
+	 line-height: 30px;
+}
+ .swal2-success-ring {
+	 display: none;
+}
+ .swal2-toast .swal2-header {
+	 margin: 0 !important;
+}
+ .swal2-progress-steps {
+	 align-items: center;
+	 justify-content: center;
+	 width: 100%;
+}
+ .swal2-toast .swal2-actions {
+	 margin: 0 !important;
+}
+ .swal2-toast .swal2-confirm, .swal2-toast .swal2-cancel {
+	 margin: 0 0 0 16px !important;
+	 padding: 0 !important;
+	 background: none;
+	 box-shadow: none !important;
+	 text-decoration: underline;
+}
+ .swal2-toast .swal2-title {
+	 font-weight: 400 !important;
+	 line-height: 13px;
+}
+ .swal2-icon {
+	 height: 32px;
+	 transform: scale(0.7) translateY(24px);
+	 border: 0;
+}
+ .swal2-icon.swal2-success {
+	 transform: scale(0.7) translateY(4px);
+}
+ .swal2-icon.swal2-error {
+	 transform: scale(0.7) translateY(8px);
+}
+ .swal2-success-circular-line-left {
+	 display: none !important;
+}
+ .swal2-popup.swal2-toast .swal2-icon * {
+	 animation: none !important;
+}
+ .swal2-toast .swal2-icon {
+	 transform: scale(0.7) translateY(-2px);
+}
+ .swal2-toast .swal2-icon.swal2-success {
+	 transform: scale(0.7) translateY(-5px);
+}
+ 

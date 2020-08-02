@@ -1,3 +1,5 @@
+// const { con } = require("../../util/dbcon");
+
 localStorage.setItem("page", "index")
 
 function userCheck() {
@@ -35,19 +37,19 @@ userCheck()
 
 function checkAuth(num) {
   if ($(".member").text() === `Sign up / Log in`) {
-    swal("請登入會員，激活此功能", {
-      buttons: {
-        cancel: "不要!",
-        catch: {
-          text: "好哦!",
-          value: "catch",
-        },
-      },
-    }).then((value) => {
-      switch (value) {
-        case "catch":
-          window.location.replace("../signin.html");
-          break;
+    Swal.fire({
+      title: "請登入會員，激活此功能",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "好哦!",
+      cancelButtonText: "不要!",
+      reverseButtons: true,
+      allowOutsideClick: false,
+    }).then((result) => {
+      if (result.value) {
+        window.location.replace("../signin.html");
+      } else {
+        window.location.replace("../index.html");
       }
     });
   } else if (num === 1) {
@@ -61,33 +63,3 @@ function pageCheck() {
   localStorage.setItem("page", "profile");
   window.location.replace("../profile.html");
 }
-
-// let timerInterval;
-
-// Swal.fire({
-//   title: "Auto close alert!",
-//   html: "I will close in <b></b> milliseconds.",
-//   // timer: 2000,
-//   timerProgressBar: true,
-//   allowOutsideClick: false,
-//   onBeforeOpen: () => {
-//     Swal.showLoading();
-//     timerInterval = setInterval(() => {
-//       const content = Swal.getContent();
-//       if (content) {
-//         const b = content.querySelector("b");
-//         if (b) {
-//           b.textContent = Swal.getTimerLeft();
-//         }
-//       }
-//     }, 100);
-//   },
-//   onClose: () => {
-//     clearInterval(timerInterval);
-//   },
-// }).then((result) => {
-//   /* Read more about handling dismissals below */
-//   if (result.dismiss === Swal.DismissReason.timer) {
-//     console.log("I was closed by the timer");
-//   }
-// });

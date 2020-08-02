@@ -718,20 +718,21 @@ function renderInfor(data) {
 }
 
 async function kBarRender() {
-  $("#realTime").css("border-buttom-color", "#656565");
-  $("#trend").css("border-bottom-color", "#ffffff");
-  $("#finance").css("border-buttom-color", "#656565");
-  $("#news").css("border-buttom-color", "#656565");
-  $("#information").css("border-buttom-color", "#656565");
+  // console.log("OK")
+  // $("#realTime").css("border-buttom-color", "#656565");
+  // $("#trend").css("border-bottom-color", "#ffffff");
+  // $("#finance").css("border-buttom-color", "#656565");
+  // $("#news").css("border-buttom-color", "#656565");
+  // $("#information").css("border-buttom-color", "#656565");
 
-  $("#realTime").css("color", "#656565");
-  $("#trend").css("color", "#ffffff");
-  $("#finance").css("color", "#656565");
-  $("#news").css("color", "#656565");
-  $("#information").css("color", "#656565");
+  // $("#realTime").css("color", "#656565");
+  // $("#trend").css("color", "#ffffff");
+  // $("#finance").css("color", "#656565");
+  // $("#news").css("color", "#656565");
+  // $("#information").css("color", "#656565");
 
-  $("#kBar").css("border-buttom-color", "1px solid #656565");
-  $("#line").css("border-buttom-color", "1px solid #656565");
+  // $("#kBar").css("border-buttom-color", "1px solid #656565");
+  // $("#line").css("border-buttom-color", "1px solid #656565");
 
   d3.select(".graph123").remove();
   qq = await d3init();
@@ -795,14 +796,20 @@ async function kBarRender() {
 }
 
 async function closeRender() {
-  $("#realTime").css("border-buttom", "1px solid #656565");
-  $("#trend").css("border-buttom", "1px solid #323232");
-  $("#finance").css("border-buttom", "1px solid #656565");
-  $("#news").css("border-buttom", "1px solid #656565");
-  $("#information").css("border-buttom", "1px solid #656565");
+  // $("#realTime").css("border-buttom-color", "#656565");
+  // $("#trend").css("border-bottom-color", "#ffffff");
+  // $("#finance").css("border-buttom-color", "#656565");
+  // $("#news").css("border-buttom-color", "#656565");
+  // $("#information").css("border-buttom-color", "#656565");
 
-  $("#kBar").css("border-buttom", "1px solid #656565");
-  $("#line").css("border-buttom", "1px solid #656565");
+  // $("#realTime").css("color", "#656565");
+  // $("#trend").css("color", "#ffffff");
+  // $("#finance").css("color", "#656565");
+  // $("#news").css("color", "#656565");
+  // $("#information").css("color", "#656565");
+
+  // $("#kBar").css("border-buttom-color", "1px solid #656565");
+  // $("#line").css("border-buttom-color", "1px solid #656565");
 
   d3.select(".graph123").remove();
   qq = await d3init();
@@ -811,7 +818,10 @@ async function closeRender() {
 
   let parseDate = JSON.parse(localData);
 
+  await renderInfor(parseDate);
+
   let data = [];
+
   for (let i = 0; i < parseDate.length; i++) {
     let oldDate = parseDate[i].date;
     parseDate[i].date = new Date(oldDate);
@@ -937,7 +947,6 @@ let currentName = "台積電";
 async function getData() {
   if ($(".search").val() !== "") {
     let searchCode = $(".search").val()
-    localStorage.setItem("homeCode", searchCode)
     if ($(".search").val() !== currentCode || $(".search").val() !== currentName) {
       let code = $(".search").val();
       let today = new Date();
@@ -970,10 +979,15 @@ async function getData() {
         .then((res) => res.json())
         .then((body) => {
           if (body.error) {
-            swal(body.error);
-            $(".search").val("");
-            return;
+            Swal.fire({
+              icon: "error",
+              title: "查無相符股票，請重新選擇條件",
+            }).then(()=>{
+              window.location.replace("/basic.html");
+              return;
+            });
           }
+          // localStorage.setItem("homeCode", searchCode);
           for (let i = 0; i < body.data.length; i++) {
             let strDate = body.data[i].date.toString();
             let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
@@ -999,8 +1013,24 @@ async function getDate() {
   if ($(".startDay").val() !== "" && $(".endDay").val() !=="") {
     startDate = $(".startDay").val();
     endDate = $(".endDay").val();
-    if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1]))<1) {
-      swal("找尋範圍太小，MACD 與 RSI 將無法正確顯示");
+    if ((Number(endDate.split('-')[0]) - Number(startDate.split('-')[0])) === 0) {
+      if (Number(endDate.split("-")[1]) - Number(startDate.split("-")[1]) < 2) {
+        Swal.fire({
+          icon: "error",
+          title: "找尋範圍太小，MACD 與 RSI 將無法正確顯示",
+        }).then(() => {
+          window.location.replace("/basic.html");
+        });
+        return;
+      }
+    } else if ((Number(endDate.split('-')[0]) - Number(startDate.split('-')[0])) < 0) {
+      Swal.fire({
+        icon: "error",
+        title: "找尋範圍錯誤，請重新選擇日期",
+      }).then(() => {
+        window.location.replace("/basic.html");
+      });
+      return;
     }
   } else if ($(".startDay").val() === "" && $(".endDay").val() !== "") {
     let end = $(".endDay").val();
@@ -1023,10 +1053,21 @@ async function getDate() {
     endDate = ey + "-" + em + "-" + ed;
     startDate = $(".startDay").val();
     if ((Number(endDate.split('-')[1]) - Number(startDate.split('-')[1])) < 1) {
-      swal("找尋範圍太小，MACD 與 RSI 將無法正確顯示");
+        Swal.fire({
+          icon: "error",
+          title: "找尋範圍太小，MACD 與 RSI 將無法正確顯示",
+        }).then(() => {
+          window.location.replace("/basic.html");
+        });
+      return;
     }
   } else {
-    swal("請填寫日期");
+    Swal.fire({
+      icon: "warning",
+      title: "請填寫日期",
+    }).then(() => {
+      window.location.replace("/basic.html");
+    });
     return;
   }
 
@@ -1050,7 +1091,10 @@ async function getDate() {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        swal(body.error);
+        Swal.fire({
+          icon: "error",
+          title: "查無相符股票，請重新選擇條件",
+        });
         $(".search").val("");
         return;
       }
@@ -1085,9 +1129,9 @@ $(".search").on("keypress", function (e) {
 
 $(".chart").change(function () {
   var t = $(this).val();
-  if (t === "Candle") {
+  if (t === "candle") {
     kBarRender();
-  } else {
+  } else if (t === "line"){
     closeRender();
   }
 });

@@ -1,27 +1,26 @@
 localStorage.setItem("page", "option");
 
 // GET DATA
-function filterData() {
-
-  let searchEndDay="";
+async function filterData() {
+  let searchEndDay = "";
   let countDays = "";
   let increase = "";
   let decrease = "";
 
   if ($("#countDays").val() === "") {
-    countDays = "25"
+    countDays = "25";
   } else {
     countDays = $("#countDays").val();
   }
 
-  if ($(".searchEndDay").val()==="") {
+  if ($(".searchEndDay").val() === "") {
     let today = new Date();
-    let ey = (today.getFullYear()).toString();
+    let ey = today.getFullYear().toString();
     let em = (today.getMonth() + 1).toString();
     if (em.length === 1) {
       em = "0" + em;
     }
-    let ed = (today.getDate()).toString();
+    let ed = today.getDate().toString();
     if (ed.length === 1) {
       ed = "0" + ed;
     }
@@ -31,37 +30,36 @@ function filterData() {
   }
 
   if ($(".upperPrice").val() === "") {
-    upperPrice = "1000"
+    upperPrice = "1000";
   } else {
     upperPrice = $(".upperPrice").val();
   }
 
   if ($(".lowerPrice").val() === "") {
-    lowerPrice = "100"
+    lowerPrice = "100";
   } else {
     lowerPrice = $(".lowerPrice").val();
   }
 
   if ($("#increase").val() === "") {
-    increase = "5"
+    increase = "5";
   } else {
     increase = $("#increase").val();
   }
 
   if ($("#decrease").val() === "") {
-    decrease = "5"
+    decrease = "5";
   } else {
     decrease = $("#decrease").val();
   }
 
   let graph = $("input:checked").val();
 
-  let y = Number(searchEndDay.split('-')[0]);
-  let m = searchEndDay.split('-')[1];
-  let d = searchEndDay.split('-')[2];
-  y = y - 1 
+  let y = Number(searchEndDay.split("-")[0]);
+  let m = searchEndDay.split("-")[1];
+  let d = searchEndDay.split("-")[2];
+  y = y - 1;
   let searchStartDay = `${y}` + "-" + `${m}` + "-" + `${d}`;
-
 
   let userFilter = {
     start: searchStartDay,
@@ -73,33 +71,60 @@ function filterData() {
     increase: increase,
     decrease: decrease,
   };
-  console.log(userFilter)
+  console.log(userFilter);
 
-  let choiceDates = searchEndDay.split('-')[0] + searchEndDay.split('-')[1] + searchEndDay.split('-')[2];
-  localStorage.setItem('filterDate', choiceDates);
+  let choiceDates =
+    searchEndDay.split("-")[0] +
+    searchEndDay.split("-")[1] +
+    searchEndDay.split("-")[2];
+  localStorage.setItem("filterDate", choiceDates);
 
-  // let alerts = $("<div>").attr("class", "alters").css("text-align", "center").css("margin-top", "20px").text("Calculating...");
-  $(".submit").val("計算中").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
+  $(".submit")
+    .val("計算中")
+    .attr("disabled", true)
+    .css("width", "94px")
+    .css("background-color", "#f15e5e");
 
-  fetch(`api/1.0/option2`, {
-    method: 'POST',
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    }),
-    body: JSON.stringify(userFilter),
-  }).then((res) => res.json())
-    .then((body) => {
-      if (body.data.length === 0) {
-        $(".alters").remove()
-        swal("無相符的股票，請重新選擇條件");
-        $(".submit").val("送出").attr("disabled", false)
-      } else {
-        let data = JSON.stringify(body)
-        localStorage.setItem('optionResult', data);
-        window.location.replace('/filter.html');
-      }
-    });
+Swal.fire({
+  icon: "info",
+  title: "計算中，請稍後!",
+  timerProgressBar: true,
+  allowOutsideClick: false,
+  onBeforeOpen: () => {
+    Swal.showLoading();
+    fetch(`api/1.0/option2`, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(userFilter),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.data.length === 0) {
+          $(".alters").remove();
+          Swal.fire("查無相符股票", "請重新選擇條件", "info");
+          $(".submit").val("送出").attr("disabled", false);
+        } else {
+          let data = JSON.stringify(body);
+          localStorage.setItem("optionResult", data);
+          Swal.fire({
+            icon: "success",
+            title: "查詢成功，即將轉向...",
+            showConfirmButton: false,
+            timer: 1500,
+            }).then(()=>{
+              window.location.replace("/filter.html");
+            })
+        }
+      });
+  },
+});
+
 }
+
+
+
 
 function option() {
   window.location.replace('../option.html')
@@ -116,113 +141,7 @@ $(".search").on("keypress", function (e) {
   }
 });
 
-// NAV GET DATA
-// async function getData() {
-//   if ($(".search").val() !== "") {
-//     let code = $(".search").val();
-//     localStorage.setItem("homeCode", code);
-//     let startDate =""
-//     let endDate =""
 
-//     if (code === "") {
-//       code = "2330";
-//     }
-
-//     let userSearch = {
-//       stockCode: code,
-//       startDate: startDate,
-//       endDate: endDate,
-//     };
-
-//     fetch(`api/1.0/singleStock`, {
-//       method: "POST",
-//       headers: new Headers({
-//         "Content-Type": "application/json",
-//       }),
-//       body: JSON.stringify(userSearch),
-//     })
-//       .then((res) => res.json())
-//       .then((body) => {
-//         if (body.error) {
-//           alert(body.error);
-//           return;
-//         }
-//         for (let i = 0; i < body.data.length; i++) {
-//           let strDate = body.data[i].date.toString();
-//           let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + "/";
-//           let m = strDate[4] + strDate[5] + "/";
-//           let d = strDate[6] + strDate[7];
-//           body.data[i].date = new Date(y + m + d);
-//         }
-
-//         let datas = JSON.stringify(body.data);
-//         localStorage.setItem("home", datas);
-//         window.location.replace("/index.html")
-//       });
-
-//   } else {
-//     return;
-//   }
-// }
-
-
-// function graphCheck () {
-//   let radioValue = $("input:checked").val();
-
-//   if (radioValue === "reverseV") {
-//     if ($(".reverseV").children().length < 3) {
-//       $(".increase").remove()
-//       $(".decrease").remove()
-//       $("#increase").remove()
-//       $("#decrease").remove()
-//       $(".countDays").remove()
-//       $("#countDays").remove()
-//       let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
-//       let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
-//       $(".reverseV").append(countDays)
-//       $(".reverseV").append(inputs)
-//     }  
-//   } else if (radioValue === "uptrend") {
-//     if ($(".uptrend").children().length < 3) {
-//       $(".countDays").remove()
-//       $("#countDays").remove()
-//       $(".decrease").remove()
-//       $("#decrease").remove()
-//       let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
-//       let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
-//       let input = $("<input>").attr("id", "increase").attr("type", "text").attr("placeholder", "ex. 5")
-//       let increase = $("<div>").attr("id", "itemss").attr("class", "increase").text("上漲 %")
-//       $(".uptrend").append(countDays)
-//       $(".uptrend").append(inputs)
-//       $(".uptrend").append(increase)
-//       $(".uptrend").append(input)
-//     }
-//   } else if (radioValue === "downtrend") {
-//     if ($(".downtrend").children().length < 3) {
-//       $(".countDays").remove()
-//       $("#countDays").remove()
-//       $(".increase").remove()
-//       $("#increase").remove()
-//       let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
-//       let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
-//       let input = $("<input>").attr("id", "decrease").attr("type", "text").attr("placeholder", "ex. 5")
-//       let decrease = $("<div>").attr("id", "itemss").attr("class", "decrease").text("下跌 %")
-//       $(".downtrend").append(countDays)
-//       $(".downtrend").append(inputs)
-//       $(".downtrend").append(decrease)
-//       $(".downtrend").append(input)
-//     }
-//   } else {
-//     $(".countDays").remove()
-//     $("#countDays").remove()
-//     $(".increase").remove()
-//     $(".decrease").remove()
-//     $("#increase").remove()
-//     $("#decrease").remove()
-//   } 
-// }
-
-// graphCheck();
 
 if (localStorage.getItem("userToken")) {
   const data = {
@@ -238,46 +157,44 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        swal("登入逾時，請重新登入", {
-          buttons: {
-            cancel: "不要!",
-            catch: {
-              text: "好哦!",
-              value: "catch",
-            },
-          },
-        }).then((value) => {
-          switch (value) {
-            case "catch":
+        Swal.fire({
+            title: "登入逾時，請重新登入",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "好哦!",
+            cancelButtonText: "不要!",
+            reverseButtons: true,
+            allowOutsideClick: false,
+          })
+          .then((result) => {
+            if (result.value) {
               window.location.replace("../signin.html");
-              break;
-
-            default:
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
               window.location.replace("../index.html");
-          }
-        });
+            }
+          });
       } else {
         $(".memberLink").attr("href", "./profile.html");
         $(".member").text(`${body.name}`);
       }
     });
 } else {
-  swal("請登入會員，激活此功能", {
-    buttons: {
-      cancel: "不要!",
-      catch: {
-        text: "好哦!",
-        value: "catch",
-      },
-    },
-  }).then((value) => {
-    switch (value) {
-      case "catch":
-        window.location.replace("../signin.html");
-        break;
-
-      default:
-        window.location.replace("../index.html");
+  Swal.fire({
+    title: "請登入會員，激活此功能",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "好哦!",
+    cancelButtonText: "不要!",
+    reverseButtons: true,
+    allowOutsideClick: false,
+  }).then((result) => {
+    if (result.value) {
+      window.location.replace("../signin.html");
+    } else{
+      window.location.replace("../index.html");
     }
   });
 }
@@ -286,37 +203,50 @@ if (localStorage.getItem("userToken")) {
 function graphCheck() {
   let radioValue = $("input:checked").val();
   let optional = $("<div>").attr("class", "optional")
+  let graphNote = $(".graphNote")
   if (radioValue === "reverseV") {
     $(".optional").remove()
+    $(".explain").remove()
     let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
     let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
+    let img = $("<img>").attr("class", "explain").attr("src", "../imgs/vTrend.png" )
     optional.append(countDays)
     optional.append(inputs)
+    graphNote.append(img)
     $(".dif").append(optional)
   } else if (radioValue === "uptrend") {
     $(".optional").remove()
+    $(".explain").remove()
     let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
     let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
     let input = $("<input>").attr("id", "increase").attr("type", "text").attr("placeholder", "ex. 5")
     let increase = $("<div>").attr("id", "itemss").attr("class", "increase").text("上漲 %")
+    let img = $("<img>").attr("class", "explain").attr("src", "../imgs/upTrend.png")
     optional.append(countDays)
     optional.append(inputs)
     optional.append(increase)
     optional.append(input)
+    graphNote.append(img)
     $(".dif").append(optional)
   } else if (radioValue === "downtrend") {
     $(".optional").remove()
+    $(".explain").remove()
     let inputs = $("<input>").attr("id", "countDays").attr("class", "countDays").attr("type", "text").attr("placeholder", "ex. 25")
     let countDays = $("<div>").attr("id", "itemss").attr("class", "countDays").text("圖形區間")
     let input = $("<input>").attr("id", "decrease").attr("type", "text").attr("placeholder", "ex. 5")
     let decrease = $("<div>").attr("id", "itemss").attr("class", "decrease").text("下跌 %")
+    let img = $("<img>").attr("class", "explain").attr("src", "../imgs/downTrend.png")
     optional.append(countDays)
     optional.append(inputs)
     optional.append(decrease)
     optional.append(input)
+    graphNote.append(img)
     $(".dif").append(optional)
   } else {
     $(".optional").remove()
+    $(".explain").remove()
+    let img = $("<img>").attr("class", "explain").attr("src", "../imgs/rangeTrend.png")
+    graphNote.append(img)
     $(".dif").append(optional)
   }
 }

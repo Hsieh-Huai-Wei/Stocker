@@ -1,6 +1,5 @@
 * {
   /* border: dotted 1px red; */
-  background-color: #262626;
 }
 
 body {
@@ -9,6 +8,7 @@ body {
   font-family: "Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
+  background-color: #262626;
 }
 
 /* header */
@@ -241,6 +241,7 @@ main {
   font-size: 1em;
   padding-left: 3px;
   padding-top: 5px;
+  background-color: #262626;
 }
 /* 
 #chart, #candle, #line {
@@ -259,6 +260,7 @@ main {
   margin-right: 25px;
   font-size: 1em;
   padding-top: 5px;
+  background-color: #262626;
 }
 
 .indicate {
@@ -837,4 +839,12 @@ header > .feature > input.backtest:hover {
 .swal-icon--success {
     border-color: rgb(8, 230, 126);
     background-color: #323232;
+}
+
+/* --------------------------- */
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
 }

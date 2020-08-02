@@ -67,6 +67,17 @@ function addCase() {
     $("#case").append(title);
     $("#case").append(userOption);
   } else {
+    Swal.fire({
+      title: "已達新增上限",
+      icon: "warning",
+      allowOutsideClick: false,
+      showClass: {
+        popup: "animate__animated animate__fadeInDown",
+      },
+      hideClass: {
+        popup: "animate__animated animate__fadeOutUp",
+      },
+    });
     $(".add").text("已達上限").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
   }
 }
@@ -130,21 +141,43 @@ function test() {
     result.push(index)
   };
   $(".test").text("計算中").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
-  // console.log(result)
-  fetch(`api/1.0/backTest`, {
-    method: 'POST',
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    }),
-    body: JSON.stringify(result),
-  }).then((res) => res.json())
-    .then((body) => {
-      console.log(body)
-      let data = JSON.stringify(body)
-      localStorage.setItem('backTestToken', data);
-      // return;
-      window.location.replace('/result.html');
-    });
+
+Swal.fire({
+  icon: "info",
+  title: "計算中，請稍後!",
+  timerProgressBar: true,
+  allowOutsideClick: false,
+  onBeforeOpen: () => {
+    Swal.showLoading();
+    fetch(`api/1.0/backTest`, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+      }),
+      body: JSON.stringify(result),
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        if (body.data.length === 0) {
+          $(".alters").remove();
+          Swal.fire("查無相符股票", "請重新選擇條件", "info");
+          $(".submit").val("送出").attr("disabled", false);
+        } else {
+          let data = JSON.stringify(body);
+          localStorage.setItem("backTestToken", data);
+
+          Swal.fire({
+            icon: "success",
+            title: "查詢成功，即將轉向...",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            window.location.replace("/result.html");
+          });
+        }
+      });
+  },
+});
 }
 
 function option() { 
@@ -169,22 +202,22 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        swal("登入逾時，請重新登入", {
-          buttons: {
-            cancel: "不要!",
-            catch: {
-              text: "好哦!",
-              value: "catch",
-            },
-          },
-        }).then((value) => {
-          switch (value) {
-            case "catch":
-              window.location.replace("../signin.html");
-              break;
-
-            default:
-              window.location.replace("../index.html");
+        Swal.fire({
+          title: "登入逾時，請重新登入",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "好哦!",
+          cancelButtonText: "不要!",
+          reverseButtons: true,
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            window.location.replace("../signin.html");
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            window.location.replace("../index.html");
           }
         });
       } else {
@@ -193,42 +226,22 @@ if (localStorage.getItem("userToken")) {
       }
     });
 } else {
-  swal("請登入會員，激活此功能", {
-    buttons: {
-      cancel: "不要!",
-      catch: {
-        text: "好哦!",
-        value: "catch",
-      },
-    },
-  }).then((value) => {
-    switch (value) {
-      case "catch":
-        window.location.replace("../signin.html");
-        break;
-
-      default:
-        window.location.replace("../index.html");
+  Swal.fire({
+    title: "請登入會員，激活此功能",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "好哦!",
+    cancelButtonText: "不要!",
+    reverseButtons: true,
+    allowOutsideClick: false,
+  }).then((result) => {
+    if (result.value) {
+      window.location.replace("../signin.html");
+    } else {
+      window.location.replace("../index.html");
     }
   });
 }
-
-
-// function check() {
-//   if () {
-//     let a = $(".increaseBuys").val()
-//     console.log(a)
-//   } else {
-//     let a = $(".increaseSell").val()
-//     console.log(a)
-//   }
-// }
-
-// if (document.getElementById('increaseBuy').checked) {
-//   console.log("buy")
-// } else if (document.getElementById('increaseSell').checked) {
-//   console.log("sell")
-// }
 
 $(".search").on("keypress", function (e) {
   if (e.key === "Enter") {

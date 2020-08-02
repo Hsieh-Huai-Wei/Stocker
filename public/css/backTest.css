@@ -1,6 +1,6 @@
 * {
   /* border: dotted 1px red; */
-  background-color: #262626;
+
 }
 
 body {
@@ -9,6 +9,7 @@ body {
   font-family: "Noto Sans TC", "微軟正黑體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
+  background-color: #262626;
 }
 
 /* header */
@@ -201,7 +202,7 @@ main {
   flex-wrap: wrap;
   /* max-width: 200px; */
   width: 100%;
-  padding: 20px 100px;
+  padding: 20px 95px;
 }
 
 .subtitle {
@@ -236,7 +237,7 @@ main {
   margin-top: 10px;
   padding-left: 5px;
   /* margin-right: 50px; */
-  width: 110px;
+  width: 115px;
   height: 25px;
   border-radius: 5px;
 }
@@ -385,4 +386,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   padding: 4px 24px;
   max-width: 150px;
   margin-left: 10px;
+}
+
+/* --------------------------- */
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
 }

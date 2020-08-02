@@ -200,22 +200,22 @@ if (localStorage.getItem("userToken")) {
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        swal("登入逾時，請重新登入", {
-          buttons: {
-            cancel: "不要!",
-            catch: {
-              text: "好哦!",
-              value: "catch",
-            },
-          },
-        }).then((value) => {
-          switch (value) {
-            case "catch":
-              window.location.replace("../signin.html");
-              break;
-
-            default:
-              window.location.replace("../index.html");
+        Swal.fire({
+          title: "登入逾時，請重新登入",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "好哦!",
+          cancelButtonText: "不要!",
+          reverseButtons: true,
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            window.location.replace("../signin.html");
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            window.location.replace("../index.html");
           }
         });
       } else {
@@ -224,22 +224,19 @@ if (localStorage.getItem("userToken")) {
       }
     });
 } else {
-  swal("請登入會員，激活此功能", {
-    buttons: {
-      cancel: "不要!",
-      catch: {
-        text: "好哦!",
-        value: "catch",
-      },
-    },
-  }).then((value) => {
-    switch (value) {
-      case "catch":
-        window.location.replace("../signin.html");
-        break;
-
-      default:
-        window.location.replace("../index.html");
+  Swal.fire({
+    title: "請登入會員，激活此功能",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "好哦!",
+    cancelButtonText: "不要!",
+    reverseButtons: true,
+    allowOutsideClick: false,
+  }).then((result) => {
+    if (result.value) {
+      window.location.replace("../signin.html");
+    } else {
+      window.location.replace("../index.html");
     }
   });
 }

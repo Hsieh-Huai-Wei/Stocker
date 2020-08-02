@@ -1281,7 +1281,13 @@ const option2 = async (req, res, next) => {
           index.change = "-" + String(stockInf[i].changes); // changes
         }
         index.percentChange = String((((stockInf[i].close - stockInf[i].open) / stockInf[i].open) * 100).toFixed(2)); // changes %
-        index.volume = stockInf[i].volume; // volumn
+        
+        let volumeSql = stockInf[i].volume.split(",");
+        let volumeNum = '';
+        for (let i = 0; i < volumeSql.length; i++){
+          volumeNum += volumeSql[i]
+        }
+        index.volume = Number(volumeNum); // volumn
 
         if (stockInf[i]["5MA"] !== null) {
           index["5MA"] = stockInf[i]["5MA"]; // 5MA
@@ -1547,7 +1553,15 @@ const option2island = async (req, res, next) => {
           index.change = "-" + String(stockInf[i].changes); // changes
         }
         index.percentChange = String((((stockInf[i].close - stockInf[i].open) / stockInf[i].open) * 100).toFixed(2)); // changes %
-        index.volume = stockInf[i].volume; // volumn
+
+        let volumeSql = stockInf[i].volume.split(",");
+        let volumeNum = '';
+        for (let i = 0; i < volumeSql.length; i++){
+          volumeNum += volumeSql[i]
+        }
+        index.volume = Number(volumeNum); // volumn
+        console.log(typeof Number(volumeNum));
+
         if (stockInf[i]["5MA"] !== null) {
           index["5MA"] = stockInf[i]["5MA"]; // 5MA
         } else {
@@ -1577,6 +1591,7 @@ const option2island = async (req, res, next) => {
         index.industry = stockInf[i].industry;
         price.push(index);
       }
+
       result.data.push(
         {
           id: price[0].code,

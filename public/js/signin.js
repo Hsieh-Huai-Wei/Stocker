@@ -17,40 +17,60 @@ signInButton.on('click', () => {
 });
 
 function signUp () {
-  // let name = $(".signUpName").val();
-  // let email = $(".signUpEmail").val();
-  // let pwd = $(".signUpPwd").val();
-
-  // const data = {
-  //   name: name,
-  //   email: email,
-  //   pwd: pwd,
-  // };
+  let name = $(".signUpName").val();
+  let email = $(".signUpEmail").val();
+  let pwd = $(".signUpPwd").val();
 
   const data = {
-    name: "test",
-    email: "test@test.com",
-    pwd: "123456",
+    name: name,
+    email: email,
+    pwd: pwd,
   };
 
-  fetch(`api/1.0/user/signup`, {
-    method: "POST",
-    headers: new Headers({
-      "Content-Type": "application/json",
-    }),
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.status !== undefined) {
-        swal(body.msg);
-      } else {
-        const token = body.data.access_token;
-        localStorage.setItem("userToken", token);
-        console.log(body)
-        window.location.replace("/profile.html");
-      }
-    });
+  // const data = {
+  //   name: "test",
+  //   email: "test@test.com",
+  //   pwd: "123456",
+  // };
+
+  Swal.fire({
+    icon: "info",
+    title: "資料註冊中，請稍後!",
+    timerProgressBar: true,
+    allowOutsideClick: false,
+    onBeforeOpen: () => {
+      Swal.showLoading();
+      fetch(`api/1.0/user/signup`, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.status !== undefined) {
+            Swal.fire({
+              icon: "error",
+              title: "信箱或密碼填寫錯誤，請重新輸入!", 
+            });
+          } else {
+            let data = JSON.stringify(body);
+            localStorage.setItem("optionResult", data);
+            Swal.fire({
+              icon: "success",
+              title: "註冊成功，即將轉向...",
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              const token = body.data.access_token;
+              localStorage.setItem("userToken", token);
+              window.location.replace("/profile.html");
+            })
+          }
+        });
+    },
+  });
 
 }
 
@@ -68,66 +88,65 @@ function signIn () {
     pwd: "123456",
   };
 
-  fetch(`api/1.0/user/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.status !== undefined) {
-        swal(body.msg);
-      } else {
-        
-        const token = body.data.access_token;
-        localStorage.setItem("userToken", token);
-        console.log(localStorage.getItem("page"));
-        console.log(localStorage.getItem("page") === "index");
-        if (localStorage.getItem("page")) {
-          let page = localStorage.getItem("page")
-          if (page === "index"){
-            window.location.replace("/index.html");
-          } else if (page === "basic"){
-            window.location.replace("/basic.html");
-          } else if (page === "option") {
-            window.location.replace("/option.html");
-          } else if (page === "filter"){
-            window.location.replace("/filter.html");
-          } else if (page === "backTest") {
-            window.location.replace("/backTest.html");
-          } else if (page === "result"){
-            window.location.replace("/result.html");
+  Swal.fire({
+    icon: "info",
+    title: "會員登入中，請稍後!",
+    timerProgressBar: true,
+    allowOutsideClick: false,
+    onBeforeOpen: () => {
+      Swal.showLoading();
+      fetch(`api/1.0/user/signin`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((body) => {
+          if (body.status !== undefined) {
+            console.log(body.msg)
+            Swal.fire({
+              icon: "error",
+              title: "信箱或密碼填寫錯誤，請重新輸入!",
+            });
+          } else {
+            let data = JSON.stringify(body);
+            localStorage.setItem("optionResult", data);
+            Swal.fire({
+              icon: "success",
+              title: "登入成功，即將轉向...",
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              const token = body.data.access_token;
+              localStorage.setItem("userToken", token);
+              console.log(localStorage.getItem("page"));
+              console.log(localStorage.getItem("page") === "index");
+              if (localStorage.getItem("page")) {
+                let page = localStorage.getItem("page")
+                if (page === "index") {
+                  window.location.replace("/index.html");
+                } else if (page === "basic") {
+                  window.location.replace("/basic.html");
+                } else if (page === "option") {
+                  window.location.replace("/option.html");
+                } else if (page === "filter") {
+                  window.location.replace("/filter.html");
+                } else if (page === "backTest") {
+                  window.location.replace("/backTest.html");
+                } else if (page === "result") {
+                  window.location.replace("/result.html");
+                }
+              } else {
+                window.location.replace("/profile.html");
+              }
+            })
           }
-        } else {
-          window.location.replace("/profile.html");
-        }
-      }
-    });
-
-}
-
-if (localStorage.getItem("userToken")) {
-  const data = {
-    token: localStorage.getItem("userToken"),
-  };
-  fetch("api/1.0/user/profile", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+        });
     },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.error) {
-        $(".member").text(`Sign up / Log in`);
-      } else {
-        console.log(body);
-        $(".member").text(`${body.name}`);
-      }
-    });
+  });
+
 }
 
 $(".search").on("keypress", function (e) {

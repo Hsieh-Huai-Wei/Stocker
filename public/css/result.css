@@ -1,6 +1,6 @@
 * {
   /* border: dotted 1px red; */
-  background-color: #262626;
+
 }
 
 body {
@@ -9,6 +9,7 @@ body {
   font-family: "Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
+  background-color: #262626;
 }
 
 /* header */
@@ -360,4 +361,12 @@ header > .feature > input.option:hover {
 }
 header > .feature > input.backtest:hover {
   cursor: pointer;
+}
+
+/* --------------------------- */
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
 }
