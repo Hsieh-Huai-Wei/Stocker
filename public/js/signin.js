@@ -137,6 +137,8 @@ function signIn () {
                   window.location.replace("/backTest.html");
                 } else if (page === "result") {
                   window.location.replace("/result.html");
+                } else {
+                  window.location.replace("/profile.html");
                 }
               } else {
                 window.location.replace("/profile.html");
