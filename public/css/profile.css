@@ -1,6 +1,6 @@
 * {
   /* border: dotted 1px red; */
-  background-color: #262626;
+  
 }
 
 body {
@@ -9,6 +9,7 @@ body {
   font-family: "Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
   color: #ffffff;
   align-items: center;
+  background-color: #262626;
 }
 
 /* header */
@@ -125,7 +126,7 @@ header > .profile > .rank {
   font-size: 1em;
 }
 
-header > .profile > .member {
+header > .profile > a > .member {
   white-space: nowrap;
   width: auto;
   min-width: 40px;
@@ -145,7 +146,9 @@ header > .profile > .memberImg img {
   width: auto;
   height: 20px;
   margin-right: 8px;
+  margin-left: 10px;
 }
+
 /* main */
 main {
   background-color: #262626;
@@ -195,6 +198,7 @@ main {
   border-right: 1px solid transparent;
   border-left: 1px solid transparent;
   font-size: small;
+  background-color: #262626;
   /* text-align: start; */
 }
 
@@ -303,4 +307,13 @@ header > .feature > input.backtest:hover {
   padding: 4px 24px;
   max-width: 150px;
   margin-left: 10px;
+}
+
+
+/* --------------------------- */
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
 }

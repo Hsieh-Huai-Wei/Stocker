@@ -1,85 +1,58 @@
 if (localStorage.getItem("userToken")) {
   const data = {
-    "token": localStorage.getItem("userToken")
-  }
+    token: localStorage.getItem("userToken"),
+  };
+
   fetch("api/1.0/user/profile", {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   })
     .then((res) => res.json())
     .then((body) => {
       if (body.error) {
-        swal("登入逾時，請重新登入", {
-          buttons: {
-            cancel: "不要!",
-            catch: {
-              text: "好哦!",
-              value: "catch",
-            },
-          },
-        }).then((value) => {
-          switch (value) {
-            case "catch":
-              window.location.replace("../signin.html");
-              break;
-
-            default:
-              window.location.replace("../index.html");
+        Swal.fire({
+          title: "登入逾時，請重新登入",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "好哦!",
+          cancelButtonText: "不要!",
+          reverseButtons: true,
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.value) {
+            window.location.replace("../signin.html");
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            window.location.replace("../index.html");
           }
         });
       } else {
-        console.log(body);
+        console.log("OK")
+        $(".memberLink").attr("href", "./profile.html");
         $(".member").text(`${body.name}`);
         $(".name").text(`${body.name}`);
-        $(".email").text(`${body.email}`);
-      }
-    });
-} else if (localStorage.getItem("fbToken")) {
-  const data = {
-    "token": localStorage.getItem("fbToken")
-  }
-  fetch("api/1.0/user/profile", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      console.log(body)
-      if (body.error) {
-        // alert(body.error);
-        alert("登入逾時，請重新登入")
-        window.location.replace("/signin.html");
-      } else {
-        console.log(body)
-        // const userName = body.name;
-        // const userEmail = body.email;
-        // const p = document.getElementById('response');
-        // p.textContent = `Name: ${userName} / Email: ${userEmail}`;
+        $(".email").text(`${body.email}`)
       }
     });
 } else {
-  swal("請登入會員", {
-    buttons: {
-      cancel: "不要!",
-      catch: {
-        text: "好哦!",
-        value: "catch",
-      },
-    },
-  }).then((value) => {
-    switch (value) {
-      case "catch":
-        window.location.replace("../signin.html");
-        break;
-
-      default:
-        window.location.replace("../index.html");
+  Swal.fire({
+    title: "請登入會員，激活此功能",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "好哦!",
+    cancelButtonText: "不要!",
+    reverseButtons: true,
+    allowOutsideClick: false,
+  }).then((result) => {
+    if (result.value) {
+      window.location.replace("../signin.html");
+    } else {
+      window.location.replace("../index.html");
     }
   });
 }
