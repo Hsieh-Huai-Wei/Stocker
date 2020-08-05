@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark/dark.css">
   <link rel="stylesheet" href="./css/result.css" />
-  <script src="./js/jquery-3.5.1.min.js"></script>
+  <script src="./js/plugins/jquery-3.5.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
 </head>
@@ -22,8 +22,8 @@
       </div>
       <div class="feature">
         <input type="text" class="search" name="tag" placeholder="2330" onclick="getData()" />
-        <input type="button" class="option" value="趨勢觀測" onclick="option()">
-        <input type="button" class="backtest" value="歷史回測" onclick="backTest()">
+        <a href="./option.html"><input type="button" class="option" value="趨勢觀測" onclick="option()"></a>
+        <a href="./backTest.html"><input type="button" class="backtest" value="歷史回測" onclick="backTest()"></a>
       </div>
       <div class="profile">
         <a class="memberLink" onclick="pageCheck()"><div class="member"></div></a>
@@ -32,6 +32,47 @@
     </header>
   <main>
     <div id="case">
+      <div class="summary">
+        <table class="detail">
+          <caption class="summary">結算</caption>
+          <thead>
+            <tr class="itemName">
+              <th class="number">No.</th>
+              <th class="code">股票代碼</th>
+              <th class="date">日期</th>
+              <th class="count"">股票庫存</th>
+                    <th class=" value">股票現價</th>
+              <th class="cost">總交易成本</th>
+              <th class="property">總資產</th>
+              <th class="profit">獲利結算</th>
+              <th class="cost">投資報酬率</th>
+              <th class="saveCheck"">儲存</th>
+                  </tr>
+                </thead>
+                <tbody class=" summaryData">
+                <!-- <tr class="summaryData1">
+                    <td class="num">case #1</td>
+                    <td class="qty">qty</td>
+                    <td class="income"">income</td>
+                    <td class="cost">cost</td>
+                    <td class="property">property</td>
+                    <td class="cost">cost</td>
+                    <td class="profit">profit</td>
+                    <td class="save">save</td>
+                  </tr>
+                  <tr class="summaryData2">
+                    <td class="num2">case #2</td>
+                    <td class="qty">qty</td>
+                    <td class="income"">income</td>
+                    <td class=" cost">cost</td>
+                    <td class="property">property</td>
+                    <td class="cost">cost</td>
+                    <td class="profit">profit</td>
+                    <td class="save">save</td>
+                  </tr> -->
+                </tbody>
+        </table>
+      </div>
       <div class="testResult">
         <!-- <table class="detail">
           <caption class="case1">Case #1</caption>
@@ -108,57 +149,17 @@
           </tbody>
         </table> -->
       </div>
-      <div class="summary">
-        <table class="detail">
-          <caption class="summary">結算</caption>
-          <thead>
-            <tr class="itemName">
-              <th class="number">No.</th>
-              <th class="code">股票代碼</th>
-              <th class="date">日期</th>
-              <th class="count"">股票庫存</th>
-              <th class="value">股票現價</th>
-              <th class="cost">總交易成本</th>
-              <th class="property">總資產</th>
-              <th class="profit">獲利結算</th>
-              <th class="cost">投資報酬率</th>
-              <th class="saveCheck"">儲存</th>
-            </tr>
-          </thead>
-          <tbody class="summaryData">
-            <!-- <tr class="summaryData1">
-              <td class="num">case #1</td>
-              <td class="qty">qty</td>
-              <td class="income"">income</td>
-              <td class="cost">cost</td>
-              <td class="property">property</td>
-              <td class="cost">cost</td>
-              <td class="profit">profit</td>
-              <td class="save">save</td>
-            </tr>
-            <tr class="summaryData2">
-              <td class="num2">case #2</td>
-              <td class="qty">qty</td>
-              <td class="income"">income</td>
-              <td class=" cost">cost</td>
-              <td class="property">property</td>
-              <td class="cost">cost</td>
-              <td class="profit">profit</td>
-              <td class="save">save</td>
-            </tr> -->
-            </tbody>
-        </table>
-      </div>
+
     </div>
     <div class="btn">
       <button type="submit" class="submit save" value="save" onclick="save();">儲存</button>
-      <button type=" submit" class="submit again" value="again" onclick="again();">再測一次</button>
+      <a href="/backTest.html"><button type=" submit" class="submit again" value="again";">再測一次</button></a>
     </div>
   </main>
 
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="./js/techan.min.js"></script>
+  <script src="./js/plugins/techan.min.js"></script>
   <script type="text/javascript" src="./js/result.js"></script>
 
   <body>

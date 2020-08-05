@@ -1,25 +1,26 @@
+/* global $ Swal*/
 const signUpButton = $('#signUp');
 const signInButton = $('#signIn');
 
-const overlayLeft = $(".overlay-left");
-const overlayRight = $(".overlay-right");
+const overlayLeft = $('.overlay-left');
+const overlayRight = $('.overlay-right');
 
 signUpButton.on('click', () => {
-  console.log("signup")
-  overlayLeft.css("display", "block");
-  overlayRight.css("display", "none");
+  console.log('signup');
+  overlayLeft.css('display', 'block');
+  overlayRight.css('display', 'none');
 });
 
 signInButton.on('click', () => {
-  console.log("signin");
-  overlayRight.css("display", "block");
-  overlayLeft.css("display", "none");
+  console.log('signin');
+  overlayRight.css('display', 'block');
+  overlayLeft.css('display', 'none');
 });
 
 function signUp () {
-  let name = $(".signUpName").val();
-  let email = $(".signUpEmail").val();
-  let pwd = $(".signUpPwd").val();
+  let name = $('.signUpName').val();
+  let email = $('.signUpEmail').val();
+  let pwd = $('.signUpPwd').val();
 
   const data = {
     name: name,
@@ -34,16 +35,16 @@ function signUp () {
   // };
 
   Swal.fire({
-    icon: "info",
-    title: "資料註冊中，請稍後!",
+    icon: 'info',
+    title: '資料註冊中，請稍後!',
     timerProgressBar: true,
     allowOutsideClick: false,
     onBeforeOpen: () => {
       Swal.showLoading();
-      fetch(`api/1.0/user/signup`, {
-        method: "POST",
+      fetch('api/1.0/user/signup', {
+        method: 'POST',
         headers: new Headers({
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         }),
         body: JSON.stringify(data),
       })
@@ -51,22 +52,22 @@ function signUp () {
         .then((body) => {
           if (body.status !== undefined) {
             Swal.fire({
-              icon: "error",
-              title: "信箱或密碼填寫錯誤，請重新輸入!", 
+              icon: 'error',
+              title: '信箱或密碼填寫錯誤，請重新輸入!',
             });
           } else {
             let data = JSON.stringify(body);
-            localStorage.setItem("optionResult", data);
+            window.localStorage.setItem('optionResult', data);
             Swal.fire({
-              icon: "success",
-              title: "註冊成功，即將轉向...",
+              icon: 'success',
+              title: '註冊成功，即將轉向...',
               showConfirmButton: false,
               timer: 1500,
             }).then(() => {
               const token = body.data.access_token;
-              localStorage.setItem("userToken", token);
-              window.location.replace("/profile.html");
-            })
+              window.localStorage.setItem('userToken', token);
+              window.location.replace('/profile.html');
+            });
           }
         });
     },
@@ -82,68 +83,66 @@ function signIn () {
   //   email: email,
   //   pwd: pwd,
   // };
-
+  console.log("KOK")
   const data = {
-    email: "test@test.com",
-    pwd: "123456",
+    email: 'test@test.com',
+    pwd: '123456',
   };
 
   Swal.fire({
-    icon: "info",
-    title: "會員登入中，請稍後!",
+    icon: 'info',
+    title: '會員登入中，請稍後!',
     timerProgressBar: true,
     allowOutsideClick: false,
     onBeforeOpen: () => {
       Swal.showLoading();
-      fetch(`api/1.0/user/signin`, {
-        method: "POST",
+      fetch('api/1.0/user/signin', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
         .then((res) => res.json())
         .then((body) => {
           if (body.status !== undefined) {
-            console.log(body.msg)
+            console.log(body.msg);
             Swal.fire({
-              icon: "error",
-              title: "信箱或密碼填寫錯誤，請重新輸入!",
+              icon: 'error',
+              title: '信箱或密碼填寫錯誤，請重新輸入!',
             });
           } else {
             let data = JSON.stringify(body);
-            localStorage.setItem("optionResult", data);
+            window.localStorage.setItem('optionResult', data);
             Swal.fire({
-              icon: "success",
-              title: "登入成功，即將轉向...",
+              icon: 'success',
+              title: '登入成功，即將轉向...',
               showConfirmButton: false,
               timer: 1500,
             }).then(() => {
               const token = body.data.access_token;
-              localStorage.setItem("userToken", token);
-              console.log(localStorage.getItem("page"));
-              console.log(localStorage.getItem("page") === "index");
-              if (localStorage.getItem("page")) {
-                let page = localStorage.getItem("page")
-                if (page === "index") {
-                  window.location.replace("/index.html");
-                } else if (page === "basic") {
-                  window.location.replace("/basic.html");
-                } else if (page === "option") {
-                  window.location.replace("/option.html");
-                } else if (page === "filter") {
-                  window.location.replace("/filter.html");
-                } else if (page === "backTest") {
-                  window.location.replace("/backTest.html");
-                } else if (page === "result") {
-                  window.location.replace("/result.html");
+              window.localStorage.setItem('userToken', token);
+              if (window.localStorage.getItem('page')) {
+                let page = window.localStorage.getItem('page');
+                if (page === 'index') {
+                  window.location.replace('/index.html');
+                } else if (page === 'basic') {
+                  window.location.replace('/basic.html');
+                } else if (page === 'option') {
+                  window.location.replace('/option.html');
+                } else if (page === 'filter') {
+                  window.location.replace('/filter.html');
+                } else if (page === 'backTest') {
+                  window.location.replace('/backTest.html');
+                } else if (page === 'result') {
+                  window.location.replace('/result.html');
                 } else {
-                  window.location.replace("/profile.html");
+                  window.location.replace('/profile.html');
                 }
               } else {
-                window.location.replace("/profile.html");
+                window.location.replace('/profile.html');
               }
-            })
+            });
           }
         });
     },
@@ -151,15 +150,15 @@ function signIn () {
 
 }
 
-$(".search").on("keypress", function (e) {
-  if (e.key === "Enter") {
-    let code = $(".search").val();
-    localStorage.setItem("homeCode", code)
-    window.location.replace("../basic.html");
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    let code = $('.search').val();
+    window.localStorage.setItem('homeCode', code);
+    window.location.replace('../basic.html');
   }
 });
 
 function pageCheck() {
-  localStorage.setItem("page", "profile");
-  window.location.replace("../profile.html");
+  window.localStorage.setItem('page', 'profile');
+  window.location.replace('../profile.html');
 }

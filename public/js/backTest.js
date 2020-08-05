@@ -1,4 +1,16 @@
-localStorage.setItem("page", "backTest");
+/* global $, Swal */
+window.localStorage.setItem('page', 'backTest');
+
+async function fetchPostData(url, data) {
+  let res = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: new Headers({
+      'Content-Type': 'application/json',
+    }),
+  });
+  return res.json();
+}
 
 function addCase() {
 
@@ -6,86 +18,86 @@ function addCase() {
   let ey = today.getFullYear().toString();
   let em = (today.getMonth() + 1).toString();
   if (em.length === 1) {
-    em = "0" + em;
+    em = '0' + em;
   }
   let ed = today.getDate().toString();
   if (ed.length === 1) {
-    ed = "0" + ed;
+    ed = '0' + ed;
   }
-  let endDate = ey + "-" + em + "-" + ed;
+  let endDate = ey + '-' + em + '-' + ed;
   let sy = (today.getFullYear() - 1).toString();
-  let startDate = sy + "-" + em + "-" + ed;
+  let startDate = sy + '-' + em + '-' + ed;
 
-  let num = $("#case").children(".title").length;
-  console.log(num)
+  let num = $('#case').children('.title').length;
+  console.log(num);
   if (num<5) {
 
-    let title = $('<div>').attr('class', `title`).text(`歷史回測條件單 #${num + 1}`).append($("<div>").attr('class', `note`));
+    let title = $('<div>').attr('class', 'title').text(`歷史回測條件單 #${num + 1}`).append($('<div>').attr('class', 'note'));
 
-    let base = $('<div>').attr('class', `base`).append(
-      $("<div>").attr('class', `subtitle`).text('基本設定'),
-      $("<div>").attr('class', `items`).text('股票名稱/代碼'),
-      $("<input>").attr("type", "text").attr('class', `code${num + 1}`).attr("placeholder", "ex. 2330"),
-      $("<div>").attr('class', `items`).text('開始日期'),
-      $("<input>").attr("type", "date").attr('class', `searchStartDay${num + 1}`).val(startDate),
-      $("<div>").attr('class', `items`).text('結束日期'),
-      $("<input>").attr("type", "date").attr("class", `searchEndDay${num + 1}`).val(endDate),
-      $("<div>").attr('class', `items`).text('資金(單位:千)'),
-      $("<input>").attr("type", "text").attr("class", `property${num + 1}`).attr("placeholder", "ex. 100000"),
-      $("<div>").attr('class', `items`).text('券商折扣(%)'),
-      $("<input>").attr("type", "text").attr("class", `discount${num + 1}`).attr("placeholder", "ex. 40"),
-    )
+    let base = $('<div>').attr('class', 'base').append(
+      $('<div>').attr('class', 'subtitle').text('基本設定'),
+      $('<div>').attr('class', 'items').text('股票名稱/代碼'),
+      $('<input>').attr('type', 'text').attr('class', `code${num + 1}`).attr('placeholder', 'ex. 2330'),
+      $('<div>').attr('class', 'items').text('開始日期'),
+      $('<input>').attr('type', 'date').attr('class', `searchStartDay${num + 1}`).val(startDate),
+      $('<div>').attr('class', 'items').text('結束日期'),
+      $('<input>').attr('type', 'date').attr('class', `searchEndDay${num + 1}`).val(endDate),
+      $('<div>').attr('class', 'items').text('資金(單位:千)'),
+      $('<input>').attr('type', 'text').attr('class', `property${num + 1}`).attr('placeholder', 'ex. 100000'),
+      $('<div>').attr('class', 'items').text('券商折扣(%)'),
+      $('<input>').attr('type', 'text').attr('class', `discount${num + 1}`).attr('placeholder', 'ex. 40'),
+    );
 
-    let inputIncreaseBuy = $("<input>").attr("class", `increase${num + 1}`).attr("name", `increase${num + 1}`).attr("type", "radio").attr("value", "buy").add("<div>"+"買"+"</div>");
-    let inputIncreaseSell = $("<input>").attr("class", `increase${num + 1}`).attr("name", `increase${num + 1}`).attr("type", "radio").attr("value", "sell").add("<div>" + "賣" + "</div>");
-    let inputDecreaseBuy = $("<input>").attr("class", `decrease${num + 1}`).attr("name", `decrease${num + 1}`).attr("type", "radio").attr("value", "buy").add("<div>" + "買" + "</div>");
-    let inputDecreaseSell = $("<input>").attr("class", `decrease${num + 1}`).attr("name", `decrease${num + 1}`).attr("type", "radio").attr("value", "sell").add("<div>" + "賣" + "</div>");
+    let inputIncreaseBuy = $('<input>').attr('class', `increase${num + 1}`).attr('name', `increase${num + 1}`).attr('type', 'radio').attr('value', 'buy').add('<div>'+'買'+'</div>');
+    let inputIncreaseSell = $('<input>').attr('class', `increase${num + 1}`).attr('name', `increase${num + 1}`).attr('type', 'radio').attr('value', 'sell').add('<div>' + '賣' + '</div>');
+    let inputDecreaseBuy = $('<input>').attr('class', `decrease${num + 1}`).attr('name', `decrease${num + 1}`).attr('type', 'radio').attr('value', 'buy').add('<div>' + '買' + '</div>');
+    let inputDecreaseSell = $('<input>').attr('class', `decrease${num + 1}`).attr('name', `decrease${num + 1}`).attr('type', 'radio').attr('value', 'sell').add('<div>' + '賣' + '</div>');
 
-    inputIncreaseSell.attr("checked", "checked")
-    inputDecreaseBuy.attr("checked", "checked")
+    inputIncreaseSell.attr('checked', 'checked');
+    inputDecreaseBuy.attr('checked', 'checked');
 
-    let advance = $('<div>').attr('class', `advance`).append(
-      $("<div>").attr('class', `subtitle`).text('交易策略'),
-      $("<div>").attr('class', `itemss`).text('上漲(%)'),
-      $("<input>").attr("type", "text").attr("class", `increase${num + 1}`).attr("placeholder", "ex. 5"),
+    let advance = $('<div>').attr('class', 'advance').append(
+      $('<div>').attr('class', 'subtitle').text('交易策略'),
+      $('<div>').attr('class', 'itemss').text('上漲(%)'),
+      $('<input>').attr('type', 'text').attr('class', `increase${num + 1}`).attr('placeholder', 'ex. 5'),
 
-      $("<div>").attr('class', `itemss increase${num + 1}`).append(inputIncreaseBuy).append(inputIncreaseSell),
+      $('<div>').attr('class', `itemss increase${num + 1}`).append(inputIncreaseBuy).append(inputIncreaseSell),
 
-      $("<input>").attr("type", "text").attr("class", `increaseText${num + 1}`).attr("name", `increase`).attr("placeholder", "ex. 5"),
+      $('<input>').attr('type', 'text').attr('class', `increaseText${num + 1}`).attr('name', 'increase').attr('placeholder', 'ex. 5'),
 
-      $("<div>").attr('class', `itemss`).text('下跌(%)'),
-      $("<input>").attr("type", "text").attr("class", `decrease${num + 1}`).attr("placeholder", "ex. 3"),
+      $('<div>').attr('class', 'itemss').text('下跌(%)'),
+      $('<input>').attr('type', 'text').attr('class', `decrease${num + 1}`).attr('placeholder', 'ex. 3'),
 
-      $("<div>").attr('class', `itemss decrease${num + 1}`).append(inputDecreaseBuy).append(inputDecreaseSell),
+      $('<div>').attr('class', `itemss decrease${num + 1}`).append(inputDecreaseBuy).append(inputDecreaseSell),
 
-      $("<input>").attr("type", "text").attr("class", `decreaseText${num + 1}`).attr("name", `decrease`).attr("placeholder", "ex. 1"),
+      $('<input>').attr('type', 'text').attr('class', `decreaseText${num + 1}`).attr('name', 'decrease').attr('placeholder', 'ex. 1'),
 
-    )
+    );
 
-    let userOption = $("<div>").attr('class', "userOption")
-    userOption.append(base).append(advance)
-    $("#case").append(title);
-    $("#case").append(userOption);
+    let userOption = $('<div>').attr('class', 'userOption');
+    userOption.append(base).append(advance);
+    $('#case').append(title);
+    $('#case').append(userOption);
   } else {
     Swal.fire({
-      title: "已達新增上限",
-      icon: "warning",
+      title: '已達新增上限',
+      icon: 'warning',
       allowOutsideClick: false,
       showClass: {
-        popup: "animate__animated animate__fadeInDown",
+        popup: 'animate__animated animate__fadeInDown',
       },
       hideClass: {
-        popup: "animate__animated animate__fadeOutUp",
+        popup: 'animate__animated animate__fadeOutUp',
       },
     });
-    $(".add").text("已達上限").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
+    $('.add').text('已達上限').attr('disabled', true).css('width', '94px').css('background-color', '#f15e5e');
   }
 }
 
 addCase();
 
-function test() {
-  let num = $("#case").children(".title").length;
+async function test() {
+  let num = $('#case').children('.title').length;
 
   let result = [];
   for (let i = 1; i < num+1; i++) {
@@ -99,14 +111,14 @@ function test() {
 
     let property = $(`.property${i}`).val();
     let discount = $(`.discount${i}`).val();
-    
-    let increaseAct = $(`.increase${i}:checked`).val()
+
+    let increaseAct = $(`.increase${i}:checked`).val();
     let increase = $(`.increase${i}`).val();
     let increaseCount = $(`.increaseText${i}`).val();
-    let decreaseAct = $(`.decrease${i}:checked`).val()
+    let decreaseAct = $(`.decrease${i}:checked`).val();
     let decrease = $(`.decrease${i}`).val();
     let decreaseCount = $(`.decreaseText${i}`).val();
-    
+
     // let caseNo = `case1`;
     // let code = "1101";
     // let startDate = "20190101"
@@ -133,125 +145,109 @@ function test() {
       decreaseAct: decreaseAct,
       decrease: decrease,
       decreaseCount: decreaseCount,
-    }
+    };
     let index = {
       id: caseNo,
       data: data,
-    }
-    result.push(index)
-  };
-  $(".test").text("計算中").attr("disabled", true).css("width", "94px").css("background-color", "#f15e5e")
+    };
+    result.push(index);
+  }
+  $('.test').text('計算中').attr('disabled', true).css('width', '94px').css('background-color', '#f15e5e');
 
-Swal.fire({
-  icon: "info",
-  title: "計算中，請稍後!",
-  timerProgressBar: true,
-  allowOutsideClick: false,
-  onBeforeOpen: () => {
-    Swal.showLoading();
-    fetch(`api/1.0/backTest`, {
-      method: "POST",
-      headers: new Headers({
-        "Content-Type": "application/json",
-      }),
-      body: JSON.stringify(result),
-    })
-      .then((res) => res.json())
-      .then((body) => {
-        if (body.data.length === 0) {
-          $(".alters").remove();
-          Swal.fire("查無相符股票", "請重新選擇條件", "info");
-          $(".submit").val("送出").attr("disabled", false);
-        } else {
-          let data = JSON.stringify(body);
-          localStorage.setItem("backTestToken", data);
-
-          Swal.fire({
-            icon: "success",
-            title: "查詢成功，即將轉向...",
-            showConfirmButton: false,
-            timer: 1500,
-          }).then(() => {
-            window.location.replace("/result.html");
-          });
-        }
-      });
-  },
-});
-}
-
-function option() { 
-  window.location.replace('../option.html')
-}
-function backTest() { 
-  window.location.replace('../backTest.html')
-}
-
-
-if (localStorage.getItem("userToken")) {
-  const data = {
-    token: localStorage.getItem("userToken"),
-  };
-  fetch("api/1.0/user/profile", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((res) => res.json())
-    .then((body) => {
-      if (body.error) {
-        Swal.fire({
-          title: "登入逾時，請重新登入",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "好哦!",
-          cancelButtonText: "不要!",
-          reverseButtons: true,
-          allowOutsideClick: false,
-        }).then((result) => {
-          if (result.value) {
-            window.location.replace("../signin.html");
-          } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            window.location.replace("../index.html");
-          }
-        });
-      } else {
-        $(".memberLink").attr("href", "./profile.html");
-        $(".member").text(`${body.name}`);
-      }
-    });
-} else {
   Swal.fire({
-    title: "請登入會員，激活此功能",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "好哦!",
-    cancelButtonText: "不要!",
-    reverseButtons: true,
+    icon: 'info',
+    title: '計算中，請稍後!',
+    timerProgressBar: true,
     allowOutsideClick: false,
-  }).then((result) => {
-    if (result.value) {
-      window.location.replace("../signin.html");
-    } else {
-      window.location.replace("../index.html");
+    onBeforeOpen: () => {
+      Swal.showLoading();
     }
   });
+  let url = 'api/1.0/backTest';
+  let body = await fetchPostData(url, result);
+  if (body.data.length === 0) {
+    $('.alters').remove();
+    Swal.fire({
+      icon: 'error',
+      title: '查無相符股票',
+      text: '請重新選擇條件',
+    });
+    $('.submit').val('送出').attr('disabled', false);
+    return;
+  }
+  let data = JSON.stringify(body);
+  window.localStorage.setItem('backTestToken', data);
+  Swal.fire({
+    icon: 'success',
+    title: '查詢成功，即將轉向...',
+    showConfirmButton: false,
+    timer: 1500,
+  }).then(() => {
+    window.location.replace('/result.html');
+  });
+};
+
+async function userTokenCheck() {
+  if (window.localStorage.getItem('userToken')) {
+    const data = {
+      token: window.localStorage.getItem('userToken'),
+    };
+    let url = 'api/1.0/user/profile';
+    let body = await fetchPostData(url, data);
+
+    if (body.error) {
+      Swal.fire({
+        title: '登入逾時，請重新登入',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '好哦!',
+        cancelButtonText: '不要!',
+        reverseButtons: true,
+        allowOutsideClick: false,
+      })
+        .then((result) => {
+          if (result.value) {
+            window.location.replace('../signin.html');
+          } else if (
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            window.location.replace('../index.html');
+          }
+        });
+    } else {
+      $('.memberLink').attr('href', './profile.html');
+      $('.member').text(`${body.name}`);
+    }
+
+  } else {
+    Swal.fire({
+      title: '請登入會員，激活此功能',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '好哦!',
+      cancelButtonText: '不要!',
+      reverseButtons: true,
+      allowOutsideClick: false,
+    }).then((result) => {
+      if (result.value) {
+        window.location.replace('../signin.html');
+      } else {
+        window.location.replace('../index.html');
+      }
+    });
+  }
 }
 
-$(".search").on("keypress", function (e) {
-  if (e.key === "Enter") {
-    let code = $(".search").val();
-    localStorage.setItem("homeCode", code)
-    window.location.replace("../basic.html");
+
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    let code = $('.search').val();
+    window.localStorage.setItem('homeCode', code);
+    window.location.replace('../basic.html');
   }
 });
 
 function pageCheck() {
-  localStorage.setItem("page", "profile");
-  window.location.replace("../profile.html");
+  window.localStorage.setItem('page', 'profile');
+  window.location.replace('../profile.html');
 }

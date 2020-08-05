@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark/dark.css">
   <link rel="stylesheet" href="./css/profile.css" />
-  <script src="./js/jquery-3.5.1.min.js"></script>
+  <script src="./js/plugins/jquery-3.5.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
 </head>
@@ -22,8 +22,8 @@
     </div>
     <div class="feature">
       <input type="text" class="search" name="tag" placeholder="2330" onclick="getData()" />
-      <input type="button" class="option" value="趨勢觀測" onclick="option()">
-      <input type="button" class="backtest" value="歷史回測" onclick="backTest()">
+      <a href="./option.html"><input type="button" class="option" value="趨勢觀測" onclick="option()"></a>
+      <a href="./backTest.html"><input type="button" class="backtest" value="歷史回測" onclick="backTest()"></a>
     </div>
     <div class="profile">
       <a class="memberLink" onclick="pageCheck()">
@@ -33,33 +33,89 @@
     </div>
   </header>
   <main>
+    <div class="basicInfo">
+      <button id='profile' onclick="profile()">基本資料</button>
+      <button id='graphView' onclick="graphView()">趨勢回測紀錄</button>
+      <button id='TestRecord' onclick="TestRecord()">歷史回測紀錄</button>
+    </div>
     <div class="main">
-      <div class="info">
-        <div class="graph">
-          <button id='profile' onclick="profile()">基本資料</button>
-          <!-- <button id='overview' onclick="overview()">趨勢回測紀錄</button>
-          <button id='record' onclick="record()">歷史回測紀錄</button> -->
-          <!-- <button id='details' onclick="details()">Inventory details</button>
-          <button id='profit' onclick="profit()">Profit and loss trial</button>
-          <button id='backtest' onclick="backtest()">Backtest history</button> -->
-        </div>
-        <div class="context">
-          <div class='profile'>
-            <div class="picture"><img src="./imgs/man.png" alt=""></div>
-            <div class="information">
-              <div class="item">姓名</div>
-              <div class="name"></div>
-              <div class="item">信箱</div>
-              <div class="email"></div>
-            </div>
-          </div>
+      <div class='profile'>
+        <div class="picture"><img src="./imgs/man.png" alt=""></div>
+        <div class="information">
+          <div class="item">姓名</div>
+          <div class="name"></div>
+          <div class="item">信箱</div>
+          <div class="email"></div>
         </div>
       </div>
     </div>
+    <div class="main">
+      <div class="filter">
+        <div id="infor">
+          <table class="infor">
+            <caption class="caption">歷史清單</caption>
+            <thead>
+              <tr id="itemName">
+                <th id="case">Case</th>
+                <th id="code">代碼</th>
+                <th id="codeName">代碼</th>
+                <th id="startDate">開始日期</th>
+                <th id="endDate">結束日期</th>
+                <th id="upperPrice"">價格上限</th>
+                <th id=" lowerPrice">價格下限</th>
+                <th id="graphChoice">圖形</th>
+                <th id="count">天數區間</th>
+                <th id="increase">漲幅</th>
+                <th id="decrease">跌幅</th>
+              </tr>
+            </thead>
+            <tbody id="userOption">
+              <!-- <tr class="userOption">
+                                <td>琦玉老師</td>
+                                <td>0</td>
+                                <td>14</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>2</td>
+                              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="info">
+        <!-- <div class="name">台灣積體電路(2330.TW)</div>
+                              <div class="price">386.00</div>
+                              <div class="change">+4.50 (+1.18%)</div> -->
+      </div>
+      <div class="graphOption">
+        <select class="chart" title="選擇線型">
+          <option id='candle' value="candle" onclick="kBarRender()" selected>Candle</option>
+          <option id='line' value="line" onclick="closeRender()">Line</option>
+        </select>
+        <div class="gun">|</div>
+        <button id="indicate" title="參考線型" onclick="indicate()">Indicator</button>
+        <div class="indicate">
+          <!-- <div id='volume'><input type="radio" onclick="checkVolume()">Volume</div>
+                                        <div id='ma'><input type="radio" onclick="checkMA()">SMA/EMA</div> -->
+          <div id='volumes'><input class="volumes" onclick="checkVolume()" type="checkbox">Volume</div>
+          <div id='ma'><input class="ma" onclick="checkMA()" type="checkbox">SMA/EMA</div>
+        </div>
+      
+        <div class="date">
+          <!-- <input type="date" class="startDay" />
+                          <div class="dash">-</div>
+                          <input type="date" class="endDay" />
+                          <input type="button" class="submit" value="送出" onclick="getDate()" /> -->
+        </div>
+      </div>
+      <div id="select" class="info_block"></div>
+    </div>
+
   </main>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="./js/techan.min.js"></script>
+  <script src="./js/plugins/techan.min.js"></script>
+  <script src="./js/graph.js"></script>
   <script type="text/javascript" src="./js/profile.js"></script>
 
   <body>

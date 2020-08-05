@@ -11,8 +11,6 @@ const app = express();
 
 app.set("json spaces", 2);
 
-
-
 // let body converted to JSON
 app.use(express.static(__dirname + "/public"));
 app.use("/admin", express.static("public"));
@@ -23,7 +21,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // API routes
 app.use("/api/" + API_VERSION, [
-  require("./server/routes/admin_route"),
   require("./server/routes/save_route"),
   require("./server/routes/stock_route"),
   require("./server/routes/user_route"),

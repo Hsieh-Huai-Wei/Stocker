@@ -2,7 +2,7 @@
  TechanJS v0.8.0
  (c) 2014 - 2016 Andre Dumas | https://github.com/andredumas/techan.js
 */
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.techan = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==='object'&&typeof module!=='undefined'){module.exports=f();}else if(typeof define==='function'&&define.amd){define([],f);}else{var g;if(typeof window!=='undefined'){g=window;}else if(typeof global!=='undefined'){g=global;}else if(typeof self!=='undefined'){g=self;}else{g=this;}g.techan = f();}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=='function'&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error('Cannot find module \''+o+'\'');throw f.code='MODULE_NOT_FOUND',f;}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e);},l,l.exports,e,t,n,r);}return n[o].exports;}var i=typeof require=='function'&&require;for(var o=0;o<r.length;o++)s(r[o]);return s;})({1:[function(require,module,exports){
 'use strict';module.exports='0.8.0';
 },{}],2:[function(require,module,exports){
 'use strict';
@@ -382,7 +382,7 @@ module.exports = function() {
   };
 };
 
-},{"./adx":2,"./aroon":3,"./atrtrailingstop":4,"./bollinger":5,"./crosshair":6,"./ichimoku":7,"./macd":9,"./ohlc":10,"./rsi":11,"./stochastic":12,"./supstance":13,"./tick":14,"./trade":15,"./trendline":16,"./value":17,"./volume":18,"./williams":19}],9:[function(require,module,exports){
+},{'./adx':2,'./aroon':3,'./atrtrailingstop':4,'./bollinger':5,'./crosshair':6,'./ichimoku':7,'./macd':9,'./ohlc':10,'./rsi':11,'./stochastic':12,'./supstance':13,'./tick':14,'./trade':15,'./trendline':16,'./value':17,'./volume':18,'./williams':19}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = function() {
@@ -1442,7 +1442,7 @@ function wilder_alpha_init(period) {
   return 1/period;
 }
 
-},{"../accessor":8,"./adx":20,"./aroon":21,"./atr":22,"./atrtrailingstop":23,"./bollinger":24,"./ema":25,"./heikinashi":26,"./ichimoku":27,"./indicatormixin":29,"./macd":30,"./rsi":31,"./sma":32,"./stochastic":33,"./vwap":34,"./williams":35}],29:[function(require,module,exports){
+},{'../accessor':8,'./adx':20,'./aroon':21,'./atr':22,'./atrtrailingstop':23,'./bollinger':24,'./ema':25,'./heikinashi':26,'./ichimoku':27,'./indicatormixin':29,'./macd':30,'./rsi':31,'./sma':32,'./stochastic':33,'./vwap':34,'./williams':35}],29:[function(require,module,exports){
 'use strict';
 
 module.exports = function() {
@@ -2164,7 +2164,7 @@ function backgroundPath(accessor, axis, orient, height, width, point, neg) {
         return 'M ' + value + ' 0 l ' + (-pt) + ' ' + (neg*Math.max(axis.tickSizeInner(), 1)) +
           ' l ' + (-w) + ' 0 l 0 ' + (neg*height) + ' l ' + width + ' 0 l 0 ' + (neg*-height) +
           ' l ' + (-w) + ' 0';
-      default: throw "Unsupported orient value: axisannotation.orient(" + orient + "). Set to one of: 'top', 'bottom', 'left', 'right'";
+      default: throw 'Unsupported orient value: axisannotation.orient(' + orient + '). Set to one of: \'top\', \'bottom\', \'left\', \'right\'';
     }
   };
 }
@@ -2604,7 +2604,7 @@ function d3_event() {
   return d3.event;
 }
 
-},{"../accessor":8,"../scale":59,"../svg":62,"../util":64,"./adx":36,"./aroon":37,"./atrtrailingstop":38,"./axisannotation":39,"./bollinger":40,"./candlestick":41,"./crosshair":42,"./ichimoku":43,"./line":45,"./macd":46,"./ohlc":47,"./plot":48,"./plotmixin":49,"./rsi":50,"./stochastic":51,"./supstance":52,"./tick":53,"./tradearrow":54,"./trendline":55,"./volume":56,"./williams":57}],45:[function(require,module,exports){
+},{'../accessor':8,'../scale':59,'../svg':62,'../util':64,'./adx':36,'./aroon':37,'./atrtrailingstop':38,'./axisannotation':39,'./bollinger':40,'./candlestick':41,'./crosshair':42,'./ichimoku':43,'./line':45,'./macd':46,'./ohlc':47,'./plot':48,'./plotmixin':49,'./rsi':50,'./stochastic':51,'./supstance':52,'./tick':53,'./tradearrow':54,'./trendline':55,'./volume':56,'./williams':57}],45:[function(require,module,exports){
 'use strict';
 
 module.exports = function(accessor_value, plot, plotMixin, showZero) {  // Injected dependencies
@@ -4274,7 +4274,7 @@ function widen(widening, width) {
   widening = widening || 0;
 
   return function(d, i, array) {
-    if(array.length > 2) throw "array.length > 2 unsupported. array.length = " + array.length;
+    if(array.length > 2) throw 'array.length > 2 unsupported. array.length = ' + array.length;
     width = width || (array[array.length-1] - array[0]);
     return d + (i*2-1)*width*widening;
   };
@@ -4286,7 +4286,7 @@ function mapReduceFilter(data, map) {
     .filter(function(d) { return d !== null; }); // Remove nulls
 }
 
-},{"../accessor":8,"../util":64,"./financetime":58,"./zoomable":60}],60:[function(require,module,exports){
+},{'../accessor':8,'../util':64,'./financetime':58,'./zoomable':60}],60:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4323,7 +4323,7 @@ module.exports = function() {
 
     scale.range = function(_) {
       if(!arguments.length) return linear.range();
-      throw "zoomable is a read only range. Use this scale for zooming only";
+      throw 'zoomable is a read only range. Use this scale for zooming only';
     };
 
     scale.copy = function() {
@@ -4387,7 +4387,7 @@ module.exports = function(d3_functor) {  // Injected dependencies
           path += ' l ' + 0 + ' ' + ws;
           break;
 
-        default: throw "Unsupported arrow.orient() = " + orient;
+        default: throw 'Unsupported arrow.orient() = ' + orient;
       }
 
       return path + ' z';
@@ -4440,7 +4440,7 @@ module.exports = function(d3) {
     arrow: require('./arrow')(require('../util')().functor)
   };
 };
-},{"../util":64,"./arrow":61}],63:[function(require,module,exports){
+},{'../util':64,'./arrow':61}],63:[function(require,module,exports){
 'use strict';
 
 var _d3;
@@ -4448,7 +4448,7 @@ var _d3;
 // If running in browser (window !undefined), assume d3 available
 if('undefined' != typeof window) _d3 = window.d3;
 else if('object' == typeof module) _d3 = require('d3'); // else we're in the only other supported mode: v8/node
-else throw "Unsupported runtime environment: Could not find d3. Ensure defined globally on window, or available as dependency.";
+else throw 'Unsupported runtime environment: Could not find d3. Ensure defined globally on window, or available as dependency.';
 
 module.exports = (function(d3) {
   return {
@@ -4460,7 +4460,7 @@ module.exports = (function(d3) {
     svg: require('./svg')(d3)
   };
 })(_d3);
-},{"../build/version":1,"./accessor":8,"./indicator":28,"./plot":44,"./scale":59,"./svg":62,"d3":"d3"}],64:[function(require,module,exports){
+},{'../build/version':1,'./accessor':8,'./indicator':28,'./plot':44,'./scale':59,'./svg':62,'d3':'d3'}],64:[function(require,module,exports){
 'use strict';
 
 module.exports = function() {
@@ -4475,7 +4475,7 @@ module.exports = function() {
 
     // https://github.com/d3/d3/blob/v3.5.17/src/core/functor.js
     functor: function(v) {
-      return typeof v === "function" ? v : function() { return v; };
+      return typeof v === 'function' ? v : function() { return v; };
     }
   };
 };
@@ -4497,5 +4497,5 @@ function doRebind(target, source, method, postSetCallback) {
     return value === source ? target : value;
   };
 }
-},{}]},{},[63])(63)
+},{}]},{},[63])(63);
 });

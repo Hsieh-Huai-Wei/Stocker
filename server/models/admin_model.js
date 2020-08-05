@@ -1,8 +1,8 @@
-const { transaction, commit, rollback, query } = require("../../util/dbcon");
+const { transaction, commit, rollback, query } = require('../../util/dbcon');
 
 const historyprice = async (historyData) => {
   try {
-    const result = await query(`SELECT id, code FROM information`);
+    const result = await query('SELECT id, code FROM information');
     let sqlArr = [];
     for (let i = 0; i < historyData.length; i++) {
       for (let j = 0; j < result.length; j++) {
@@ -14,8 +14,8 @@ const historyprice = async (historyData) => {
         }
       }
     }
-    await query(`INSERT INTO history_price (stock_id, date, volume, open, high, low, close, changes, PE) VALUES ?;`, [sqlArr]);
-    return; 
+    await query('INSERT INTO history_price (stock_id, date, volume, open, high, low, close, changes, PE) VALUES ?;', [sqlArr]);
+    return;
   } catch (err) {
     throw err;
   }
