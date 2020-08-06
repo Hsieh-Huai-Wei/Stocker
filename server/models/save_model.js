@@ -5,13 +5,13 @@ const filter = async (data) => {
     return result;
 };
 
-const backTest = async (searchInf) => {
-  const result = await query('SELECT * FROM fake WHERE stock_id = ? AND date BETWEEN ? AND ?', [searchInf.code, searchInf.date, searchInf.today]);
+const summary = async (searchInf) => {
+  const result = await query('INSERT INTO stock.backtest_summary SET ?;', [searchInf]);
   return result;
 };
 
 
 module.exports = {
   filter,
-  backTest,
+  summary,
 };

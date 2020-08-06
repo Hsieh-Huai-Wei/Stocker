@@ -241,19 +241,8 @@ input, select, textarea{
   display: flex;
   flex-direction: row-reverse;
   max-width: 935px;
-  margin: 0px auto;
-
-}
-
-.submit {
-  width: 89px;
-  height: 38px;
-  background-color: #5b9bc3;
-  border: 1.5px solid #ffffff;
-  color: #ffffff;
-  border-radius: 8px;
-  margin-left: 23px;
-  font-size: 0.6em;
+  margin-left: auto;
+  margin-top: 15px;
 }
 
 table >.case tr {
@@ -369,4 +358,24 @@ header > .feature > input.backtest:hover {
   font-size: 0.6rem;
   border: 2px solid #656565;
   border-radius: 20px;
+}
+
+
+.submit {
+  width: 85px;
+  height: 33px;
+  background-color: #5b9bc3;
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 0.8em;
+  margin-right: 5px;
+}
+
+.submit:hover {
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  cursor: pointer;
+  background-color: #5b9bc3;
 }

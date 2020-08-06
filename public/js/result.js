@@ -133,9 +133,9 @@ function backTestResult() {
     for (let i = 0; i < data.data.length; i++) {
       let earningRateFont = (data.data[i].summary.earningRate).toString();
       if (earningRateFont[0] !== '-') {
-        let inputCheck = $('<input>').attr('class', `save${i + 1}`).attr('type', 'checkbox').attr('value', `case${i+1}`);
-        let tr = $('<tr>').attr('class', `summaryData${i + 1}`).append(
-          $('<td>').attr('class', 'case').append(`case #${i + 1}`),
+        let inputCheck = $('<input>').attr('class', `save${i}`).attr('type', 'checkbox').attr('value', i);
+        let tr = $('<tr>').attr('class', `summaryData${i}`).append(
+          $('<td>').attr('class', 'case').append(`case #${i+1}`),
           $('<td>').attr('class', 'code').append(data.data[i].case.code),
           $('<td>').attr('class', 'date').append(data.data[i].case.startDate + '</br>' + '~' + '</br>' + data.data[i].case.endDate),
           $('<td>').attr('class', 'qty').append(data.data[i].summary.finalStock),
@@ -148,9 +148,9 @@ function backTestResult() {
         );
         $('.summaryData').append(tr);
       } else {
-        let inputCheck = $('<input>').attr('class', `save${i + 1}`).attr('type', 'checkbox');
-        let tr = $('<tr>').attr('class', `summaryData${i + 1}`).append(
-          $('<td>').attr('class', 'case').append(`case #${i + 1}`),
+        let inputCheck = $('<input>').attr('class', `save${i}`).attr('type', 'checkbox').attr('value', i);
+        let tr = $('<tr>').attr('class', `summaryData${i}`).append(
+          $('<td>').attr('class', 'case').append(`case #${i+1}`),
           $('<td>').attr('class', 'code').append(data.data[i].case.code),
           $('<td>').attr('class', 'date').append(data.data[i].case.startDate + '</br>' + '~' + '</br>' + data.data[i].case.endDate),
           $('<td>').attr('class', 'qty').append(data.data[i].summary.finalStock),
@@ -167,10 +167,6 @@ function backTestResult() {
     }
 
     // $(".summary").append(summaryNum)
-
-  } else {
-
-
 
   }
 }
@@ -264,6 +260,65 @@ async function save() {
     console.log(results);
     let url = 'api/1.0/saveFilter';
     let body = await fetchPostData(url, results);
+        $('.save').attr('disabled', false);
+        if (body.error) {
+          Swal.fire({
+            title: body.error,
+            icon: 'error',
+            confirmButtonText: '好哦!',
+            reverseButtons: true,
+          });
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: '儲存成功',
+            text: '已加入您個人歷史紀錄',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+    }
+}
+
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    let code = $('.search').val();
+    window.localStorage.setItem('homeCode', code);
+    window.location.replace(`/basic.html?stock=${code}`);
+  }
+});
+
+function pageCheck() {
+  window.localStorage.setItem('page', 'profile');
+  window.location.replace('../profile.html');
+}
+
+async function saveBacktestHistory() {
+  $('.save').attr('disabled', true);
+  if (window.localStorage.getItem('backTestToken')) {
+
+    let dataString = window.localStorage.getItem('backTestToken');
+    let data = JSON.parse(dataString);
+    let num = data.data.length;
+
+    let results = {};
+    results.data = [];
+    for (let i = 0; i < num; i++) {
+      if ($(`.save${i}:checked`).val() !== undefined) {
+        let result = {
+          case: data.data[i].case,
+          history: data.data[i].history,
+          summary: data.data[i].summary,
+          condition: data.data[i].condition,
+        };
+        results.data.push(result);
+      }
+    }
+
+    results.user = window.localStorage.getItem('userToken');
+    console.log(results)
+    let url = 'api/1.0/saveBackTest';
+    let body = await fetchPostData(url, results);
     $('.save').attr('disabled', false);
     if (body.error) {
       Swal.fire({
@@ -282,17 +337,4 @@ async function save() {
       });
     }
   }
-}
-
-$('.search').on('keypress', function (e) {
-  if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace(`/basic.html?stock=${code}`);
-  }
-});
-
-function pageCheck() {
-  window.localStorage.setItem('page', 'profile');
-  window.location.replace('../profile.html');
 }

@@ -524,4 +524,4 @@ $('.chart').change(function () {
   }
 });
 
-// userTokenCheck();
+userTokenCheck();

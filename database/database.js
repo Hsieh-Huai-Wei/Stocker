@@ -206,6 +206,50 @@ CREATE TABLE `filter_history`
 `lower` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
 `graph` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
 `count` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`increase` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`decrease` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
 PRIMARY KEY (`id`),
 CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+USE stock;
+CREATE TABLE `backtest_summary`
+(
+`id` int (25) unsigned NOT NULL AUTO_INCREMENT,
+`user_id` int (25) unsigned NOT NULL,
+`stock_code` int (25) unsigned NOT NULL,
+`property` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`discount` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`decrease` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`decreaseAct` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`decreaseCount` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`increase` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`increaseAct` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`increaseCount` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`start` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`end` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`stock_inventory` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`stock_price` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`trade_cost` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`final_property` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`profit` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`roi` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+PRIMARY KEY (`id`),
+CONSTRAINT fk_backtest FOREIGN KEY (user_id) REFERENCES user (id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+USE stock;
+CREATE TABLE `backtest_detial`
+(
+`id` int (25) unsigned NOT NULL AUTO_INCREMENT,
+`summary_id` int (25) unsigned NOT NULL,
+`date` int (25) unsigned NOT NULL,
+`status` varchar (255) COLLATE utf8mb4_unicode_ci NOT NULL,
+`count` int (25) COLLATE utf8mb4_unicode_ci NOT NULL,
+`price` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`trade_cost` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`property` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+`profit` float(20,2) COLLATE utf8mb4_unicode_ci NOT NULL,
+PRIMARY KEY (`id`),
+CONSTRAINT fk_summary FOREIGN KEY (summary_id) REFERENCES backtest_summary (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

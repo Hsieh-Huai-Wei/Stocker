@@ -1,5 +1,5 @@
 * {
-  border: dotted 1px red;
+  /* border: dotted 1px red; */
   
 }
 
@@ -156,7 +156,7 @@ main {
 
 .main {
   margin: 20px auto;
-  max-width: 700px;
+  max-width: 1000px;
   background-color: #262626;
   /* border: 1px solid #656565; */
   border-radius: 10px;
@@ -320,6 +320,19 @@ header > .feature > input.backtest:hover {
   margin-top: 20px;
   align-items: center;
   position: relative;
+  margin-left: 50px;
+}
+
+.graphOptionFilter {
+  display: flex;
+  width: 935px;
+  height: 40px;
+  background-color: #262626;
+  margin-right: auto;
+  margin-top: 20px;
+  align-items: center;
+  position: relative;
+  margin-left: 50px;
 }
 
 .chart {
@@ -757,9 +770,14 @@ caption {
 #itemName th, #itemName th, .userOption td {
   text-align: center;
   font-size: 0.8em;
-  padding: 8px;
+  padding: 10px 16px;
 }
 
+#itemName th, #itemName th, .userOptionFilter td {
+  text-align: center;
+  font-size: 0.8em;
+  padding: 10px 16px;
+}
 /* .infor, .resultTable {
   border: 1px solid #656565;
 }
@@ -789,11 +807,12 @@ table {
   table-layout:fixed;
   text-align:center;
   border-collapse: collapse;
+  margin: 0px auto;
 }
 
 th, td {
   vertical-align:middle;
-  padding: 10px 0px;
+  padding: 10px 16px;
   border: 1px solid #ffffff; 
   font-size: 0.8em;
 }
@@ -938,4 +957,13 @@ header > .feature > input.backtest:hover {
   font-size: 0.6rem;
   border: 2px solid #656565;
   border-radius: 20px;
+}
+
+.stockName {
+  flex: 1 1 100%;
+}
+
+.backTest {
+  display: flex;
+  justify-content: center;
 }

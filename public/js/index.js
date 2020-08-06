@@ -34,8 +34,6 @@ function userCheck() {
 
 userCheck();
 
-
-
 function checkAuth(num) {
   if ($('.member').text() === 'Sign up / Log in') {
     Swal.fire({

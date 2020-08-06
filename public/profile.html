@@ -25,12 +25,10 @@
       <a href="./option.html"><input type="button" class="option" value="趨勢觀測" onclick="option()"></a>
       <a href="./backTest.html"><input type="button" class="backtest" value="歷史回測" onclick="backTest()"></a>
     </div>
-    <div class="profile">
-      <a class="memberLink" onclick="pageCheck()">
-        <div class="member"></div>
-      </a>
+    <!-- <div class="profile">
+      <a class="memberLink" onclick="pageCheck()"><div class="member"></div></a>
       <a onclick="pageCheck()" class="memberImg"><img src="./imgs/member.png" /></a>
-    </div>
+    </div> -->
   </header>
   <main>
     <div class="basicInfo">
@@ -52,10 +50,10 @@
     <div class="main">
       <div class="filter">
         <div id="infor">
-          <table class="infor">
-            <caption class="caption">歷史清單</caption>
+          <table class="inforFilter">
+            <caption class="captionFilter">歷史清單</caption>
             <thead>
-              <tr id="itemName">
+              <tr id="itemNameFilter">
                 <th id="case">Case</th>
                 <th id="code">代碼</th>
                 <th id="codeName">代碼</th>
@@ -69,25 +67,12 @@
                 <th id="decrease">跌幅</th>
               </tr>
             </thead>
-            <tbody id="userOption">
-              <!-- <tr class="userOption">
-                                <td>琦玉老師</td>
-                                <td>0</td>
-                                <td>14</td>
-                                <td>0</td>
-                                <td>0</td>
-                                <td>2</td>
-                              </tr> -->
+            <tbody id="userOptionFilter">
             </tbody>
           </table>
         </div>
       </div>
-      <div class="info">
-        <!-- <div class="name">台灣積體電路(2330.TW)</div>
-                              <div class="price">386.00</div>
-                              <div class="change">+4.50 (+1.18%)</div> -->
-      </div>
-      <div class="graphOption">
+      <div class="graphOptionFilter">
         <select class="chart" title="選擇線型">
           <option id='candle' value="candle" onclick="kBarRender()" selected>Candle</option>
           <option id='line' value="line" onclick="closeRender()">Line</option>
@@ -95,22 +80,49 @@
         <div class="gun">|</div>
         <button id="indicate" title="參考線型" onclick="indicate()">Indicator</button>
         <div class="indicate">
-          <!-- <div id='volume'><input type="radio" onclick="checkVolume()">Volume</div>
-                                        <div id='ma'><input type="radio" onclick="checkMA()">SMA/EMA</div> -->
           <div id='volumes'><input class="volumes" onclick="checkVolume()" type="checkbox">Volume</div>
           <div id='ma'><input class="ma" onclick="checkMA()" type="checkbox">SMA/EMA</div>
         </div>
       
         <div class="date">
-          <!-- <input type="date" class="startDay" />
-                          <div class="dash">-</div>
-                          <input type="date" class="endDay" />
-                          <input type="button" class="submit" value="送出" onclick="getDate()" /> -->
         </div>
       </div>
       <div id="select" class="info_block"></div>
     </div>
-
+    <div class="main">
+      <div class="backTest">
+        <div id="infor">
+          <table class="infor">
+            <caption class="caption">歷史清單</caption>
+            <thead>
+              <tr id="itemName">
+                <th id="case">Case</th>
+                <th id="code">代碼</th>
+                <th id="name">代碼</th>
+                <th id="property">預設資金</th>
+                <th id="discount">券商折扣</th>
+                <th id="startDate">開始日期</th>
+                <th id="endDate">開始日期</th>
+                <th id="decrease">下跌(%)</th>
+                <th id="decreaseAct">下跌委託</th>
+                <th id="decreaseCount">下跌交易(張)</th>
+                <th id="increase">上漲(%)</th>
+                <th id="increaseAct">上漲委託</th>
+                <th id="increaseCount">上漲交易(張)</th>
+                <th id="stock_inventory">股票庫存</th>
+                <th id="stock_price">股票現價</th>
+                <th id="trade_cost">總交易成本</th>
+                <th id="final_property">總資產結算</th>
+                <th id="profit"">獲利結算</th>
+                <th id="roi">投資報酬率</th>
+              </tr>
+            </thead>
+            <tbody id="userOption">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>

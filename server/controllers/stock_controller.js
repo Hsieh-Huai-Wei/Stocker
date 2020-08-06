@@ -652,27 +652,18 @@ const backTest = async (req, res, next) => {
     let history = [];
 
     for (let i = 0; i < caseResult.length; i++) {
-      console.log('今日漲跌為: ',caseResult[i].changes);
       if (caseResult[i].changes >= increase) {
         if (increaseAct === 'buy' && property > caseResult[i].close) {
-          console.log('漲要買 ');
-          console.log('資金為 ', property);
           let list = {};
-          // console.log(0)
           // 購買手續費
           let buyCost = caseResult[i].close * increaseCount * buyCostPercent * discount;
-          // console.log(1)
           list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2);
-          // console.log(2)
           // 累積交易成本
           tradeCost += buyCost;
-          // console.log(3)
           // 庫存stock數量
           stock += increaseCount;
-          // console.log(4)
           // 總資產扣除
           property = property - buyCost - (caseResult[i].close * increaseCount);
-          // console.log(5)
           list.information = caseResult[i].date;
           list.situation = increaseAct;
           list.price = caseResult[i].close;
@@ -682,8 +673,6 @@ const backTest = async (req, res, next) => {
           list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
           history.push(list);
         } else if (increaseAct === 'sell' && stock > 0) {
-          console.log('漲要賣 ');
-          console.log('股票庫存為 ', property);
           let list = {};
           // 賣出手續費
           let sellCost = (caseResult[i].close * increaseCount * buyCostPercent * discount) + (caseResult[i].close * increaseCount * sellCostPercent);
@@ -710,8 +699,6 @@ const backTest = async (req, res, next) => {
 
       } else if (caseResult[i].changes <= decrease) {
         if (decreaseAct === 'buy' && property > caseResult[i].close) {
-          console.log('跌要買 ');
-          console.log('資金為 ', property);
           let list = {};
           // 購買手續費
           let buyCost = caseResult[i].close * decreaseCount * buyCostPercent * discount;
@@ -733,8 +720,6 @@ const backTest = async (req, res, next) => {
           list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
           history.push(list);
         } else if (decreaseAct === 'sell' && stock > 0) {
-          console.log('跌要賣 ');
-          console.log('股票庫存為 ', property);
           let list = {};
           // 賣出手續費
           let sellCost = (caseResult[i].close * decreaseCount * buyCostPercent * discount) + (caseResult[i].close * decreaseCount * sellCostPercent);
@@ -762,60 +747,6 @@ const backTest = async (req, res, next) => {
       }
     }
 
-
-    // for (let i = 0; i < caseResult.length; i++) {
-    //   let list = {};
-    //   if (property > 0 && caseResult[i].changes >= decrease) {
-    //     console.log("資產",property)
-    //     // 購買手續費
-    //     let buyCost = caseResult[i].close * buy * buyCostPercent * discount;
-    //     list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2)
-    //     // 累積交易成本
-    //     tradeCost += buyCost;
-    //     // 庫存stock數量
-    //     stock += buy;
-
-    //     // 總資產扣除
-    //     property = property - buyCost - (caseResult[i].close * buy)
-
-    //     list.information = caseResult[i].date;
-    //     list.situation = "buy";
-    //     list.price = caseResult[i].close
-    //     list.stock = stock
-    //     list.value = caseResult[i].close;
-    //     list.tradeCost = Number((buyCost).toFixed(2))
-    //     list.property = Number((property + (caseResult[i].close * stock)).toFixed(2))
-    //     history.push(list)
-    //   } else if (caseResult[i].changes >= increase && stock > 0) {
-
-    //     // 賣出手續費
-    //     let sellCost = (caseResult[i].close * sell * buyCostPercent * discount) + (caseResult[i].close * sell * sellCostPercent);
-
-    //     list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2)
-
-    //     // 累積交易成本
-    //     tradeCost += sellCost;
-    //     // 庫存stock數量
-    //     stock -= sell;
-
-    //     // 總資產扣除
-    //     property = property - sellCost + (caseResult[i].close * sell);
-
-    //     list.information = caseResult[i].date;
-    //     list.situation = "sell";
-    //     list.price = caseResult[i].close
-    //     list.stock = stock
-    //     list.value = caseResult[i].close;
-    //     list.tradeCost = Number((sellCost).toFixed(2))
-    //     list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
-    //     history.push(list)
-    //   }
-    // }
-    // console.log("股票庫存", stock);
-    // console.log("資產總額",profit);
-    // console.log("交易成本", tradeCost)
-    // console.log("獲利率", profitPercent)
-    // console.log("淨利", parseInt(data.property) - property);
     let len = caseResult.length;
     let caseData = {
       case: stockData,
@@ -828,6 +759,7 @@ const backTest = async (req, res, next) => {
         income: Number(((property + (stock * caseResult[len - 1].close)) - parseInt(stockData.property)).toFixed(2)),
       },
       history: history,
+      condition: stockData,
     };
 
     data.push(caseData);

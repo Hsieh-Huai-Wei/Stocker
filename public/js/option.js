@@ -95,13 +95,7 @@ async function filterData() {
   window.location.replace(`/filter.html?startDate=${userFilter.start}&endDate=${userFilter.end}&upper=${userFilter.upper}&lower=${userFilter.lower}&graph=${userFilter.graph}&count=${userFilter.count}&increase=${userFilter.increase}&decrease=${userFilter.decrease}`);
 }
 
-$('.search').on('keypress', function (e) {
-  if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace('../basic.html');
-  }
-});
+
 
 async function userTokenCheck () {
   if (window.localStorage.getItem('userToken')) {
@@ -224,6 +218,14 @@ function today () {
   let searchEndDay = ey + '-' + em + '-' + ed;
   $('.searchEndDay').val(searchEndDay);
 }
+
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    let code = $('.search').val();
+    window.localStorage.setItem('homeCode', code);
+    window.location.replace('../basic.html');
+  }
+});
 
 userTokenCheck();
 

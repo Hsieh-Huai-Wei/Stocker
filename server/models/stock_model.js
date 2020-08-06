@@ -44,6 +44,11 @@ const filterHistory = async (data) => {
   return result;
 };
 
+const backTestHistory = async (data) => {
+  console.log("////////////////////////////")
+  const result = await query('SELECT stock.information.name, stock.backtest_summary.*, stock.user.id, stock.user.email FROM stock.user INNER JOIN stock.backtest_summary ON stock.backtest_summary.user_id = stock.user.id INNER JOIN stock.information ON stock.information.code = stock.backtest_summary.stock_code WHERE stock.user.email = ?;', [data.email]);
+  return result;
+};
 
 module.exports = {
   stock,
@@ -52,6 +57,7 @@ module.exports = {
   backTest,
   filterInit,
   filterHistory,
+  backTestHistory,
 };
 
 

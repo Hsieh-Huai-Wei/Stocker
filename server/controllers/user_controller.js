@@ -257,10 +257,36 @@ const graphView = async (req, res) => {
   // }
 };
 
+
+const backTestView = async (req, res) => {
+
+  let token = (req.headers.authorization).split(" ")[1];
+  let decode = jwt.verify(token, secret);
+  let data = {
+    email: decode.userEmail,
+    token: req.body.token,
+  };
+  let result = await Product.backTestHistory(data);
+  // console.log(result);
+  res.status(200).json(result);
+  // if (result.length === 0) {
+  //   res.status(404).json({ error: '信箱不存在!' });
+  //   return;
+  // } else {
+  //   let userId = result[0].id;
+  //   console.log(userId);
+  //   let filterHistory = await Product.filterHistory(userId);
+  //   console.log(filterHistory);
+  //   res.status(200).json({ filterHistory });
+  // }
+};
+
+
 module.exports = {
   signUp,
   signIn,
   fbSignIn,
   getUserProfile,
   graphView,
+  backTestView,
 };
