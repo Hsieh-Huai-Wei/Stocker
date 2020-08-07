@@ -12,6 +12,20 @@ async function fetchPostData(url, data) {
   return res.json();
 }
 
+// nav function
+async function getData() {
+  if ($('.search').val() !== '') {
+    window.location.replace(`/basic.html?stock=${$('.search').val()}`);
+  }
+}
+
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    getData();
+  }
+});
+
+// main function
 function addCase() {
 
   let today = new Date();
@@ -94,9 +108,7 @@ function addCase() {
   }
 }
 
-addCase();
-
-async function test() {
+async function submitData() {
   let num = $('#case').children('.title').length;
 
   let result = [];
@@ -185,9 +197,10 @@ async function test() {
   }).then(() => {
     window.location.replace('/result.html');
   });
-};
+}
 
-async function userTokenCheck() {
+// init function
+async function checkUser() {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
@@ -238,16 +251,11 @@ async function userTokenCheck() {
   }
 }
 
-
-$('.search').on('keypress', function (e) {
-  if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace('../basic.html');
-  }
-});
-
-function pageCheck() {
+function checkPage() {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
 }
+
+checkUser();
+
+addCase();

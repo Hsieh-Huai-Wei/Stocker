@@ -203,11 +203,11 @@ app.d3init = async function (data) {
     .yAnnotation([rsiAnnotation, rsiAnnotationLeft])
     .verticalWireRange([0, dim.plot.height]);
 
-  let a = $('<div>').attr('class', 'graph123');
+  let a = $('<div>').attr('class', 'graphlayout');
   $('#select').append(a);
 
   let svg = d3
-    .select('.graph123')
+    .select('.graphlayout')
     .append('svg')
     .attr('width', dim.width)
     .attr('height', dim.height);
@@ -839,7 +839,7 @@ app.trendDataSort = function (trendData) {
       '/' +
       endOldDates[6] +
       endOldDates[7];
-    const trendObj = {}
+    const trendObj = {};
     trendObj.startDate = new Date(startDate);
     trendObj.endDate = new Date(endDate);
     trendObj.startPrice = trendData[i].startPrice;
@@ -864,3 +864,29 @@ app.trendDataSort = function (trendData) {
   }
   return trendlineData;
 };
+
+
+app.checkVolume = function checkVolume() {
+  if ($('.volumes').is(':checked') === true) {
+    app.volumeRender(app.currGraph, app.choiceStockData);
+  } else {
+    app.volumeCancel(app.currGraph, app.choiceStockData);
+  }
+};
+
+app.checkMA = function checkMA() {
+  if ($('.ma').is(':checked') === true) {
+    app.smaAndema(app.currGraph, app.choiceStockData);
+  } else {
+    app.smaCancel(app.currGraph, app.choiceStockData);
+  }
+}
+
+app.indicate = function indicate() {
+  let display = $('.indicate').css('display');
+  if (display === 'none') {
+    $('.indicate').css('display', 'block');
+  } else {
+    $('.indicate').css('display', 'none');
+  }
+}

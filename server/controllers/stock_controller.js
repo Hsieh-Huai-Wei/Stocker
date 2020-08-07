@@ -125,11 +125,10 @@ function downtrend(userSearch, stockPricePair) {
   let graphPosition = [];
   // 對全部股票進行掃描
   for (let i = 0; i < stockPricePair.length; i++) {
-    console.log('i', i);
+    // console.log('i', i);
     // 對單一股票的歷史價格進行掃描
     let r = Number(userSearch.count);
     let decrease = Number(userSearch.decrease);
-
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
       let stockIndex = stockPricePair[i].data;
       let firstDay = stockIndex[j];
@@ -233,10 +232,10 @@ function reverseV(userSearch, stockPricePair) {
   // 找到圖形符合之型態
   let graphPosition = [];
   // 對全部股票進行掃描
+  console.log(stockPricePair.length)
   for (let i = 0; i < stockPricePair.length; i++) {
     console.log('i', i);
     // 對單一股票的歷史價格進行掃描
-    console.log(userSearch);
     let r = Number(userSearch.count);
     let low = Math.floor(r / 2) - 2;
     let up = Math.floor(r / 2) + 2;
@@ -467,9 +466,8 @@ const option = async (req, res, next) => {
     increase: req.query.increase,
     decrease: req.query.decrease,
   };
-
   // 對 "價格區間" 與 "日期" 對 DB 進行篩選
-
+  console.log(userSearch)
   let date = await dateCheck(userSearch.start, userSearch.end);
   userSearch.start = date.start;
   userSearch.end = date.end;
@@ -526,13 +524,13 @@ const option = async (req, res, next) => {
   } else {
     finalStockPricePair = stockPricePair;
   }
-
-  console.log(finalStockPricePair);
   // 找最終符合條件的 stock 回傳
   let filterCode = [];
   let result = {};
   result.data = [];
+  console.log(finalStockPricePair.length)
   for (let i = 0; i < finalStockPricePair.length; i++) {
+    console.log(i)
     let searchCode = {
       id: finalStockPricePair[i].id,
       start: userSearch.start,
@@ -542,7 +540,6 @@ const option = async (req, res, next) => {
     if (stockInf.length !== 0) {
       let price = [];
       for (let i = 0; i < stockInf.length; i++) {
-
         let index = {};
         index.date = stockInf[i].date; // date
         index.code = stockInf[i].code; // code
@@ -578,7 +575,6 @@ const option = async (req, res, next) => {
         index.industry = stockInf[i].industry;
         price.push(index);
       }
-
       result.data.push(
         {
           id: price[0].code,
@@ -593,7 +589,6 @@ const option = async (req, res, next) => {
       console.log('找不到');
     }
   }
-
   for (let i = 0; i < finalStockPricePair.length; i++) {
     for (let j = 0; j < filterCode.length; j++) {
       if (finalStockPricePair[i].id === filterCode[j].stock_id){

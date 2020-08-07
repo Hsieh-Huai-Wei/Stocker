@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stocker - 首頁</title>
+    <title>Stocker - 個股搜尋</title>
     <link rel=icon href="./imgs/money.png" sizes="16x16" type="image/png">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
@@ -33,34 +33,27 @@
     <main>
         <div class="main">
             <div class="info">
-                <!-- <div class="name">台灣積體電路(2330.TW)</div>
-                <div class="price">386.00</div>
-                <div class="change">+4.50 (+1.18%)</div> -->
             </div>
             <div class="graphOption" >
                 <div class="chart">
                     <select class="chart">
-                        <option id='candle' value="candle" onclick="kBarRender()" selected>Candle</option>
-                        <option id='line' value="line" onclick="closeRender()">Line</option>
+                        <option id='candle' value="candle" onclick="renderKBar()" selected>Candle</option>
+                        <option id='line' value="line" onclick="renderClose()">Line</option>
                     </select>
                 </div>
                 <div class="gun" >|</div>
                 <button id="indicate" data-tooltip="參考線型" onclick="indicate()">Indicator</button>
                 <div class="indicate">
-                    <!-- <div id='volume'><input type="radio" onclick="checkVolume()">Volume</div>
-                    <div id='ma'><input type="radio" onclick="checkMA()">SMA/EMA</div> -->
                     <div id='volumes'><input class="volumes" onclick="checkVolume()" type="checkbox">Volume</div>
                     <div id='ma'><input class="ma" onclick="checkMA()" type="checkbox">SMA/EMA</div>
                 </div>
-
                 <div class="date">
                     <input type="date" class="startDay" />
                     <div class="dash">-</div>
                     <input type="date" class="endDay" />
-                    <input type="button" class="submit" value="送出" onclick="getDate()" />
+                    <input type="button" class="submit" value="送出" onclick="searchDate()" />
                 </div>
             </div>
-
             <div id="select" class="info_block"></div>
         </div>
     </main>

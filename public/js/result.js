@@ -12,25 +12,38 @@ async function fetchPostData(url, data) {
   return res.json();
 }
 
-let today = new Date();
-let ey = (today.getFullYear()).toString();
-let em = (today.getMonth() + 1).toString();
-if (em.length === 1) {
-  em = '0' + em;
+// nav function
+async function getData() {
+  if ($('.search').val() !== '') {
+    window.location.replace(`/basic.html?stock=${$('.search').val()}`);
+  }
 }
-let ed = (today.getDate()).toString();
-if (ed.length === 1) {
-  ed = '0' + ed;
-}
-endDate = ey + '-' + em + '-' + ed;
 
-let c = 'rgba(51, 51, 51, 0.902)';
-let r = 'red';
-let g = 'green';
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    getData();
+  }
+});
 
+// main function
+function renderList() {
 
+  let today = new Date();
+  let ey = (today.getFullYear()).toString();
+  let em = (today.getMonth() + 1).toString();
+  if (em.length === 1) {
+    em = '0' + em;
+  }
+  let ed = (today.getDate()).toString();
+  if (ed.length === 1) {
+    ed = '0' + ed;
+  }
+  let endDate = ey + '-' + em + '-' + ed;
 
-function backTestResult() {
+  let c = 'rgba(51, 51, 51, 0.902)';
+  let r = 'red';
+  let g = 'green';
+
   if (window.localStorage.getItem('backTestToken')) {
     let data = JSON.parse(window.localStorage.getItem('backTestToken'));
     for (let i = 0; i < data.data.length; i++) {
@@ -171,9 +184,54 @@ function backTestResult() {
   }
 }
 
-backTestResult();
+async function saveBacktestHistory() {
+  $('.save').attr('disabled', true);
+  if (window.localStorage.getItem('backTestToken')) {
 
-async function userTokenCheck() {
+    let dataString = window.localStorage.getItem('backTestToken');
+    let data = JSON.parse(dataString);
+    let num = data.data.length;
+
+    let results = {};
+    results.data = [];
+    for (let i = 0; i < num; i++) {
+      if ($(`.save${i}:checked`).val() !== undefined) {
+        let result = {
+          case: data.data[i].case,
+          history: data.data[i].history,
+          summary: data.data[i].summary,
+          condition: data.data[i].condition,
+        };
+        results.data.push(result);
+      }
+    }
+
+    results.user = window.localStorage.getItem('userToken');
+    console.log(results);
+    let url = 'api/1.0/saveBackTest';
+    let body = await fetchPostData(url, results);
+    $('.save').attr('disabled', false);
+    if (body.error) {
+      Swal.fire({
+        title: body.error,
+        icon: 'error',
+        confirmButtonText: '好哦!',
+        reverseButtons: true,
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: '儲存成功',
+        text: '已加入您個人歷史紀錄',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }
+}
+
+// init function
+async function checkUser() {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
@@ -224,117 +282,11 @@ async function userTokenCheck() {
   }
 }
 
-async function save() {
-  $('.save').attr('disabled', true);
-  if (window.localStorage.getItem('backTestToken')) {
-    let dataString = window.localStorage.getItem('backTestToken');
-    let data = JSON.parse(dataString);
-    let num = data.data.length;
-    let results = {};
-    results.data = [];
-    for (let i = 0; i < num; i++) {
-      for (let j = 0; j < num; j++) {
-        if ($(`.save${i}:checked`).val() === data.data[j].id) {
-          let code = $(`.save${i}:checked`).val();
-          console.log('找到了', code);
-          let result = {
-            id: data.data[j].id,
-            trend: data.data[j].trend,
-          };
-          results.data.push(result);
-        }
-      }
-    }
-    results.user = window.localStorage.getItem('userToken');
-    results.inf = data.inf;
-    if (results.data.length === 0) {
-      $('.save').attr('disabled', false);
-      Swal.fire({
-        title: '請勾選要儲存的股票',
-        icon: 'error',
-        confirmButtonText: '好哦!',
-        reverseButtons: true,
-      });
-      return;
-    }
-    console.log(results);
-    let url = 'api/1.0/saveFilter';
-    let body = await fetchPostData(url, results);
-        $('.save').attr('disabled', false);
-        if (body.error) {
-          Swal.fire({
-            title: body.error,
-            icon: 'error',
-            confirmButtonText: '好哦!',
-            reverseButtons: true,
-          });
-        } else {
-          Swal.fire({
-            icon: 'success',
-            title: '儲存成功',
-            text: '已加入您個人歷史紀錄',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-    }
-}
-
-$('.search').on('keypress', function (e) {
-  if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace(`/basic.html?stock=${code}`);
-  }
-});
-
-function pageCheck() {
+function checkPage() {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
 }
 
-async function saveBacktestHistory() {
-  $('.save').attr('disabled', true);
-  if (window.localStorage.getItem('backTestToken')) {
+renderList();
 
-    let dataString = window.localStorage.getItem('backTestToken');
-    let data = JSON.parse(dataString);
-    let num = data.data.length;
-
-    let results = {};
-    results.data = [];
-    for (let i = 0; i < num; i++) {
-      if ($(`.save${i}:checked`).val() !== undefined) {
-        let result = {
-          case: data.data[i].case,
-          history: data.data[i].history,
-          summary: data.data[i].summary,
-          condition: data.data[i].condition,
-        };
-        results.data.push(result);
-      }
-    }
-
-    results.user = window.localStorage.getItem('userToken');
-    console.log(results)
-    let url = 'api/1.0/saveBackTest';
-    let body = await fetchPostData(url, results);
-    $('.save').attr('disabled', false);
-    if (body.error) {
-      Swal.fire({
-        title: body.error,
-        icon: 'error',
-        confirmButtonText: '好哦!',
-        reverseButtons: true,
-      });
-    } else {
-      Swal.fire({
-        icon: 'success',
-        title: '儲存成功',
-        text: '已加入您個人歷史紀錄',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-  }
-}
+checkUser();

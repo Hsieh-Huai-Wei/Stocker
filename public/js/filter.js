@@ -26,6 +26,20 @@ async function fetchGetData(url) {
   return res.json();
 }
 
+// nav function
+async function getData() {
+  if ($('.search').val() !== '') {
+    window.location.replace(`/basic.html?stock=${$('.search').val()}`);
+  }
+}
+
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    getData();
+  }
+});
+
+// render graph
 function renderInfor(data) {
   $('.name').remove();
   $('.price').remove();
@@ -53,14 +67,14 @@ function renderInfor(data) {
   $('.info').append(name).append(price).append(change);
 }
 
-async function kBarRender(trendData) {
-  d3.select('.graph123').remove();
+async function renderKBar(trendData) {
+  d3.select('.graphlayout').remove();
   app.currGraph = null;
 
   let d3Graph = await app.d3init(app.choiceStockData);
 
   let datas = app.choiceStockData;
-  
+
   await renderInfor(datas);
 
   let data = [];
@@ -82,8 +96,8 @@ async function kBarRender(trendData) {
   app.currGraph = d3Graph;
 }
 
-async function closeRender() {
-  d3.select('.graph123').remove();
+async function renderClose() {
+  d3.select('.graphlayout').remove();
   app.currGraph = null;
   let d3Graph = await app.d3init(app.choiceStockData);
 
@@ -110,23 +124,6 @@ async function closeRender() {
   app.currGraph = d3Graph;
 }
 
-$('.search').on('keypress', function (e) {
-  if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace('../basic.html');
-  }
-});
-
-$('.chart').change(function () {
-  var t = $(this).val();
-  if (t === 'Candle') {
-    kBarRender();
-  } else {
-    closeRender();
-  }
-});
-
 function checkVolume() {
   if ($('.volumes').is(':checked') === true) {
     app.volumeRender(app.currGraph, app.choiceStockData);
@@ -152,8 +149,8 @@ function indicate() {
   }
 }
 
-// --------------------------------------------
 
+// main function
 function renderList() {
   if (window.localStorage.getItem('optionResult')) {
     let data = JSON.parse(window.localStorage.getItem('optionResult'));
@@ -172,11 +169,11 @@ function renderList() {
 
     let increase = '';
     if (data.inf.increase === 'undefined') {
-      increase = "-"
+      increase = '-';
     }
     let decrease = '';
     if (data.inf.decrease === 'undefined') {
-      decrease = "-"
+      decrease = '-';
     }
 
     // user search condition
@@ -219,7 +216,7 @@ function renderList() {
             .attr('class', 'userChoice')
             .attr('class', `code${i}`)
             .click(function () {
-              `${choiceStock(data.data[i].data)}`
+              `${choiceStock(data.data[i].data)}`;
             })
             .append(data.data[i].data[priceLen - 1].code),
           $('<td>')
@@ -337,10 +334,66 @@ function choiceStock(data) {
       break;
     }
   }
-  kBarRender(app.choiceStockTrend);
+  renderKBar(app.choiceStockTrend);
 }
 
-async function initRender() {
+async function saveData() {
+  $('.save').attr('disabled', true);
+  if (window.localStorage.getItem('optionResult')) {
+    let dataString = window.localStorage.getItem('optionResult');
+    let data = JSON.parse(dataString);
+    let num = data.data.length;
+    let results = {};
+    results.data = [];
+    for (let i = 0; i < num; i++) {
+      for (let j = 0; j < num; j++) {
+        if ($(`.save${i}:checked`).val() === data.data[j].id) {
+          let code = $(`.save${i}:checked`).val();
+          let result = {
+            id: data.data[j].id,
+            trend: data.data[j].trend,
+          };
+          results.data.push(result);
+        }
+      }
+    }
+    results.user = window.localStorage.getItem('userToken');
+    results.inf = data.inf;
+    if (results.data.length === 0) {
+      $('.save').attr('disabled', false);
+      Swal.fire({
+        title: '請勾選要儲存的股票',
+        icon: 'error',
+        confirmButtonText: '好哦!',
+        reverseButtons: true,
+      });
+      return;
+    }
+
+    let url = 'api/1.0/saveFilter';
+    let body = await fetchPostData(url, results);
+    $('.save').attr('disabled', false);
+    if (body.error) {
+      Swal.fire({
+        title: body.error,
+        icon: 'error',
+        confirmButtonText: '好哦!',
+        reverseButtons: true,
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: '儲存成功',
+        text: '已加入您個人歷史紀錄',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  }
+}
+
+// init function
+async function renderInit() {
 
   Swal.fire({
     icon: 'info',
@@ -354,14 +407,14 @@ async function initRender() {
 
   const urlParams = new URLSearchParams(window.location.search);
 
-  let startDate = urlParams.get("startDate");
-  let endDate = urlParams.get("endDate");
-  let upper = urlParams.get("upper");
-  let lower = urlParams.get("lower");
-  let graph = urlParams.get("graph");
-  let count = urlParams.get("count");
-  let increase = urlParams.get("increase");
-  let decrease = urlParams.get("decrease");
+  let startDate = urlParams.get('startDate');
+  let endDate = urlParams.get('endDate');
+  let upper = urlParams.get('upper');
+  let lower = urlParams.get('lower');
+  let graph = urlParams.get('graph');
+  let count = urlParams.get('count');
+  let increase = urlParams.get('increase');
+  let decrease = urlParams.get('decrease');
 
   if (startDate === null || endDate === null || upper === null || lower === null || graph === null || count === null || increase === null || decrease === null) {
     Swal.fire({
@@ -378,17 +431,17 @@ async function initRender() {
 
   const body = await fetchGetData(url);
   if (body.data.length === 0) {
-    $('.alters').remove();
+    // $('.alters').remove();
     Swal.fire({
       icon: 'error',
       title: '查無相符股票',
-      text:'請重新選擇條件',
-    }).then(()=>{
+      text: '請重新選擇條件',
+    }).then(() => {
       window.location.replace('/option.html');
       return;
     });
+    return;
   }
-
   let data = JSON.stringify(body);
   window.localStorage.setItem('optionResult', data);
   Swal.fire({
@@ -401,10 +454,7 @@ async function initRender() {
   });
 }
 
-initRender();
-
-
-async function userTokenCheck() {
+async function checkUser() {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
@@ -455,61 +505,6 @@ async function userTokenCheck() {
   }
 }
 
-async function saveFilterHistory() {
-  $('.save').attr('disabled', true);
-  if (window.localStorage.getItem('optionResult')) {
-    let dataString = window.localStorage.getItem('optionResult');
-    let data = JSON.parse(dataString);
-    let num = data.data.length;
-    let results = {};
-    results.data = [];
-    for (let i = 0; i < num; i++) {
-      for (let j = 0; j < num; j++) {
-        if ($(`.save${i}:checked`).val() === data.data[j].id) {
-          let code = $(`.save${i}:checked`).val();
-          let result = {
-            id: data.data[j].id,
-            trend: data.data[j].trend,
-          };
-          results.data.push(result);
-        }
-      }
-    }
-    results.user = window.localStorage.getItem('userToken');
-    results.inf = data.inf;
-    if (results.data.length === 0) {
-      $('.save').attr('disabled', false);
-      Swal.fire({
-        title: '請勾選要儲存的股票',
-        icon: 'error',
-        confirmButtonText: '好哦!',
-        reverseButtons: true,
-      });
-      return;
-    }
-
-    let url = `api/1.0/saveFilter`;
-    let body = await fetchPostData(url, results);
-    $('.save').attr('disabled', false);
-    if (body.error) {
-      Swal.fire({
-        title: body.error,
-        icon: 'error',
-        confirmButtonText: '好哦!',
-        reverseButtons: true,
-      });
-    } else {
-      Swal.fire({
-        icon: 'success',
-        title: '儲存成功',
-        text: '已加入您個人歷史紀錄',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
-  }
-}
-
 function checkPage() {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
@@ -524,4 +519,6 @@ $('.chart').change(function () {
   }
 });
 
-userTokenCheck();
+renderInit();
+
+checkUser();

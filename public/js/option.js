@@ -12,7 +12,21 @@ async function fetchPostData (url, data) {
   return res.json();
 }
 
-async function filterData() {
+// nav function
+async function getData() {
+  if ($('.search').val() !== '') {
+    window.location.replace(`/basic.html?stock=${$('.search').val()}`);
+  }
+}
+
+$('.search').on('keypress', function (e) {
+  if (e.key === 'Enter') {
+    getData();
+  }
+});
+
+// main function
+async function submitData() {
 
   let searchEndDay = '';
   let countDays = '';
@@ -51,7 +65,7 @@ async function filterData() {
   }
 
   if ($('.lowerPrice').val() === '') {
-    lowerPrice = '100';
+    lowerPrice = '0';
   } else {
     lowerPrice = $('.lowerPrice').val();
   }
@@ -95,9 +109,74 @@ async function filterData() {
   window.location.replace(`/filter.html?startDate=${userFilter.start}&endDate=${userFilter.end}&upper=${userFilter.upper}&lower=${userFilter.lower}&graph=${userFilter.graph}&count=${userFilter.count}&increase=${userFilter.increase}&decrease=${userFilter.decrease}`);
 }
 
+function checkGraph() {
+  let radioValue = $('input:checked').val();
+  let optional = $('<div>').attr('class', 'optional');
+  let graphNote = $('.graphNote');
+  if (radioValue === 'reverseV') {
+    $('.optional').remove();
+    $('.explain').remove();
+    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').val(25);
+    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
+    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/vTrend.png');
+    optional.append(countDays);
+    optional.append(inputs);
+    graphNote.append(img);
+    $('.dif').append(optional);
+  } else if (radioValue === 'uptrend') {
+    $('.optional').remove();
+    $('.explain').remove();
+    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').val(25);
+    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
+    let input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5').val(5);
+    let increase = $('<div>').attr('id', 'itemss').attr('class', 'increase').text('上漲 %');
+    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/upTrend.png');
+    optional.append(countDays);
+    optional.append(inputs);
+    optional.append(increase);
+    optional.append(input);
+    graphNote.append(img);
+    $('.dif').append(optional);
+  } else if (radioValue === 'downtrend') {
+    $('.optional').remove();
+    $('.explain').remove();
+    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').val(25);
+    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
+    let input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5').val(5);
+    let decrease = $('<div>').attr('id', 'itemss').attr('class', 'decrease').text('下跌 %');
+    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/downTrend.png');
+    optional.append(countDays);
+    optional.append(inputs);
+    optional.append(decrease);
+    optional.append(input);
+    graphNote.append(img);
+    $('.dif').append(optional);
+  } else {
+    $('.optional').remove();
+    $('.explain').remove();
+    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/rangeTrend.png');
+    graphNote.append(img);
+    $('.dif').append(optional);
+  }
+}
 
+function renderToday() {
+  let now = new Date();
+  let ey = now.getFullYear().toString();
+  let em = (now.getMonth() + 1).toString();
+  if (em.length === 1) {
+    em = '0' + em;
+  }
+  let ed = now.getDate().toString();
+  if (ed.length === 1) {
+    ed = '0' + ed;
+  }
+  let searchEndDay = ey + '-' + em + '-' + ed;
+  $('.searchEndDay').val(searchEndDay);
+}
 
-async function userTokenCheck () {
+// init function
+async function checkUser() {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
@@ -148,87 +227,14 @@ async function userTokenCheck () {
   }
 }
 
-function graphCheck() {
-  let radioValue = $('input:checked').val();
-  let optional = $('<div>').attr('class', 'optional');
-  let graphNote = $('.graphNote');
-  if (radioValue === 'reverseV') {
-    $('.optional').remove();
-    $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
-    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/vTrend.png' );
-    optional.append(countDays);
-    optional.append(inputs);
-    graphNote.append(img);
-    $('.dif').append(optional);
-  } else if (radioValue === 'uptrend') {
-    $('.optional').remove();
-    $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
-    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5');
-    let increase = $('<div>').attr('id', 'itemss').attr('class', 'increase').text('上漲 %');
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/upTrend.png');
-    optional.append(countDays);
-    optional.append(inputs);
-    optional.append(increase);
-    optional.append(input);
-    graphNote.append(img);
-    $('.dif').append(optional);
-  } else if (radioValue === 'downtrend') {
-    $('.optional').remove();
-    $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
-    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5');
-    let decrease = $('<div>').attr('id', 'itemss').attr('class', 'decrease').text('下跌 %');
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/downTrend.png');
-    optional.append(countDays);
-    optional.append(inputs);
-    optional.append(decrease);
-    optional.append(input);
-    graphNote.append(img);
-    $('.dif').append(optional);
-  } else {
-    $('.optional').remove();
-    $('.explain').remove();
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/rangeTrend.png');
-    graphNote.append(img);
-    $('.dif').append(optional);
-  }
-}
-
 function checkPage() {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
 }
 
-function today () {
-  let now = new Date();
-  let ey = now.getFullYear().toString();
-  let em = (now.getMonth() + 1).toString();
-  if (em.length === 1) {
-    em = '0' + em;
-  }
-  let ed = now.getDate().toString();
-  if (ed.length === 1) {
-    ed = '0' + ed;
-  }
-  let searchEndDay = ey + '-' + em + '-' + ed;
-  $('.searchEndDay').val(searchEndDay);
-}
 
-$('.search').on('keypress', function (e) {
-  if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace('../basic.html');
-  }
-});
+checkUser();
 
-userTokenCheck();
+checkGraph();
 
-graphCheck();
-
-today();
+renderToday();

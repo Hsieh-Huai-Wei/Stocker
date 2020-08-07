@@ -26,112 +26,20 @@ async function fetchGetData(url) {
   return res.json();
 }
 
-async function userTokenCheck() {
-  if (window.localStorage.getItem('userToken')) {
-    const data = {
-      token: window.localStorage.getItem('userToken'),
-    };
-    let url = 'api/1.0/user/profile';
-    let body = await fetchPostData(url, data);
-
-    if (body.error) {
-      Swal.fire({
-        title: '登入逾時，請重新登入',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '好哦!',
-        cancelButtonText: '不要!',
-        reverseButtons: true,
-        allowOutsideClick: false,
-      })
-        .then((result) => {
-          if (result.value) {
-            window.location.replace('../signin.html');
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            window.location.replace('../index.html');
-          }
-        });
-    } else {
-      $('.memberLink').attr('href', './profile.html');
-      console.log(body)
-      $('.member').text(`${body.name}`);
-      $(".name").text(`${body.name}`);
-      $(".email").text(`${body.email}`);
-    }
-
-  } else {
-    Swal.fire({
-      title: '請登入會員，激活此功能',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: '好哦!',
-      cancelButtonText: '不要!',
-      reverseButtons: true,
-      allowOutsideClick: false,
-    }).then((result) => {
-      if (result.value) {
-        window.location.replace('../signin.html');
-      } else {
-        window.location.replace('../index.html');
-      }
-    });
+// nav function
+async function getData() {
+  if ($('.search').val() !== '') {
+    window.location.replace(`/basic.html?stock=${$('.search').val()}`);
   }
 }
-
-
-userTokenCheck();
-
-function profile() {
-  $('#graphView').attr("disabled", false);
-  $('#profile').attr("disabled", true);
-  $('#TestRecord').attr("disabled", false);
-  $('#overview').css('color', '#656565');
-  $('#overview').css('border-bottom-color', '#656565');
-  $('#profile').css('color', '#ffffff');
-  $('#profile').css('border-bottom-color', '#ffffff');
-  $('#TestRecord').css('color', '#656565');
-  $('#TestRecord').css('border-bottom-color', '#656565');
-  $('.context').show();
-  $('.filter').hide();
-  $('.resultTable').hide();
-  $('.graphOption').hide();
-  $('.info_block').hide();
-
-  $(".filter").hide();
-  $(".graphOption").hide();
-  $("#select").hide();
-  $(".profile").show();
-  $(".backTest").hide();
-  $(".graphOptionFilter").hide();
-  // $(".main").remove();
-
-  // let img = $("<img>").attr("src", "./imgs/man.png");
-  // let picture = $("<div>").attr("class", "picture").append(img);
-  // let information = $("<div>").attr("class", "information");
-  // information.append(
-  //   $("<div>").attr("class", "item").text("姓名"),
-  //   $("<div>").attr("class", "name"),
-  //   $("<div>").attr("class", "item").text("信箱"),
-  //   $("<div>").attr("class", "email"),
-  // );
-  // let profile = $("<div>").attr("class", "profile").append(picture).append(information)
-  // let main = $("<div>").attr("class", "main").append(profile);
-
-  // $("main").append(main)
-}
-
-profile();
 
 $('.search').on('keypress', function (e) {
   if (e.key === 'Enter') {
-    let code = $('.search').val();
-    window.localStorage.setItem('homeCode', code);
-    window.location.replace('../basic.html');
+    getData();
   }
 });
 
+// render graph
 function renderInfor(data) {
   $('.name').remove();
   $('.price').remove();
@@ -159,8 +67,8 @@ function renderInfor(data) {
   $('.info').append(name).append(price).append(change);
 }
 
-async function kBarRender(trendData) {
-  d3.select('.graph123').remove();
+async function renderKBar(trendData) {
+  d3.select('.graphlayout').remove();
   app.currGraph = null;
 
   let d3Graph = await app.d3init(app.choiceStockData);
@@ -186,8 +94,8 @@ async function kBarRender(trendData) {
   app.currGraph = d3Graph;
 }
 
-async function closeRender(trendData) {
-  d3.select('.graph123').remove();
+async function renderClose(trendData) {
+  d3.select('.graphlayout').remove();
   app.currGraph = null;
   let d3Graph = await app.d3init(app.choiceStockData);
 
@@ -225,18 +133,18 @@ async function renderStock(data) {
   let url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
   let body = await fetchGetData(url);
 
-  for (let i = 0; i < body.data.length; i++){
+  for (let i = 0; i < body.data.length; i++) {
     let oldDate = body.data[i].date.toString();
     let y = oldDate[0] + oldDate[1] + oldDate[2] + oldDate[3];
     let m = oldDate[4] + oldDate[5];
     let d = oldDate[6] + oldDate[7];
-    let newDateString = y + "-" + m + "-" + d;
+    let newDateString = y + '-' + m + '-' + d;
     let newDate = new Date(newDateString);
     body.data[i].date = newDate;
   }
   app.choiceStockData = body.data;
 
-  kBarRender(backTestTrend);
+  renderKBar(backTestTrend);
 }
 
 function checkVolume() {
@@ -264,11 +172,54 @@ function indicate() {
   }
 }
 
-async function graphView() {
-  $('#graphView').attr("disabled", true);
-  $('#profile').attr("disabled", false);
-  $('#TestRecord').attr("disabled", false);
-  
+// main function
+
+// profile page
+function renderProfile() {
+  $('#graphView').attr('disabled', false);
+  $('#profile').attr('disabled', true);
+  $('#TestRecord').attr('disabled', false);
+  $('#overview').css('color', '#656565');
+  $('#overview').css('border-bottom-color', '#656565');
+  $('#profile').css('color', '#ffffff');
+  $('#profile').css('border-bottom-color', '#ffffff');
+  $('#TestRecord').css('color', '#656565');
+  $('#TestRecord').css('border-bottom-color', '#656565');
+  $('.context').show();
+  $('.filter').hide();
+  $('.resultTable').hide();
+  $('.graphOption').hide();
+  $('.info_block').hide();
+
+  $('.filter').hide();
+  $('.graphOption').hide();
+  $('#select').hide();
+  $('.profile').show();
+  $('.backTest').hide();
+  $('.graphOptionFilter').hide();
+  // $(".main").remove();
+
+  // let img = $("<img>").attr("src", "./imgs/man.png");
+  // let picture = $("<div>").attr("class", "picture").append(img);
+  // let information = $("<div>").attr("class", "information");
+  // information.append(
+  //   $("<div>").attr("class", "item").text("姓名"),
+  //   $("<div>").attr("class", "name"),
+  //   $("<div>").attr("class", "item").text("信箱"),
+  //   $("<div>").attr("class", "email"),
+  // );
+  // let profile = $("<div>").attr("class", "profile").append(picture).append(information)
+  // let main = $("<div>").attr("class", "main").append(profile);
+
+  // $("main").append(main)
+}
+
+// filter page
+async function renderGraphRecord() {
+  $('#graphView').attr('disabled', true);
+  $('#profile').attr('disabled', false);
+  $('#TestRecord').attr('disabled', false);
+
   $('#overview').css('color', '#ffffff');
   $('#overview').css('border-bottom-color', '#ffffff');
   $('#profile').css('color', '#656565');
@@ -276,31 +227,31 @@ async function graphView() {
   $('#TestRecord').css('color', '#656565');
   $('#TestRecord').css('border-bottom-color', '#656565');
 
-  $(".userOptionFilter").show();
-  $(".graphOptionFilter").show();
-  $("#select").show();
-  $(".inforFilter").show();
-  $(".profile").hide();
-  $(".backTest").hide();
+  $('.userOptionFilter').show();
+  $('.graphOptionFilter').show();
+  $('#select').show();
+  $('.inforFilter').show();
+  $('.profile').hide();
+  $('.backTest').hide();
 
 
   let url = 'api/1.0/user/graphView';
   let body = await fetchGetData(url);
   app.filterHistoryData = body;
-  for (let i=0; i < body.length; i++) {
+  for (let i = 0; i < body.length; i++) {
     // user search condition
     var tr = $('<tr>').attr('class', 'userOptionFilter').append(
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append("#" + (i+1)),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].stock_code),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].name),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].start),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].end),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].upper),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].lower),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].graph),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].count),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].increase),
-      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`}).append(body[i].decrease),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append('#' + (i + 1)),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].stock_code),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].name),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].start),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].end),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].upper),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].lower),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].graph),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].count),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].increase),
+      $('<td>').attr('class', 'userChoice').click(function () { `${renderStock(i)}`; }).append(body[i].decrease),
     );
     $('#userOptionFilter').append(tr);
   }
@@ -330,7 +281,7 @@ async function choiceStock(data) {
     let y = oldDate[0] + oldDate[1] + oldDate[2] + oldDate[3];
     let m = oldDate[4] + oldDate[5];
     let d = oldDate[6] + oldDate[7];
-    let newDateString = y + "-" + m + "-" + d;
+    let newDateString = y + '-' + m + '-' + d;
     let newDate = new Date(newDateString);
     body.data[i].date = newDate;
   }
@@ -339,12 +290,12 @@ async function choiceStock(data) {
   kBarRender(backTestTrend);
 }
 
+// back test page
+async function renderBackTestRecord() {
 
-async function TestRecord() {
-
-  $('#graphView').attr("disabled", false);
-  $('#profile').attr("disabled", false);
-  $('#TestRecord').attr("disabled", true);
+  $('#graphView').attr('disabled', false);
+  $('#profile').attr('disabled', false);
+  $('#TestRecord').attr('disabled', true);
 
 
   $('#overview').css('color', '#656565');
@@ -354,21 +305,21 @@ async function TestRecord() {
   $('#TestRecord').css('color', '#ffffff');
   $('#TestRecord').css('border-bottom-color', '#ffffff');
 
-  $(".userOptionFilter").hide();
-  $("#select").hide();
-  $(".inforFilter").hide();
-  $(".profile").hide();
-  $(".backTest").show();
-  $(".graphOptionFilter").hide();
-  $("svg").hide();
+  $('.userOptionFilter').hide();
+  $('#select').hide();
+  $('.inforFilter').hide();
+  $('.profile').hide();
+  $('.backTest').show();
+  $('.graphOptionFilter').hide();
+  $('svg').hide();
 
   let url = 'api/1.0/user/backTestView';
   let body = await fetchGetData(url);
-  console.log(body)
+  console.log(body);
   for (let i = 0; i < body.length; i++) {
     // user search condition
     var tr = $('<tr>').attr('class', 'userOption').append(
-      $('<td>').attr('class', 'userChoice').append("#" + (i + 1)),
+      $('<td>').attr('class', 'userChoice').append('#' + (i + 1)),
       $('<td>').attr('class', 'userChoice').append(body[i].stock_code),
       $('<td>').attr('class', 'userChoice').append(body[i].name),
       $('<td>').attr('class', 'userChoice').append(body[i].property),
@@ -398,6 +349,61 @@ async function TestRecord() {
   $('.info_block').show();
 }
 
+// init function
+async function checkUser() {
+  if (window.localStorage.getItem('userToken')) {
+    const data = {
+      token: window.localStorage.getItem('userToken'),
+    };
+    let url = 'api/1.0/user/profile';
+    let body = await fetchPostData(url, data);
+
+    if (body.error) {
+      Swal.fire({
+        title: '登入逾時，請重新登入',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '好哦!',
+        cancelButtonText: '不要!',
+        reverseButtons: true,
+        allowOutsideClick: false,
+      })
+        .then((result) => {
+          if (result.value) {
+            window.location.replace('../signin.html');
+          } else if (
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            window.location.replace('../index.html');
+          }
+        });
+    } else {
+      $('.memberLink').attr('href', './profile.html');
+      console.log(body);
+      $('.member').text(`${body.name}`);
+      $('.name').text(`${body.name}`);
+      $('.email').text(`${body.email}`);
+    }
+
+  } else {
+    Swal.fire({
+      title: '請登入會員，激活此功能',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '好哦!',
+      cancelButtonText: '不要!',
+      reverseButtons: true,
+      allowOutsideClick: false,
+    }).then((result) => {
+      if (result.value) {
+        window.location.replace('../signin.html');
+      } else {
+        window.location.replace('../index.html');
+      }
+    });
+  }
+}
+
 $('.chart').change(function () {
   var t = $(this).val();
   if (t === 'candle') {
@@ -406,3 +412,7 @@ $('.chart').change(function () {
     closeRender(app.choiceStockTrend);
   }
 });
+
+checkUser();
+
+renderProfile();

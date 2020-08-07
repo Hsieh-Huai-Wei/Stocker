@@ -3,24 +3,17 @@ const jwt = require('jsonwebtoken');
 const secret = 'secret';
 const User = require('../models/user_model');
 const Product = require('../models/stock_model');
-const { con } = require('../../util/dbcon');
 
 const signUp = async (req, res) => {
-
-  const expirationDate = Math.floor(Date.now() / 1000) + 30; // 30 sec
+  const expirationDate = Math.floor(Date.now() / 1000) + 3600;
   const signInDate = Math.floor(Date.now() / 1000);
-  if (!req.body.name) {
-    res.json({ status: 404, msg: '使用者名稱不得為空!' });
-    // return;
-    const err = new Error('verify fail');
-    err.status = 403;
-    next(err);
-  } else if (!req.body.email) {
-    res.json({ status: 404, msg: '信箱不可為空!' });
+  if (!req.body.name || !req.body.email) {
+    res.status(400).send({ error: '使用者名稱或信箱不得為空!' });
+    return;
   } else if (!req.body.pwd || req.body.pwd.length < 6) {
-    res.json({ status: 404, msg: '密碼長度小於6位數!' });
+    res.status(400).send({ error: '密碼不得為空或長度小於6位數!' });
+    return;
   } else {
-
     let data = {
       name: req.body.name,
       email: req.body.email,
@@ -30,21 +23,18 @@ const signUp = async (req, res) => {
     let checkAccount = await User.signUpCheck(data);
 
     if (checkAccount.length > 0) {
-      res.json({ status: 404, msg: '帳號已存在!' });
+      res.status(400).send({ error: '帳號已存在!'});
+      return;
     } else {
-
       const randomID = Math.floor(Math.random() * 10000) + 1;
       const userPwd = crypto
         .createHash('sha256')
         .update(req.body.pwd)
         .digest('hex');
 
-      const token = jwt.sign(
-        { userEmail: req.body.email, exp: expirationDate },
-        secret
-      );
+      const token = jwt.sign({ userEmail: req.body.email, exp: expirationDate }, secret);
 
-      data = {
+      let userData = {
         id: randomID,
         name: req.body.name,
         email: req.body.email,
@@ -55,8 +45,8 @@ const signUp = async (req, res) => {
         date: signInDate,
       };
 
-      let registerAccount = User.signUp(data);
-
+      let registerAccount = User.signUp(userData);
+      console.log(registerAccount);
       let user = {
         id: randomID,
         provider: 'native',
@@ -129,113 +119,27 @@ const signIn = async (req, res) => {
   }
 };
 
-const fbSignIn = async (req, res) => {
-  const expirationDate = Math.floor(Date.now() / 1000) + 3600; // 60 min
-  const signInDate = Math.floor(Date.now() / 1000);
-  let url = `https://graph.facebook.com/me?fields=id,name,email&access_token=${req.body.access_token}`;
-
-  try {
-    let result = await got(url);
-    // console.log(req.body.access_token) //token
-    //because this object in response, not in request, so you need to transfer it by JSON.parse
-    let userData = JSON.parse(result.body);
-    // console.log(userData) // fb user data
-    sql = `SELECT * FROM user WHERE email = "${userData.email}"`;
-    con.query(sql, function (err, result) {
-      if (result.length === 1) {
-        const token = jwt.sign(
-          { userEmail: userData.email, exp: expirationDate },
-          secret
-        );
-        sql = `UPDATE user SET access_token = "${token}", access_expired = "${signInDate}" WHERE email = "${userData.email}"`;
-        con.query(sql, function (err) {
-          if (err) throw err;
-
-          sql = `SELECT number AS id, provider_id AS provider, name, email, picture FROM user WHERE email = "${userData.email}"`;
-
-          con.query(sql, function (err, result) {
-            if (err) throw err;
-            let user = result[0];
-
-            data = {};
-            data.access_token = token;
-            data.access_expired = signInDate;
-            data.user = user;
-            let results = {};
-            results.data = data;
-            res.json(results);
-          });
-        });
-      } else if (result.length === 0) {
-        const token = jwt.sign(
-          { userEmail: userData.email, exp: expirationDate },
-          secret
-        );
-        sql = 'INSERT INTO user SET number = ?, name = ?, email = ?, picture = ?, provider_id = ?, access_token = ?, access_expired = ?';
-
-        con.query(
-          sql,
-          [
-            userData.id,
-            userData.name,
-            userData.email,
-            '123.jepg',
-            2,
-            token,
-            signInDate,
-          ],
-          function (err, result) {
-            if (err) throw err;
-
-            let user = {
-              id: userData.id,
-              provider: 'facebook',
-              name: userData.name,
-              email: userData.email,
-              picture: '123.jepg',
-            };
-
-            data = {};
-            data.access_token = token;
-            data.access_expired = signInDate;
-            data.user = user;
-            let results = {};
-            results.data = data;
-            res.json(results);
-          }
-        );
-      } else {
-        throw err;
-      }
-    });
-  } catch (error) {
-    res.send(err);
-  }
-};
-
-const getUserProfile = async (req, res) => {
+const getProfile = async (req, res) => {
   const signInDate = Math.floor(Date.now() / 1000);
   let decode = jwt.verify(req.body.token, secret);
   if (decode.exp > signInDate) {
-    console.log('沒過期');
     let data = {
       email: decode.userEmail,
       token: req.body.token,
     };
     let result = await User.profile(data);
     if (result.length === 0) {
-      res.status(404).json({ error: '信箱不存在!' });
+      res.status(400).json({ error: '用戶不存在!' });
       return;
     } else {
       res.status(200).json(result[0]);
     }
   } else {
-    res.status(404).json({ error: '登入逾時，請重新登入!' });
+    res.status(400).json({ error: '登入逾時，請重新登入!' });
   }
 };
 
 const graphView = async (req, res) => {
-
   let token = (req.headers.authorization).split(" ")[1];
   let decode = jwt.verify(token, secret);
   let data = {
@@ -245,21 +149,9 @@ const graphView = async (req, res) => {
   let result = await Product.filterHistory(data);
   console.log(result);
   res.status(200).json(result);
-  // if (result.length === 0) {
-  //   res.status(404).json({ error: '信箱不存在!' });
-  //   return;
-  // } else {
-  //   let userId = result[0].id;
-  //   console.log(userId);
-  //   let filterHistory = await Product.filterHistory(userId);
-  //   console.log(filterHistory);
-  //   res.status(200).json({ filterHistory });
-  // }
 };
 
-
 const backTestView = async (req, res) => {
-
   let token = (req.headers.authorization).split(" ")[1];
   let decode = jwt.verify(token, secret);
   let data = {
@@ -267,26 +159,14 @@ const backTestView = async (req, res) => {
     token: req.body.token,
   };
   let result = await Product.backTestHistory(data);
-  // console.log(result);
   res.status(200).json(result);
-  // if (result.length === 0) {
-  //   res.status(404).json({ error: '信箱不存在!' });
-  //   return;
-  // } else {
-  //   let userId = result[0].id;
-  //   console.log(userId);
-  //   let filterHistory = await Product.filterHistory(userId);
-  //   console.log(filterHistory);
-  //   res.status(200).json({ filterHistory });
-  // }
 };
 
 
 module.exports = {
   signUp,
   signIn,
-  fbSignIn,
-  getUserProfile,
+  getProfile,
   graphView,
   backTestView,
 };

@@ -42,9 +42,9 @@
         <div class="items">歷史時間點</div>
           <input type="date" class="searchEndDay" />
         <div class="items">股價上限</br>(單位:千)</div>
-          <input type="text" class="upperPrice" placeholder="ex. 400" />
+          <input type="text" class="upperPrice" placeholder="ex. 1000" value="1000" />
         <div class="items">股價下限</br>(單位:千)</div>
-          <input type="text" class="lowerPrice" placeholder="ex. 100" />
+          <input type="text" class="lowerPrice" placeholder="ex. 0" value="0" />
       </div>
 
       <!-- <div></div> -->
@@ -71,19 +71,19 @@
         <div class="subtitle">圖形選擇</div>
         <!-- <div id="items" class="graph" >圖形選擇</div> -->
         <div class="itemss dif">
-          <label class="reverseV"><input type="radio" class="itemsss" name="graph" value="reverseV" onclick="graphCheck()"
+          <label class="reverseV"><input type="radio" class="itemsss" name="graph" value="reverseV" onclick="checkGraph()"
               checked> V 型反轉</label>
           <!-- <div id="itemss" class="countDay">圖形區間</div>
                 <input class="countDay" type="text" value="" placeholder="ex. 25" />-->
           <label class="uptrend">
-            <input type="radio" name="graph" value="uptrend" class="itemsss" onclick="graphCheck()"> 上升趨勢線</label>
+            <input type="radio" name="graph" value="uptrend" class="itemsss" onclick="checkGraph()"> 上升趨勢線</label>
           <!-- <div id="itemss" class="increase">上漲 %</div>
                 <input class="increase" type="text" value="" placeholder="ex. 25" /> -->
-          <label class="downtrend"><input type="radio" name="graph" class="itemsss" value="downtrend" onclick="graphCheck()">
+          <label class="downtrend"><input type="radio" name="graph" class="itemsss" value="downtrend" onclick="checkGraph()">
             下跌趨勢線</label>
           <!-- <div id="itemss" class="decrease">下跌 %</div>
                 <input class="decrease" type="text" value="" placeholder="ex. 25" /> -->
-          <label><input type="radio" name="graph" value="na" class="itemsss" onclick="graphCheck()"> 無</label>
+          <label><input type="radio" name="graph" value="na" class="itemsss" onclick="checkGraph()"> 無</label>
           <!-- <div class="optional"> -->
             <!-- <div class="itemss" class="countDay">圖形區間</div>
               <input class="countDay" type="text" value="" placeholder="ex. 25" />
@@ -99,7 +99,7 @@
       <div class="description"> 
         <div class="subtitle">圖形描述</div> 
         <div class="graphNote"><img class="explain" src="./imgs/vTrend.png" alt=""></div>
-        <input type="submit" class="submit" value="送出" onclick="filterData();" />
+        <input type="submit" class="submit" value="送出" onclick="submitData();" />
       </div>
     </div>
     
