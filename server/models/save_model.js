@@ -1,4 +1,4 @@
-const { transaction, commit, rollback, query } = require('../../util/dbcon');
+const { query } = require('../../util/dbcon');
 
 const filter = async (data) => {
     const result = await query('INSERT INTO stock.filter_history SET ?;', data);

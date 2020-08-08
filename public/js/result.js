@@ -1,4 +1,4 @@
-/* global $ Swal*/
+/* global $ Swal app*/
 window.localStorage.setItem('page', 'result');
 
 async function fetchPostData(url, data) {
@@ -13,23 +13,23 @@ async function fetchPostData(url, data) {
 }
 
 // nav function
-async function getData() {
+app.getData = async function () {
   if ($('.search').val() !== '') {
     window.location.replace(`/basic.html?stock=${$('.search').val()}`);
   }
-}
+};
 
 $('.search').on('keypress', function (e) {
   if (e.key === 'Enter') {
-    getData();
+    app.getData();
   }
 });
 
 // main function
-function renderList() {
+app.renderList = function () {
 
   let today = new Date();
-  let ey = (today.getFullYear()).toString();
+  // let ey = (today.getFullYear()).toString();
   let em = (today.getMonth() + 1).toString();
   if (em.length === 1) {
     em = '0' + em;
@@ -38,7 +38,6 @@ function renderList() {
   if (ed.length === 1) {
     ed = '0' + ed;
   }
-  let endDate = ey + '-' + em + '-' + ed;
 
   let c = 'rgba(51, 51, 51, 0.902)';
   let r = 'red';
@@ -182,9 +181,9 @@ function renderList() {
     // $(".summary").append(summaryNum)
 
   }
-}
+};
 
-async function saveBacktestHistory() {
+app.saveBacktestHistory = async function () {
   $('.save').attr('disabled', true);
   if (window.localStorage.getItem('backTestToken')) {
 
@@ -205,9 +204,17 @@ async function saveBacktestHistory() {
         results.data.push(result);
       }
     }
-
+    if (results.data.length === 0) {
+      $('.save').attr('disabled', false);
+      Swal.fire({
+        title: '請勾選要儲存的股票',
+        icon: 'error',
+        confirmButtonText: '好哦!',
+        reverseButtons: true,
+      });
+      return;
+    }
     results.user = window.localStorage.getItem('userToken');
-    console.log(results);
     let url = 'api/1.0/saveBackTest';
     let body = await fetchPostData(url, results);
     $('.save').attr('disabled', false);
@@ -228,10 +235,10 @@ async function saveBacktestHistory() {
       });
     }
   }
-}
+};
 
 // init function
-async function checkUser() {
+app.checkUser = async function () {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
@@ -240,7 +247,7 @@ async function checkUser() {
     let body = await fetchPostData(url, data);
 
     if (body.error) {
-      Swal.fire({
+      let result = Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -248,23 +255,21 @@ async function checkUser() {
         cancelButtonText: '不要!',
         reverseButtons: true,
         allowOutsideClick: false,
-      })
-        .then((result) => {
-          if (result.value) {
-            window.location.replace('../signin.html');
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            window.location.replace('../index.html');
-          }
-        });
+      });
+      if (result.value) {
+        window.location.replace('../signin.html');
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        window.location.replace('../index.html');
+      }
     } else {
       $('.memberLink').attr('href', './profile.html');
       $('.member').text(`${body.name}`);
     }
 
   } else {
-    Swal.fire({
+    let result = Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,
@@ -272,21 +277,20 @@ async function checkUser() {
       cancelButtonText: '不要!',
       reverseButtons: true,
       allowOutsideClick: false,
-    }).then((result) => {
-      if (result.value) {
-        window.location.replace('../signin.html');
-      } else {
-        window.location.replace('../index.html');
-      }
     });
+    if (result.value) {
+      window.location.replace('../signin.html');
+    } else {
+      window.location.replace('../index.html');
+    }
   }
-}
+};
 
-function checkPage() {
+app.checkPage = function () {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
-}
+};
 
-renderList();
+app.renderList();
 
-checkUser();
+app.checkUser();

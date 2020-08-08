@@ -21,13 +21,13 @@
       <a href="./index.html"><img src="./imgs/logo.png" /></a>
       </div>
       <div class="feature">
-        <input type="text" class="search" name="tag" placeholder="2330" onclick="getData()" />
+        <input type="text" class="search" name="tag" placeholder="2330" onclick="app.getData()" />
         <a href="./option.html"><input type="button" class="option" value="趨勢觀測"></a>
         <a href="./backTest.html"><input type="button" class="backtest" value="歷史回測"></a>
       </div>
       <div class="profile">
-      <a class="memberLink" onclick="checkPage()"><div class="member"></div></a>
-      <a onclick="checkPage()" class="memberImg"><img src="./imgs/member.png" /></a>
+      <a class="memberLink" onclick="app.checkPage()"><div class="member"></div></a>
+      <a onclick="app.checkPage()" class="memberImg"><img src="./imgs/member.png" /></a>
       </div>
     </header>
   <main>
@@ -42,9 +42,9 @@
         <div class="items">歷史時間點</div>
           <input type="date" class="searchEndDay" />
         <div class="items">股價上限</br>(單位:千)</div>
-          <input type="text" class="upperPrice" placeholder="ex. 1000" value="1000" />
+          <input type="text" class="upperPrice" placeholder="ex. 1000" />
         <div class="items">股價下限</br>(單位:千)</div>
-          <input type="text" class="lowerPrice" placeholder="ex. 0" value="0" />
+          <input type="text" class="lowerPrice" placeholder="ex. 0" />
       </div>
 
       <!-- <div></div> -->
@@ -71,19 +71,19 @@
         <div class="subtitle">圖形選擇</div>
         <!-- <div id="items" class="graph" >圖形選擇</div> -->
         <div class="itemss dif">
-          <label class="reverseV"><input type="radio" class="itemsss" name="graph" value="reverseV" onclick="checkGraph()"
+          <label class="reverseV"><input type="radio" class="itemsss" name="graph" value="reverseV" onclick="app.checkGraph()"
               checked> V 型反轉</label>
           <!-- <div id="itemss" class="countDay">圖形區間</div>
                 <input class="countDay" type="text" value="" placeholder="ex. 25" />-->
           <label class="uptrend">
-            <input type="radio" name="graph" value="uptrend" class="itemsss" onclick="checkGraph()"> 上升趨勢線</label>
+            <input type="radio" name="graph" value="uptrend" class="itemsss" onclick="app.checkGraph()"> 上升趨勢線</label>
           <!-- <div id="itemss" class="increase">上漲 %</div>
                 <input class="increase" type="text" value="" placeholder="ex. 25" /> -->
-          <label class="downtrend"><input type="radio" name="graph" class="itemsss" value="downtrend" onclick="checkGraph()">
+          <label class="downtrend"><input type="radio" name="graph" class="itemsss" value="downtrend" onclick="app.checkGraph()">
             下跌趨勢線</label>
           <!-- <div id="itemss" class="decrease">下跌 %</div>
                 <input class="decrease" type="text" value="" placeholder="ex. 25" /> -->
-          <label><input type="radio" name="graph" value="na" class="itemsss" onclick="checkGraph()"> 無</label>
+          <label><input type="radio" name="graph" value="na" class="itemsss" onclick="app.checkGraph()"> 無</label>
           <!-- <div class="optional"> -->
             <!-- <div class="itemss" class="countDay">圖形區間</div>
               <input class="countDay" type="text" value="" placeholder="ex. 25" />
@@ -99,16 +99,27 @@
       <div class="description"> 
         <div class="subtitle">圖形描述</div> 
         <div class="graphNote"><img class="explain" src="./imgs/vTrend.png" alt=""></div>
-        <input type="submit" class="submit" value="送出" onclick="submitData();" />
+        <input type="submit" class="submit" value="送出" onclick="app.submitData()" />
       </div>
     </div>
     
   </main>
-
+  <footer>
+    <div class="view">
+      <div class="copyright">
+        &copy; 2018. All rights reserved.
+      </div>
+      <div class="social">
+        <img src="imgs/line.png" />
+        <img src="imgs/twitter.png" />
+        <img src="imgs/facebook.png" />
+      </div>
+    </div>
+  </footer>
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script src="http://techanjs.org/techan.min.js"></script>
+  <script src="./js/plugins/techan.min.js"></script>
+  <script src="./js/graph.js"></script>
   <script type="text/javascript" src="./js/option.js"></script>
-
   <body>
 
 </html>

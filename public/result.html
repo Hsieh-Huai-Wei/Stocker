@@ -21,13 +21,13 @@
       <a href="./index.html"><img src="./imgs/logo.png" /></a>
       </div>
       <div class="feature">
-        <input type="text" class="search" name="tag" placeholder="2330" onclick="getData()" />
+        <input type="text" class="search" name="tag" placeholder="2330" onclick="app.getData()" />
         <a href="./option.html"><input type="button" class="option" value="趨勢觀測"></a>
         <a href="./backTest.html"><input type="button" class="backtest" value="歷史回測"></a>
       </div>
       <div class="profile">
-        <a class="memberLink" onclick="checkPage()"><div class="member"></div></a>
-        <a onclick="checkPage()" class="memberImg"><img src="./imgs/member.png" /></a>
+        <a class="memberLink" onclick="app.checkPage()"><div class="member"></div></a>
+        <a onclick="app.checkPage()" class="memberImg"><img src="./imgs/member.png" /></a>
       </div>
     </header>
   <main>
@@ -74,7 +74,7 @@
         </table>
       </div>
       <div class="btn">
-        <button type="submit" class="submit save" value="save" onclick="saveBacktestHistory();">儲存</button>
+        <button type="submit" class="submit save" value="save" onclick="app.saveBacktestHistory();">儲存</button>
         <a href="/backTest.html"><button type=" submit" class="submit again" value="again" ;">再測一次</button></a>
       </div>
       <div class="testResult">
@@ -157,10 +157,22 @@
     </div>
 
   </main>
-
+  <footer>
+    <div class="view">
+      <div class="copyright">
+        &copy; 2018. All rights reserved.
+      </div>
+      <div class="social">
+        <img src="imgs/line.png" />
+        <img src="imgs/twitter.png" />
+        <img src="imgs/facebook.png" />
+      </div>
+    </div>
+  </footer>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="./js/plugins/techan.min.js"></script>
+  <script src="./js/graph.js"></script>
   <script type="text/javascript" src="./js/result.js"></script>
 
   <body>

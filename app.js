@@ -1,34 +1,40 @@
 // require
-require("dotenv").config();
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
 const { PORT, API_VERSION} = process.env;
 // const port = 3000;
 // const port = 5000;
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
 // const apiVersion = "1.0";
 
 const app = express();
 
-app.set("json spaces", 2);
+app.set('json spaces', 2);
 
 // let body converted to JSON
-app.use(express.static(__dirname + "/public"));
-app.use("/admin", express.static("public"));
+app.use(express.static(__dirname + '/public'));
+app.use('/admin', express.static('public'));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(express.json({ limit: '1000mb' }));
 
 // API routes
-app.use("/api/" + API_VERSION, [
-  require("./server/routes/save_route"),
-  require("./server/routes/stock_route"),
-  require("./server/routes/user_route"),
+app.use('/api/' + API_VERSION, [
+  require('./server/routes/save_route'),
+  require('./server/routes/stock_route'),
+  require('./server/routes/user_route'),
 ]);
+
+// 404 page
+app.get('*', (req, res) => {
+  res.redirect('/404.html');
+});
 
 // Error handling
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
+  console.log(err.message);
   res.json({ error: err.message });
 });
 

@@ -1,7 +1,7 @@
-/* global $ Swal*/
+/* global $ Swal app*/
 window.localStorage.setItem('page', 'option');
 
-async function fetchPostData (url, data) {
+app.fetchPostData = async function  (url, data) {
   let res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -10,23 +10,23 @@ async function fetchPostData (url, data) {
     }),
   });
   return res.json();
-}
+};
 
 // nav function
-async function getData() {
+app.getData = async function () {
   if ($('.search').val() !== '') {
     window.location.replace(`/basic.html?stock=${$('.search').val()}`);
   }
-}
+};
 
 $('.search').on('keypress', function (e) {
   if (e.key === 'Enter') {
-    getData();
+    app.getData();
   }
 });
 
 // main function
-async function submitData() {
+app.submitData = async () => {
 
   let searchEndDay = '';
   let countDays = '';
@@ -73,13 +73,13 @@ async function submitData() {
   if ($('#increase').val() === '') {
     increase = '5';
   } else {
-    increase = $('#increase').val();
+    increase = 0;
   }
 
   if ($('#decrease').val() === '') {
     decrease = '5';
   } else {
-    decrease = $('#decrease').val();
+    decrease = 0;
   }
 
   let graph = $('input:checked').val();
@@ -107,16 +107,16 @@ async function submitData() {
     .css('background-color', '#f15e5e');
 
   window.location.replace(`/filter.html?startDate=${userFilter.start}&endDate=${userFilter.end}&upper=${userFilter.upper}&lower=${userFilter.lower}&graph=${userFilter.graph}&count=${userFilter.count}&increase=${userFilter.increase}&decrease=${userFilter.decrease}`);
-}
+};
 
-function checkGraph() {
+app.checkGraph = function () {
   let radioValue = $('input:checked').val();
   let optional = $('<div>').attr('class', 'optional');
   let graphNote = $('.graphNote');
   if (radioValue === 'reverseV') {
     $('.optional').remove();
     $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').val(25);
+    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
     let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
     let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/vTrend.png');
     optional.append(countDays);
@@ -126,9 +126,9 @@ function checkGraph() {
   } else if (radioValue === 'uptrend') {
     $('.optional').remove();
     $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').val(25);
+    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
     let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5').val(5);
+    let input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5');
     let increase = $('<div>').attr('id', 'itemss').attr('class', 'increase').text('上漲 %');
     let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/upTrend.png');
     optional.append(countDays);
@@ -140,9 +140,9 @@ function checkGraph() {
   } else if (radioValue === 'downtrend') {
     $('.optional').remove();
     $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').val(25);
+    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
     let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5').val(5);
+    let input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5');
     let decrease = $('<div>').attr('id', 'itemss').attr('class', 'decrease').text('下跌 %');
     let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/downTrend.png');
     optional.append(countDays);
@@ -158,9 +158,9 @@ function checkGraph() {
     graphNote.append(img);
     $('.dif').append(optional);
   }
-}
+};
 
-function renderToday() {
+app.renderToday = function () {
   let now = new Date();
   let ey = now.getFullYear().toString();
   let em = (now.getMonth() + 1).toString();
@@ -173,19 +173,19 @@ function renderToday() {
   }
   let searchEndDay = ey + '-' + em + '-' + ed;
   $('.searchEndDay').val(searchEndDay);
-}
+};
 
 // init function
-async function checkUser() {
+app.checkUser = async function () {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
     let url = 'api/1.0/user/profile';
-    let body = await fetchPostData(url, data);
+    let body = await app.fetchPostData(url, data);
 
     if (body.error) {
-      Swal.fire({
+      let result = await Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -193,23 +193,21 @@ async function checkUser() {
         cancelButtonText: '不要!',
         reverseButtons: true,
         allowOutsideClick: false,
-      })
-        .then((result) => {
-          if (result.value) {
-            window.location.replace('../signin.html');
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            window.location.replace('../index.html');
-          }
-        });
+      });
+      if (result.value) {
+        window.location.replace('../signin.html');
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        window.location.replace('../index.html');
+      }
     } else {
       $('.memberLink').attr('href', './profile.html');
       $('.member').text(`${body.name}`);
     }
 
   } else {
-    Swal.fire({
+    let result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,
@@ -217,24 +215,23 @@ async function checkUser() {
       cancelButtonText: '不要!',
       reverseButtons: true,
       allowOutsideClick: false,
-    }).then((result) => {
-      if (result.value) {
-        window.location.replace('../signin.html');
-      } else {
-        window.location.replace('../index.html');
-      }
     });
+    if (result.value) {
+      window.location.replace('../signin.html');
+    } else {
+      window.location.replace('../index.html');
+    }
   }
-}
+};
 
-function checkPage() {
+app.checkPage = function () {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
-}
+};
 
 
-checkUser();
+app.checkUser();
 
-checkGraph();
+app.checkGraph();
 
-renderToday();
+app.renderToday();

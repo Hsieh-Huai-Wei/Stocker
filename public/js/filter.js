@@ -5,7 +5,7 @@ app.currentCode = null;
 app.choiceStockData = null;
 app.choiceStockTrend = null;
 
-async function fetchPostData(url, data) {
+app.fetchPostData = async function (url, data) {
   let res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -14,9 +14,9 @@ async function fetchPostData(url, data) {
     }),
   });
   return res.json();
-}
+};
 
-async function fetchGetData(url) {
+app.fetchGetData = async function (url) {
   let res = await fetch(url, {
     method: 'GET',
     headers: new Headers({
@@ -24,23 +24,23 @@ async function fetchGetData(url) {
     }),
   });
   return res.json();
-}
+};
 
 // nav function
-async function getData() {
+app.getData = async function () {
   if ($('.search').val() !== '') {
     window.location.replace(`/basic.html?stock=${$('.search').val()}`);
   }
-}
+};
 
 $('.search').on('keypress', function (e) {
   if (e.key === 'Enter') {
-    getData();
+    app.getData();
   }
 });
 
 // render graph
-function renderInfor(data) {
+app.renderInfor = function (data) {
   $('.name').remove();
   $('.price').remove();
   $('.change').remove();
@@ -65,9 +65,9 @@ function renderInfor(data) {
     change.css('color', 'green');
   }
   $('.info').append(name).append(price).append(change);
-}
+};
 
-async function renderKBar(trendData) {
+app.renderKBar = async function (trendData) {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
 
@@ -75,7 +75,7 @@ async function renderKBar(trendData) {
 
   let datas = app.choiceStockData;
 
-  await renderInfor(datas);
+  await app.renderInfor(datas);
 
   let data = [];
 
@@ -94,9 +94,9 @@ async function renderKBar(trendData) {
   app.zoom(d3Graph);
   app.draw(d3Graph);
   app.currGraph = d3Graph;
-}
+};
 
-async function renderClose() {
+app.renderClose = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
   let d3Graph = await app.d3init(app.choiceStockData);
@@ -104,7 +104,7 @@ async function renderClose() {
   let datas = app.choiceStockData;
   let trendData = app.choiceStockTrend;
 
-  await renderInfor(datas);
+  await app.renderInfor(datas);
 
   let data = [];
 
@@ -122,159 +122,36 @@ async function renderClose() {
   app.zoom(d3Graph);
   app.draw(d3Graph);
   app.currGraph = d3Graph;
-}
+};
 
-function checkVolume() {
+app.checkVolume = function () {
   if ($('.volumes').is(':checked') === true) {
     app.volumeRender(app.currGraph, app.choiceStockData);
   } else {
     app.volumeCancel(app.currGraph, app.choiceStockData);
   }
-}
+};
 
-function checkMA() {
+app.checkMA = function () {
   if ($('.ma').is(':checked') === true) {
     app.smaAndema(app.currGraph, app.choiceStockData);
   } else {
     app.smaCancel(app.currGraph, app.choiceStockData);
   }
-}
+};
 
-function indicate() {
+app.indicate = function () {
   let display = $('.indicate').css('display');
   if (display === 'none') {
     $('.indicate').css('display', 'block');
   } else {
     $('.indicate').css('display', 'none');
   }
-}
+};
 
 
 // main function
-function renderList() {
-  if (window.localStorage.getItem('optionResult')) {
-    let data = JSON.parse(window.localStorage.getItem('optionResult'));
-    let date = window.localStorage.getItem('filterDate');
-
-    let graph = '';
-    if (data.inf.graph === 'reverseV') {
-      graph = 'V型反轉';
-    } else if (data.inf.graph === 'uptrend') {
-      graph = '上升趨勢線';
-    } else if (data.inf.graph === 'downtrend') {
-      graph = '下跌趨勢線';
-    } else {
-      graph = '無';
-    }
-
-    let increase = '';
-    if (data.inf.increase === 'undefined') {
-      increase = '-';
-    }
-    let decrease = '';
-    if (data.inf.decrease === 'undefined') {
-      decrease = '-';
-    }
-
-    // user search condition
-    var tr = $('<tr>').attr('class', 'userOption').append(
-      $('<td>').attr('class', 'userChoice').append(data.inf.start),
-      $('<td>').attr('class', 'userChoice').append(data.inf.end),
-      $('<td>').attr('class', 'userChoice').append(data.inf.upper),
-      $('<td>').attr('class', 'userChoice').append(data.inf.lower),
-      $('<td>').attr('class', 'userChoice').append(graph),
-      $('<td>').attr('class', 'userChoice').append(data.inf.count),
-      $('<td>').attr('class', 'userChoice').append(increase),
-      $('<td>').attr('class', 'userChoice').append(decrease)
-    );
-    $('#userOption').append(tr);
-
-    let target = 0;
-    // for (let i = 0; i < data.data[0].data.length; i++) {
-    //   if (data.data[0].data[i].date.toString() === date) {
-    //     target += i;
-    //     break;
-    //   }
-    // }
-    // let currentDate = $('<div>').attr('id', 'cDate').append(`${date}`);
-    // $('#currentDate').append(currentDate);
-
-    // for (let i = 0; i < data.data.length; i++) {
-    //   $('#recommend').remove();
-    // }
-    for (let i = 0; i < data.data.length; i++) {
-      let priceLen = target + 1;
-      let code = data.data[i].data[priceLen - 1].code;
-      let inputCheck = $('<input>')
-        .attr('class', `save${i}`)
-        .attr('value', `${code}`)
-        .attr('type', 'checkbox');
-      var tr = $('<tr>')
-        .attr('class', 'userOption')
-        .append(
-          $('<td>')
-            .attr('class', 'userChoice')
-            .attr('class', `code${i}`)
-            .click(function () {
-              `${choiceStock(data.data[i].data)}`;
-            })
-            .append(data.data[i].data[priceLen - 1].code),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .click(function () {
-              `${choiceStock(data.data[i].data)}`;
-            })
-            .append(data.data[i].data[priceLen - 1].name),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].close),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].percentChange),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].volume),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].industry),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].total),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].fd),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].sitc),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .append(data.data[i].data[priceLen - 1].dealers),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].mc),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
-          $('<td>')
-            .attr('class', 'userChoice')
-            .attr('value', `${i}`)
-            .append(inputCheck)
-        );
-      $('.resultTable').append(tr);
-    }
-
-  } else {
-    Swal.fire({
-      title: '還沒有選過篩選條件哦!',
-      icon: 'warning',
-      confirmButtonText: '好哦!',
-      reverseButtons: true,
-      allowOutsideClick: false,
-    }).then(() => {
-      window.location.replace('./option.html');
-    });
-  }
-}
-
-function choiceStock(data) {
+app.choiceStock = function (data) {
   let optionStock = window.localStorage.getItem('optionResult');
   let optionResult = JSON.parse(optionStock);
   app.currentCode = data[0].code;
@@ -334,10 +211,137 @@ function choiceStock(data) {
       break;
     }
   }
-  renderKBar(app.choiceStockTrend);
-}
+  app.renderKBar(app.choiceStockTrend);
+};
 
-async function saveData() {
+app.renderList = async function () {
+  if (window.localStorage.getItem('optionResult')) {
+    let data = JSON.parse(window.localStorage.getItem('optionResult'));
+    // let date = window.localStorage.getItem('filterDate');
+
+    let graph = '';
+    if (data.inf.graph === 'reverseV') {
+      graph = 'V型反轉';
+    } else if (data.inf.graph === 'uptrend') {
+      graph = '上升趨勢線';
+    } else if (data.inf.graph === 'downtrend') {
+      graph = '下跌趨勢線';
+    } else {
+      graph = '無';
+    }
+
+    let increase = '';
+    if (data.inf.increase === 0) {
+      increase = '-';
+    } else {
+      increase = data.inf.increase;
+    }
+    let decrease = '';
+    if (data.inf.decrease === 0) {
+      decrease = '-';
+    } else {
+      decrease = data.inf.decrease;
+    }
+
+    // user search condition
+    var tr = $('<tr>').attr('class', 'userOption').append(
+      $('<td>').attr('class', 'userChoice').append(data.inf.start),
+      $('<td>').attr('class', 'userChoice').append(data.inf.end),
+      $('<td>').attr('class', 'userChoice').append(data.inf.upper),
+      $('<td>').attr('class', 'userChoice').append(data.inf.lower),
+      $('<td>').attr('class', 'userChoice').append(graph),
+      $('<td>').attr('class', 'userChoice').append(data.inf.count),
+      $('<td>').attr('class', 'userChoice').append(increase),
+      $('<td>').attr('class', 'userChoice').append(decrease)
+    );
+    $('#userOption').append(tr);
+
+    let target = 0;
+    // for (let i = 0; i < data.data[0].data.length; i++) {
+    //   if (data.data[0].data[i].date.toString() === date) {
+    //     target += i;
+    //     break;
+    //   }
+    // }
+    // let currentDate = $('<div>').attr('id', 'cDate').append(`${date}`);
+    // $('#currentDate').append(currentDate);
+
+    // for (let i = 0; i < data.data.length; i++) {
+    //   $('#recommend').remove();
+    // }
+    for (let i = 0; i < data.data.length; i++) {
+      let priceLen = target + 1;
+      let code = data.data[i].data[priceLen - 1].code;
+      let inputCheck = $('<input>')
+        .attr('class', `save${i}`)
+        .attr('value', `${code}`)
+        .attr('type', 'checkbox');
+      let tr = $('<tr>')
+        .attr('class', 'userOption')
+        .append(
+          $('<td>')
+            .attr('class', 'userChoice')
+            .attr('class', `code${i}`)
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
+            .append(data.data[i].data[priceLen - 1].code),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
+            .append(data.data[i].data[priceLen - 1].name),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].close),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].percentChange),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].volume),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].industry),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].total),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].fd),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].sitc),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .append(data.data[i].data[priceLen - 1].dealers),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].mc),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
+          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
+          $('<td>')
+            .attr('class', 'userChoice')
+            .attr('value', `${i}`)
+            .append(inputCheck)
+        );
+      $('.resultTable').append(tr);
+    }
+    let firstCode = data.data[0].data;
+    app.choiceStock(firstCode);
+  } else {
+    await Swal.fire({
+      title: '還沒有選過篩選條件哦!',
+      icon: 'warning',
+      confirmButtonText: '好哦!',
+      reverseButtons: true,
+      allowOutsideClick: false,
+    });
+    window.location.replace('./option.html');
+  }
+};
+
+app.saveData = async function () {
   $('.save').attr('disabled', true);
   if (window.localStorage.getItem('optionResult')) {
     let dataString = window.localStorage.getItem('optionResult');
@@ -348,7 +352,6 @@ async function saveData() {
     for (let i = 0; i < num; i++) {
       for (let j = 0; j < num; j++) {
         if ($(`.save${i}:checked`).val() === data.data[j].id) {
-          let code = $(`.save${i}:checked`).val();
           let result = {
             id: data.data[j].id,
             trend: data.data[j].trend,
@@ -371,7 +374,7 @@ async function saveData() {
     }
 
     let url = 'api/1.0/saveFilter';
-    let body = await fetchPostData(url, results);
+    let body = await app.fetchPostData(url, results);
     $('.save').attr('disabled', false);
     if (body.error) {
       Swal.fire({
@@ -390,10 +393,10 @@ async function saveData() {
       });
     }
   }
-}
+};
 
 // init function
-async function renderInit() {
+app.renderInit = async function () {
 
   Swal.fire({
     icon: 'info',
@@ -417,53 +420,56 @@ async function renderInit() {
   let decrease = urlParams.get('decrease');
 
   if (startDate === null || endDate === null || upper === null || lower === null || graph === null || count === null || increase === null || decrease === null) {
-    Swal.fire({
+    await Swal.fire({
       icon: 'error',
       title: '查無相符股票',
       text: '請重新選擇條件',
-    }).then(() => {
-      window.location.replace('/option.html');
-      return;
     });
+    window.location.replace('/option.html');
+    return;
   }
 
   let url = `api/1.0/option?startDate=${startDate}&endDate=${endDate}&upper=${upper}&lower=${lower}&graph=${graph}&count=${count}&increase=${increase}&decrease=${decrease}`;
 
-  const body = await fetchGetData(url);
-  if (body.data.length === 0) {
-    // $('.alters').remove();
-    Swal.fire({
+  const body = await app.fetchGetData(url);
+  if (body.error) {
+    await Swal.fire({
+      icon: 'error',
+      title: '伺服器錯誤',
+      text: '請重新選擇條件',
+    });
+    window.location.replace('/option.html');
+    return;
+  } else if (body.data.length === 0) {
+    await Swal.fire({
       icon: 'error',
       title: '查無相符股票',
       text: '請重新選擇條件',
-    }).then(() => {
-      window.location.replace('/option.html');
-      return;
     });
+    window.location.replace('/option.html');
     return;
   }
   let data = JSON.stringify(body);
   window.localStorage.setItem('optionResult', data);
-  Swal.fire({
+  await Swal.fire({
     icon: 'success',
     title: '查詢成功!',
     showConfirmButton: false,
     timer: 1500,
-  }).then(() => {
-    renderList();
   });
-}
+  app.renderList();
+};
 
-async function checkUser() {
+app.checkUser = async function () {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
     let url = 'api/1.0/user/profile';
-    let body = await fetchPostData(url, data);
+    let body = await app.fetchPostData(url, data);
 
     if (body.error) {
-      Swal.fire({
+      let result = await Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -471,23 +477,21 @@ async function checkUser() {
         cancelButtonText: '不要!',
         reverseButtons: true,
         allowOutsideClick: false,
-      })
-        .then((result) => {
-          if (result.value) {
-            window.location.replace('../signin.html');
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            window.location.replace('../index.html');
-          }
-        });
+      });
+      if (result.value) {
+        window.location.replace('../signin.html');
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        window.location.replace('../index.html');
+      }
     } else {
       $('.memberLink').attr('href', './profile.html');
       $('.member').text(`${body.name}`);
     }
 
   } else {
-    Swal.fire({
+    let result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,
@@ -495,30 +499,29 @@ async function checkUser() {
       cancelButtonText: '不要!',
       reverseButtons: true,
       allowOutsideClick: false,
-    }).then((result) => {
-      if (result.value) {
-        window.location.replace('../signin.html');
-      } else {
-        window.location.replace('../index.html');
-      }
     });
+    if (result.value) {
+      window.location.replace('../signin.html');
+    } else {
+      window.location.replace('../index.html');
+    }
   }
-}
+};
 
-function checkPage() {
+app.checkPage = function () {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
-}
+};
 
 $('.chart').change(function () {
   var t = $(this).val();
   if (t === 'candle') {
-    kBarRender(app.choiceStockTrend);
+    app.renderKBar(app.choiceStockTrend);
   } else if (t === 'line') {
-    closeRender(app.choiceStockTrend);
+    app.renderClose(app.choiceStockTrend);
   }
 });
 
-renderInit();
+app.renderInit();
 
-checkUser();
+app.checkUser();

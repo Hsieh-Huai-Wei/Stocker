@@ -1,7 +1,7 @@
-/* global $, Swal */
+/* global $, Swal app */
 window.localStorage.setItem('page', 'backTest');
 
-async function fetchPostData(url, data) {
+app.fetchPostData = async function (url, data) {
   let res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -10,23 +10,23 @@ async function fetchPostData(url, data) {
     }),
   });
   return res.json();
-}
+};
 
 // nav function
-async function getData() {
+app.getData = async function () {
   if ($('.search').val() !== '') {
     window.location.replace(`/basic.html?stock=${$('.search').val()}`);
   }
-}
+};
 
 $('.search').on('keypress', function (e) {
   if (e.key === 'Enter') {
-    getData();
+    app.getData();
   }
 });
 
 // main function
-function addCase() {
+app.addCase = async function () {
 
   let today = new Date();
   let ey = today.getFullYear().toString();
@@ -43,7 +43,6 @@ function addCase() {
   let startDate = sy + '-' + em + '-' + ed;
 
   let num = $('#case').children('.title').length;
-  console.log(num);
   if (num<5) {
 
     let title = $('<div>').attr('class', 'title').text(`歷史回測條件單 #${num + 1}`).append($('<div>').attr('class', 'note'));
@@ -57,7 +56,7 @@ function addCase() {
       $('<div>').attr('class', 'items').text('結束日期'),
       $('<input>').attr('type', 'date').attr('class', `searchEndDay${num + 1}`).val(endDate),
       $('<div>').attr('class', 'items').text('資金(單位:千)'),
-      $('<input>').attr('type', 'text').attr('class', `property${num + 1}`).attr('placeholder', 'ex. 100000'),
+      $('<input>').attr('type', 'text').attr('class', `property${num + 1}`).attr('placeholder', 'ex. 10000'),
       $('<div>').attr('class', 'items').text('券商折扣(%)'),
       $('<input>').attr('type', 'text').attr('class', `discount${num + 1}`).attr('placeholder', 'ex. 40'),
     );
@@ -93,7 +92,7 @@ function addCase() {
     $('#case').append(title);
     $('#case').append(userOption);
   } else {
-    Swal.fire({
+    await Swal.fire({
       title: '已達新增上限',
       icon: 'warning',
       allowOutsideClick: false,
@@ -106,9 +105,9 @@ function addCase() {
     });
     $('.add').text('已達上限').attr('disabled', true).css('width', '94px').css('background-color', '#f15e5e');
   }
-}
+};
 
-async function submitData() {
+app.submitData = async function () {
   let num = $('#case').children('.title').length;
 
   let result = [];
@@ -176,7 +175,7 @@ async function submitData() {
     }
   });
   let url = 'api/1.0/backTest';
-  let body = await fetchPostData(url, result);
+  let body = await app.fetchPostData(url, result);
   if (body.data.length === 0) {
     $('.alters').remove();
     Swal.fire({
@@ -189,27 +188,26 @@ async function submitData() {
   }
   let data = JSON.stringify(body);
   window.localStorage.setItem('backTestToken', data);
-  Swal.fire({
+  await Swal.fire({
     icon: 'success',
     title: '查詢成功，即將轉向...',
     showConfirmButton: false,
     timer: 1500,
-  }).then(() => {
-    window.location.replace('/result.html');
   });
-}
+  window.location.replace('/result.html');
+};
 
 // init function
-async function checkUser() {
+app.checkUser = async function () {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
     let url = 'api/1.0/user/profile';
-    let body = await fetchPostData(url, data);
+    let body = await app.fetchPostData(url, data);
 
     if (body.error) {
-      Swal.fire({
+      let result = Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -217,23 +215,21 @@ async function checkUser() {
         cancelButtonText: '不要!',
         reverseButtons: true,
         allowOutsideClick: false,
-      })
-        .then((result) => {
-          if (result.value) {
-            window.location.replace('../signin.html');
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            window.location.replace('../index.html');
-          }
-        });
+      });
+      if (result.value) {
+        window.location.replace('../signin.html');
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        window.location.replace('../index.html');
+      }
     } else {
       $('.memberLink').attr('href', './profile.html');
       $('.member').text(`${body.name}`);
     }
 
   } else {
-    Swal.fire({
+    let result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,
@@ -241,21 +237,20 @@ async function checkUser() {
       cancelButtonText: '不要!',
       reverseButtons: true,
       allowOutsideClick: false,
-    }).then((result) => {
-      if (result.value) {
-        window.location.replace('../signin.html');
-      } else {
-        window.location.replace('../index.html');
-      }
     });
+    if (result.value) {
+      window.location.replace('../signin.html');
+    } else {
+      window.location.replace('../index.html');
+    }
   }
-}
+};
 
-function checkPage() {
+app.checkPage = function () {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
-}
+};
 
-checkUser();
+app.checkUser();
 
-addCase();
+app.addCase();

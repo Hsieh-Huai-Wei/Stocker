@@ -2,10 +2,10 @@
 window.localStorage.setItem('page', 'basic');
 
 let currentCode = '2330';
-let currentName = '台積電';
+// let currentName = '台積電';
 app.graphData = null;
 
-async function fetchPostData(url, data) {
+app.fetchPostData = async function (url, data) {
   let res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -14,9 +14,9 @@ async function fetchPostData(url, data) {
     }),
   });
   return res.json();
-}
+};
 
-async function fetchGetData(url) {
+app.fetchGetData = async function (url) {
   let res = await fetch(url, {
     method: 'GET',
     headers: new Headers({
@@ -24,16 +24,16 @@ async function fetchGetData(url) {
     }),
   });
   return res.json();
-}
+};
 
 // nav function
-async function getData() {
+app.getData = async function () {
   if ($('.search').val() !== '') {
     window.location.replace(`/basic.html?stock=${$('.search').val()}`);
   }
-}
+};
 
-async function searchDate() {
+app.searchDate = async function () {
 
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -49,12 +49,14 @@ async function searchDate() {
           icon: 'error',
           title: '找尋範圍太小，MACD 與 RSI 將無法正確顯示',
         });
+        return;
       }
     } else if ((Number(endDate.split('-')[0]) - Number(startDate.split('-')[0])) < 0) {
       Swal.fire({
         icon: 'error',
         title: '找尋範圍錯誤，請重新選擇日期',
       });
+      return;
     }
   } else if ($('.startDay').val() === '' && $('.endDay').val() !== '') {
     let end = $('.endDay').val();
@@ -83,12 +85,11 @@ async function searchDate() {
       });
     }
   } else {
-    Swal.fire({
+    await Swal.fire({
       icon: 'warning',
       title: '請填寫日期',
-    }).then(() => {
-      return;
     });
+    return;
   }
 
   let code = urlParams.get('stock');
@@ -106,16 +107,16 @@ async function searchDate() {
   $('.endDay').val(endDate);
 
   window.location.replace(`/basic.html?stock=${userSearch.stockCode}&start=${userSearch.startDate}&end=${userSearch.endDate}`);
-}
+};
 
 $('.search').on('keypress', function (e) {
   if (e.key === 'Enter') {
-    getData();
+    app.getData();
   }
 });
 
 // render graph
-function renderInfor(data) {
+app.renderInfor = function (data) {
   $('.name').remove();
   $('.price').remove();
   $('.change').remove();
@@ -141,15 +142,15 @@ function renderInfor(data) {
     change.css('color', 'green');
   }
   $('.info').append(name).append(price).append(change);
-}
+};
 
-async function renderKBar() {
+app.renderKBar = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
   let localData = window.localStorage.getItem('home');
   app.graphData = JSON.parse(localData);
   let d3Graph = await app.d3init(app.graphData);
-  await renderInfor(app.graphData);
+  await app.renderInfor(app.graphData);
 
   let data = [];
 
@@ -163,9 +164,9 @@ async function renderKBar() {
   app.zoom(d3Graph);
   app.draw(d3Graph);
   app.currGraph = d3Graph;
-}
+};
 
-async function renderClose() {
+app.renderClose = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
   let d3Graph = await app.d3init();
@@ -174,7 +175,7 @@ async function renderClose() {
 
   app.graphData = JSON.parse(localData);
 
-  await renderInfor(app.graphData);
+  await app.renderInfor(app.graphData);
 
   let data = [];
 
@@ -188,35 +189,35 @@ async function renderClose() {
   app.zoom(d3Graph);
   app.draw(d3Graph);
   app.currGraph = d3Graph;
-}
+};
 
-function checkVolume() {
+app.checkVolume = function () {
   if ($('.volumes').is(':checked') === true) {
     app.volumeRender(app.currGraph, app.graphData);
   } else {
     app.volumeCancel(app.currGraph, app.graphData);
   }
-}
+};
 
-function checkMA() {
+app.checkMA = function () {
   if ($('.ma').is(':checked') === true) {
     app.smaAndema(app.currGraph, app.graphData);
   } else {
     app.smaCancel(app.currGraph, app.graphData);
   }
-}
+};
 
-function indicate() {
+app.indicate = function () {
   let display = $('.indicate').css('display');
   if (display === 'none') {
     $('.indicate').css('display', 'block');
   } else {
     $('.indicate').css('display', 'none');
   }
-}
+};
 
 // init function
-async function renderInit() {
+app.renderInit = async function () {
   const urlParams = new URLSearchParams(window.location.search);
 
   let code = urlParams.get('stock');
@@ -252,15 +253,14 @@ async function renderInit() {
   $('.endDay').val(endDate);
 
   let url = `api/1.0/stock?code=${userSearch.stockCode}&start=${userSearch.startDate}&end=${userSearch.endDate}`;
-  let body = await fetchGetData(url);
+  let body = await app.fetchGetData(url);
   if (body.error) {
-    Swal.fire({
+    await Swal.fire({
       icon: 'error',
       title: '查無相符股票，請重新選擇條件',
-    }).then(() => {
-      window.location.replace('/basic.html');
-      return;
-    });
+    }).
+    window.location.replace('/basic.html');
+    return;
   }
   for (let i = 0; i < body.data.length; i++) {
     let strDate = body.data[i].date.toString();
@@ -270,19 +270,19 @@ async function renderInit() {
     body.data[i].date = new Date(y + m + d);
   }
   currentCode = body.data[0].code;
-  currentName = body.data[0].name;
+  // currentName = body.data[0].name;
   let datas = JSON.stringify(body.data);
   window.localStorage.setItem('home', datas);
-  renderKBar();
-}
+  app.renderKBar();
+};
 
-async function checkUser() {
+app.checkUser = async function () {
   if (window.localStorage.getItem('userToken')) {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
     let url = 'api/1.0/user/profile';
-    let body = await fetchPostData(url, data);
+    let body = await app.fetchPostData(url, data);
     if (body.error) {
       $('.memberLink').attr('href', './signin.html');
       $('.member').text('Sign up / Log in');
@@ -294,22 +294,22 @@ async function checkUser() {
     $('.memberLink').attr('href', './signin.html');
     $('.member').text('Sign up / Log in');
   }
-}
+};
 
-function checkPage() {
+app.checkPage = function () {
   window.localStorage.setItem('page', 'profile');
   window.location.replace('../profile.html');
-}
+};
 
 $('.chart').change(function () {
   var t = $(this).val();
   if (t === 'candle') {
-    kBarRender();
+    app.renderKBar();
   } else if (t === 'line') {
-    closeRender();
+    app.renderClose();
   }
 });
 
-renderInit();
+app.renderInit();
 
-checkUser();
+app.checkUser();

@@ -880,7 +880,7 @@ app.checkMA = function checkMA() {
   } else {
     app.smaCancel(app.currGraph, app.choiceStockData);
   }
-}
+};
 
 app.indicate = function indicate() {
   let display = $('.indicate').css('display');
@@ -889,4 +889,4 @@ app.indicate = function indicate() {
   } else {
     $('.indicate').css('display', 'none');
   }
-}
+};

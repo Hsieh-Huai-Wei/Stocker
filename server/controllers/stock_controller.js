@@ -1,14 +1,9 @@
 const Product = require('../models/stock_model');
-const User = require('../models/user_model');
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const secret = 'secret';
 const moment = require('moment'); // calculate time
 
 function dateCheck(start, end) {
 
   return new Promise((resolve) => {
-    console.log(start)
     const startString = start.split('-');
     const startTime = startString[0] + startString[1] + startString[2];
     const endString = end.split('-');
@@ -17,7 +12,6 @@ function dateCheck(start, end) {
       start: parseInt(startTime),
       end: parseInt(endTime),
     };
-    console.log(result)
     resolve(result);
     return;
   });
@@ -66,7 +60,7 @@ function uptrend(userSearch, stockPricePair) {
         for (let k = 1; k < stockIndexLength; k++) {
           if (
             firstDay.close < stockIndex[k].close &&
-            stockIndex[k].m === 1 &&
+            stockIndex[k].trend_slope === 1 &&
             stockIndex[k - 1].close <= stockIndex[k].close
           ) {
             upCount += 1;
@@ -125,7 +119,7 @@ function downtrend(userSearch, stockPricePair) {
   let graphPosition = [];
   // 對全部股票進行掃描
   for (let i = 0; i < stockPricePair.length; i++) {
-    // console.log('i', i);
+    console.log('i', i);
     // 對單一股票的歷史價格進行掃描
     let r = Number(userSearch.count);
     let decrease = Number(userSearch.decrease);
@@ -161,7 +155,7 @@ function downtrend(userSearch, stockPricePair) {
         for (let k = 1; k < stockIndexLength; k++) {
           if (
             firstDay.close < stockIndex[k].close &&
-            stockIndex[k].m === -1 &&
+            stockIndex[k].trend_slope === -1 &&
             stockIndex[k - 1].close >= stockIndex[k].close
           ) {
             upCount += 1;
@@ -211,31 +205,16 @@ function downtrend(userSearch, stockPricePair) {
       finalStockPricePair.push(index);
     }
   }
-
   return finalStockPricePair;
 }
 
 function reverseV(userSearch, stockPricePair) {
-
-  // 找到圖形符合之型態
-  // 對全部股票進行掃描
-  // 對單一股票的歷史價格進行掃描
-  // 30 day    3 day
-  // 180 day    6 day
-  // 360 day    9 day
-  // 找出最小值的位置與close
-  // 從第0個到最低點是否close是否都小於第0個且m=-1佔7成
-  // 從最低點到最後一個是否close是否都大於最低點且m=1佔7成
-  // 將0、最低點、最後一個的start與end打包成index塞入array
-  // 整理array
-
   // 找到圖形符合之型態
   let graphPosition = [];
   // 對全部股票進行掃描
-  console.log(stockPricePair.length)
   for (let i = 0; i < stockPricePair.length; i++) {
-    console.log('i', i);
     // 對單一股票的歷史價格進行掃描
+    console.log('i', i);
     let r = Number(userSearch.count);
     let low = Math.floor(r / 2) - 2;
     let up = Math.floor(r / 2) + 2;
@@ -296,7 +275,7 @@ function reverseV(userSearch, stockPricePair) {
             for (let k = 1; k < minPosition; k++) {
               if (
                 firstDay.close > stockIndex[k].close &&
-                stockIndex[k].m === -1 &&
+                stockIndex[k].trend_slope === -1 &&
                 lastDay.close > stockIndex[k].close
               ) {
                 lowCount += 1;
@@ -306,7 +285,7 @@ function reverseV(userSearch, stockPricePair) {
             for (let k = minPosition; k < stockIndexLength; k++) {
               if (
                 minDay.close < stockIndex[k].close &&
-                stockIndex[k].m === 1 &&
+                stockIndex[k].trend_slope === 1 &&
                 lastDay.close >= stockIndex[k].close &&
                 firstDay.close > stockIndex[k].close
               ) {
@@ -369,6 +348,7 @@ function reverseV(userSearch, stockPricePair) {
       finalStockPricePair.push(index);
     }
   }
+
   return finalStockPricePair;
 }
 
@@ -455,7 +435,6 @@ const stock = async (req, res, next) => {
 };
 
 const option = async (req, res, next) => {
-
   let userSearch = {
     start: req.query.startDate,
     end: req.query.endDate,
@@ -467,7 +446,6 @@ const option = async (req, res, next) => {
     decrease: req.query.decrease,
   };
   // 對 "價格區間" 與 "日期" 對 DB 進行篩選
-  console.log(userSearch)
   let date = await dateCheck(userSearch.start, userSearch.end);
   userSearch.start = date.start;
   userSearch.end = date.end;
@@ -487,7 +465,7 @@ const option = async (req, res, next) => {
           open: filterInit[i].open,
           close: filterInit[i].close,
           changes: filterInit[i].changes,
-          m: filterInit[i].m,
+          trend_slope: filterInit[i].trend_slope,
         }
       );
     } else {
@@ -499,7 +477,7 @@ const option = async (req, res, next) => {
             open: filterInit[i].open,
             close: filterInit[i].close,
             changes: filterInit[i].changes,
-            m: filterInit[i].m,
+            trend_slope: filterInit[i].trend_slope,
           }
         ],
       };
@@ -508,7 +486,6 @@ const option = async (req, res, next) => {
   }
 
   // 進行圖形分類判斷
-
   let finalStockPricePair;
 
   if (userSearch.graph === 'na') {
@@ -528,9 +505,9 @@ const option = async (req, res, next) => {
   let filterCode = [];
   let result = {};
   result.data = [];
-  console.log(finalStockPricePair.length)
+
   for (let i = 0; i < finalStockPricePair.length; i++) {
-    console.log(i)
+
     let searchCode = {
       id: finalStockPricePair[i].id,
       start: userSearch.start,
@@ -561,30 +538,27 @@ const option = async (req, res, next) => {
           volumeNum += volumeSql[i];
         }
         index.volume = Number(volumeNum); // volumn
-        index.pe = stockInf[i].PE;
-        index.mc = stockInf[i].MC;
-        index.rsv = stockInf[i].RSV;
-        index.k = stockInf[i].K;
-        index.d = stockInf[i].D;
-        index.dy = stockInf[i].DY;
-        index.pb = stockInf[i].PB;
-        index.fd = stockInf[i].FD;
-        index.sitc = stockInf[i].SITC;
-        index.dealers = stockInf[i].Dealers;
+        index.pe = stockInf[i].pe;
+        index.fd = stockInf[i].fi_count;
+        index.sitc = stockInf[i].sitc_count;
+        index.dealers = stockInf[i].dealers_count;
         index.total = stockInf[i].total;
         index.industry = stockInf[i].industry;
         price.push(index);
       }
+
       result.data.push(
         {
           id: price[0].code,
           data: price,
         }
       );
-      filterCode.push({
-        stock_code: stockInf[i].code,
-        stock_id: stockInf[i].stock_id
-      });
+      if (stockInf[i] !== undefined) {
+        filterCode.push({
+          stock_code: stockInf[i].code,
+          stock_id: stockInf[i].stock_id
+        });
+      }
     } else {
       console.log('找不到');
     }
@@ -605,10 +579,8 @@ const option = async (req, res, next) => {
     }
   }
 
-
   result.inf = userSearch;
   console.log(result);
-
   res.send(result);
 };
 
@@ -623,7 +595,6 @@ const backTest = async (req, res, next) => {
     caseInf.push(parseInt(stockData.code));
     caseInf.push(parseInt(stockData.startDate));
     caseInf.push(parseInt(stockData.endDate));
-    console.log(caseInf);
     let caseResult = await Product.backTest(caseInf);
     //帶入參數
     let propertyInit = parseInt(stockData.property);
@@ -635,10 +606,9 @@ const backTest = async (req, res, next) => {
     let decrease = parseInt(stockData.decrease); //跌 %
     let increaseCount = parseInt(stockData.increaseCount); // 張
     let decreaseCount = parseInt(stockData.decreaseCount); // 張
-
     let discount = (parseInt(stockData.discount)) / 100;
-    let buyCostPercent = 0.001425;
-    let sellCostPercent = 0.003;
+    const buyCostPercent = 0.001425;
+    const sellCostPercent = 0.003;
 
 
 
@@ -760,7 +730,7 @@ const backTest = async (req, res, next) => {
     data.push(caseData);
   }
   console.log({data});
-  res.send({data});
+  res.status(200).send({ data });
 };
 
 module.exports = {

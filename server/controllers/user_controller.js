@@ -45,8 +45,7 @@ const signUp = async (req, res) => {
         date: signInDate,
       };
 
-      let registerAccount = User.signUp(userData);
-      console.log(registerAccount);
+      await User.signUp(userData);
       let user = {
         id: randomID,
         provider: 'native',
@@ -61,7 +60,7 @@ const signUp = async (req, res) => {
       data.user = user;
       let results = {};
       results.data = data;
-      res.json(results);
+      res.status(200).json(results);
     }
   }
 };
@@ -70,11 +69,11 @@ const signIn = async (req, res) => {
   const expirationDate = Math.floor(Date.now() / 1000) + 3600; // 60 min
   const signInDate = Math.floor(Date.now() / 1000);
   if (!req.body.email) {
-    res.json({ status: 404, msg: '信箱不可為空!' });
+    res.status(404).send({ error: '信箱不可為空!' });
     return;
   } else if (!req.body.pwd || req.body.pwd.length < 6) {
     // throw new Error("Password cannot be empty or length less 6");
-    res.json({ status: 404, msg: '密碼長度小於6位數!' });
+    res.status(404).send({ error: '密碼長度小於6位數!' });
     return;
   } else {
     const userPwd = crypto
@@ -89,10 +88,7 @@ const signIn = async (req, res) => {
 
     let checkAccount = await User.signInCheck(data);
     if (checkAccount.length === 0) {
-      res.json({
-        status: 404,
-        msg: '信箱不存在或密碼錯誤!',
-      });
+      res.status(404).send({ error: '信箱不存在或密碼錯誤!' });
     } else {
       const token = jwt.sign(
         { userEmail: req.body.email, exp: expirationDate },
@@ -114,7 +110,7 @@ const signIn = async (req, res) => {
       data.user = user;
       let results = {};
       results.data = data;
-      res.json(results);
+      res.status(200).json(results);
     }
   }
 };
@@ -140,19 +136,18 @@ const getProfile = async (req, res) => {
 };
 
 const graphView = async (req, res) => {
-  let token = (req.headers.authorization).split(" ")[1];
+  let token = (req.headers.authorization).split(' ')[1];
   let decode = jwt.verify(token, secret);
   let data = {
     email: decode.userEmail,
     token: req.body.token,
   };
   let result = await Product.filterHistory(data);
-  console.log(result);
   res.status(200).json(result);
 };
 
 const backTestView = async (req, res) => {
-  let token = (req.headers.authorization).split(" ")[1];
+  let token = (req.headers.authorization).split(' ')[1];
   let decode = jwt.verify(token, secret);
   let data = {
     email: decode.userEmail,

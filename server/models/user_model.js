@@ -1,4 +1,4 @@
-const { transaction, commit, rollback, query } = require('../../util/dbcon');
+const { query } = require('../../util/dbcon');
 
 const signUpCheck = async (data) => {
   const result = await query('SELECT * FROM user WHERE email = ?', [data.email]);

@@ -708,3 +708,43 @@ border-radius: 20px;
   border: 2px solid #656565;
   border-radius: 20px;
 }
+
+footer {
+  color: #ffffff;
+  border-top: 2px solid #656565;
+  /* 設定footer的高度 */
+  height: 1px;
+  box-sizing: border-box;
+  /* 設定footer絕對位置在底部 */
+  position: absolute;
+  /* 展開footer寬度 */
+  width: 100%;
+  font-size: 0.8em;
+}
+
+.view {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin: 0px auto;
+  width: 935px;
+  height: 50px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.view > .social {
+  width: 300px;
+  margin-top: 9px;
+}
+
+.view > .social > img{
+  width: 20px;
+  margin: 0px 5px;
+}
+
+.copyright {
+  width: 400px;
+  margin-top: 4px;
+  margin-right: 50px;
+}
