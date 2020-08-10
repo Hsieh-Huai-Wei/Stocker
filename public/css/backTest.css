@@ -160,6 +160,7 @@ main {
   width: 930px;
   height: 100%;
   margin: 20px auto;
+  min-height: calc(100vh - 9rem);
 }
 
 #case {

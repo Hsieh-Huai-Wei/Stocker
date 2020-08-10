@@ -1,12 +1,11 @@
 // require
 require('dotenv').config();
-const express = require('express');
-const { PORT, API_VERSION} = process.env;
-// const port = 3000;
-// const port = 5000;
-const bodyParser = require('body-parser');
-// const apiVersion = "1.0";
+const { NODE_ENV, PORT, PORT_TEST, API_VERSION} = process.env;
+const port = NODE_ENV == 'test' ? PORT_TEST : PORT;
 
+// Express Initialization
+const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 
 app.set('json spaces', 2);
@@ -17,7 +16,16 @@ app.use('/admin', express.static('public'));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(express.json({ limit: '1000mb' }));
+
+// CORS Control
+app.use('/api/', function (req, res, next) {
+  res.set('Access-Control-Allow-Origin', '*'); //允許所有的來源
+  res.set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization'); //其他可以嗎
+  res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.set('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+
 
 // API routes
 app.use('/api/' + API_VERSION, [
@@ -38,8 +46,8 @@ app.use((err, req, res, next) => {
   res.json({ error: err.message });
 });
 
-app.listen(PORT, () => {
-  console.log(`Express is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Express is running on http://localhost:${port}`);
 });
 
 module.exports = app;

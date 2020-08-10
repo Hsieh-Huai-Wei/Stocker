@@ -158,6 +158,7 @@ header > .profile > .memberImg img {
 /* main */
 main {
   background-color: #262626;
+  min-height: calc(100vh - 9rem);
 }
 
 .main {

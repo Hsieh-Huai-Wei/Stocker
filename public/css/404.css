@@ -195,6 +195,7 @@ main {
   display: flex;
   height: 350px;
   width: 100%;
+  min-height: calc(100vh - 9rem);
 }
 
 .infor {

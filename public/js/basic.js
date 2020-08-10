@@ -252,7 +252,7 @@ app.renderInit = async function () {
   $('.startDay').val(startDate);
   $('.endDay').val(endDate);
 
-  let url = `api/1.0/stock?code=${userSearch.stockCode}&start=${userSearch.startDate}&end=${userSearch.endDate}`;
+  let url = `/api/1.0/stock?code=${userSearch.stockCode}&start=${userSearch.startDate}&end=${userSearch.endDate}`;
   let body = await app.fetchGetData(url);
   if (body.error) {
     await Swal.fire({

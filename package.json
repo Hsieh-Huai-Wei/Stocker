@@ -5,7 +5,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "set NODE_ENV=test&&nyc mocha --timeout 10000 --exit",
     "lint": "eslint"
   },
   "keywords": [],
@@ -25,14 +25,20 @@
     "moment": "^2.27.0",
     "mysql": "^2.18.1",
     "node-xlsx": "^0.15.0",
+    "nyc": "^15.1.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "request-promise-native": "^1.0.8",
     "sweetalert": "^2.1.2",
-    "sweetalert2": "^9.17.1"
+    "sweetalert2": "^9.17.1",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
-    "eslint": "^7.3.1"
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^7.3.1",
+    "mocha": "^8.1.1",
+    "sinon": "^9.0.2"
   },
   "repository": {
     "type": "git",

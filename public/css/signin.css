@@ -161,13 +161,11 @@ header > .profile > .memberImg img {
 
 main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 930px;
-  height: 100%;
   margin: 45px auto;
-  position: relative;
-	/* 設定高度最小為100%, 如果內容區塊很多, 可以長大 */
-  min-height: 100%;
+  /* position: relative; */
+  min-height: calc(100vh - 11rem);
 }
 
 /* --------------------------------- */
@@ -309,11 +307,11 @@ footer {
   height: 1px;
   box-sizing: border-box;
   /* 設定footer絕對位置在底部 */
-  position: absolute;
+  /* position: absolute; */
   /* 展開footer寬度 */
   width: 100%;
   font-size: 0.8em;
-  margin-top: 590px;
+  /* margin-top: 590px; */
 }
 
 .view {

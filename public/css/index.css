@@ -152,6 +152,7 @@ header > .profile > .memberImg img {
 }
 /* main */
 main {
+  min-height: calc(100vh - 9rem);
   background-color: #262626;
 }
 
@@ -162,6 +163,7 @@ main {
   flex-flow: column wrap;
   align-items: center;
   background-color: #262626;
+  min-height: calc(100vh - 9rem);
 }
 
 .intro {
@@ -239,7 +241,7 @@ footer {
   color: #ffffff;
   border-top: 2px solid #656565;
   /* 設定footer的高度 */
-  height: 1px;
+  height: 20px;
   box-sizing: border-box;
   /* 設定footer絕對位置在底部 */
   position: absolute;

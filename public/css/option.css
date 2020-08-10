@@ -153,16 +153,15 @@ header > .profile > .memberImg img {
 
 main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   width: 930px;
   height: 100%;
   margin: 20px auto;
-  border-bottom: 1px solid #ccc;
+  min-height: calc(100vh - 9rem);
 }
 
 .title {
-  flex: 1 1 100%;
   text-align: center;
   font-size: 2.0em;
   height: 77px;
