@@ -36,7 +36,6 @@ app.checkAuth = async function (num) {
 };
 
 // init function
-
 app.checkUser = async function () {
   if (window.localStorage.getItem('userToken')) {
     const data = {

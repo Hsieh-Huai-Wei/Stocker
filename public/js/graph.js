@@ -6,20 +6,20 @@ let app = {
 };
 
 app.d3init = async function (data) {
-  let dim = { // 繪圖區
+  let dim = { // graph arena
     width: 930,
-    height: 750, //最底部x軸
+    height: 750, // bottom x axis
     margin: { top: 50, right: 60, bottom: 50, left: 60 },
     ohlc: { height: 405 },
-    indicator: { height: 90, padding: 20 }, // 調整第二個圖層
+    indicator: { height: 90, padding: 20 }, // adjust the second layer
   };
-  dim.plot = { // 裡面圖形區
+  dim.plot = { // inside graph
     width: dim.width - dim.margin.left - dim.margin.right,
     height: dim.height - dim.margin.top - dim.margin.bottom,
-  }; // 調整第二個圖層
-  dim.indicator.top = dim.ohlc.height + dim.indicator.padding; // +開-收
+  }; // adjust the second layer
+  dim.indicator.top = dim.ohlc.height + dim.indicator.padding; // + open - close
   dim.indicator.bottom =
-    dim.indicator.top + dim.indicator.height + dim.indicator.padding; // +開-收
+    dim.indicator.top + dim.indicator.height + dim.indicator.padding; // + open - close
 
   let indicatorTop = d3
     .scaleLinear()
@@ -27,15 +27,15 @@ app.d3init = async function (data) {
 
   const parseDate = d3.timeParse('%Y%m%d');
 
-  let x = techan.scale.financetime().range([0, dim.plot.width]); // K線圖的x
+  let x = techan.scale.financetime().range([0, dim.plot.width]); // k bar graph x axis
 
-  let y = d3.scaleLinear().range([dim.ohlc.height, 0]); // K線圖的y
+  let y = d3.scaleLinear().range([dim.ohlc.height, 0]); // k bar graph y axis
 
   let yPercent = y.copy(); // Same as y at this stage, will get a different domain later
 
   let yInit, yPercentInit, zoomableInit;
 
-  let yVolume = d3.scaleLinear().range([y(0), y(0.2)]); // 成交量的y
+  let yVolume = d3.scaleLinear().range([y(0), y(0.2)]); // volume y
 
   let candlestick = techan.plot.candlestick().xScale(x).yScale(y); //k bar
 
@@ -62,7 +62,6 @@ app.d3init = async function (data) {
     .accessor(close.accessor())
     .xScale(x)
     .yScale(yVolume);
-  // .accessor(candlestick.accessor()); // Set the accessor to a ohlc accessor so we get highlighted bars
 
   let trendline = techan.plot.trendline().xScale(x).yScale(y);
 
@@ -70,34 +69,33 @@ app.d3init = async function (data) {
 
   let xAxis = d3.axisBottom(x);
 
-  // 設定十字線上下顯示的時間
-  let timeAnnotation = techan.plot // 底部x軸時間
+  // setting crosschair display time
+  let timeAnnotation = techan.plot // bottom x axis time
     .axisannotation()
     .axis(xAxis)
     .orient('bottom')
     .format(d3.timeFormat('%Y-%m-%d'))
     .width(90)
     .height(20)
-    .translate([0, dim.plot.height]); //矩形座標
+    .translate([0, dim.plot.height]); //rect coordinate
 
-  let yAxis = d3.axisRight(y); //右邊close y軸座標標示方向
+  let yAxis = d3.axisRight(y); // y coordinate of close for right
 
-  // 右側滑鼠標誌
+  // tag of right for mouse
   let ohlcAnnotation = techan.plot
     .axisannotation()
     .axis(yAxis)
-    .orient('right') // 右側標誌
-    .format(d3.format(',.2f')) //指定小數點後有幾位數
-    .translate([x(1), 0]) //矩形座標
+    .orient('right') // tag of right
+    .format(d3.format(',.2f')) // number of position for float number
+    .translate([x(1), 0]) //rect coordinate
     .width(60)
     .height(20);
 
-  //右側最後收盤價顯示
+  // last close tag on right axis
   let closeAnnotation = techan.plot
     .axisannotation()
     .axis(yAxis)
     .orient('right')
-    // .accessor(candlestick.accessor())
     .accessor(close.accessor())
     .format(d3.format(',.2f'))
     .translate([x(1), 0])
@@ -105,23 +103,23 @@ app.d3init = async function (data) {
     .height(20);
 
   let percentAxis = d3
-    .axisLeft(yPercent) // 左邊%滑鼠標示方向
-    .tickFormat(d3.format('+.1%')); //以 f 為基礎，返回乘以 100 後加上 %
+    .axisLeft(yPercent) // tag % of left for mouse
+    .tickFormat(d3.format('+.1%')); //base on f, return 100 and add %
 
   let percentAnnotation = techan.plot
     .axisannotation()
     .axis(percentAxis)
-    .orient('left') // 左邊%座標標示方向
+    .orient('left') // tag % of left for mouse
     .width(60)
     .height(20);
 
-  //左側最後成交量軸
+  // last close tag on left axis
   let volumeAxis = d3
     .axisRight(yVolume)
-    .ticks(3) // volume座標間隔
-    .tickFormat(d3.format(',.3s')); // 以 r 為基礎，但帶有一個單位碼 ( 例如 9.5M、或 1.00µ )
+    .ticks(3) // gap of volume axis
+    .tickFormat(d3.format(',.3s')); // base on r, and include unit
 
-  //左側最後成交量顯示
+ // last volume tag on left axis
   let volumeAnnotation = techan.plot
     .axisannotation()
     .axis(volumeAxis)
@@ -137,7 +135,7 @@ app.d3init = async function (data) {
 
   let macd = techan.plot.macd().xScale(x).yScale(macdScale);
 
-  let macdAxis = d3.axisRight(macdScale).ticks(3); // 右側macd間距
+  let macdAxis = d3.axisRight(macdScale).ticks(3); // macd gap of right
 
   let macdAnnotation = techan.plot
     .axisannotation()
@@ -261,7 +259,6 @@ app.d3init = async function (data) {
     .attr('class', 'axis')
     .attr('transform', 'translate(' + x(1) + ',0)')
     .append('text')
-    // .attr("transform", "rotate(-90)")
     .attr('y', -20)
     .attr('x', 55)
     .attr('dy', '.71em')
@@ -274,12 +271,6 @@ app.d3init = async function (data) {
     .append('g')
     .attr('class', 'volume')
     .attr('clip-path', 'url(#ohlcClip)');
-
-  // ohlcSelection
-  //   .append("g")
-  //   .attr("class", "candlestick")
-  //   // .attr("class", "close")
-  //   .attr("clip-path", "url(#ohlcClip)");
 
   ohlcSelection
     .append('g')
@@ -348,32 +339,11 @@ app.d3init = async function (data) {
     .attr('class', 'supstances analysis')
     .attr('clip-path', 'url(#ohlcClip)');
 
-  // // 設定文字區域
-  // let textSvg = d3.select("#navBar").append("svg")
-  //   .attr("width", dim.width + dim.margin.left + dim.margin.right)
-  //   .attr("height", dim.margin.top + dim.margin.bottom)
-  //   .append("g")
-  //   .attr("transform", "translate(" + dim.margin.left + "," + dim.margin.top + ")");
-
-  // // 設定文字區域
-  // let textSvg = svg
-  //   .append("svg")
-
-  // //設定顯示文字，web版滑鼠拖曳就會顯示，App上則是要點擊才會顯示
-  // let svgText = textSvg.append("g")
-  //   .attr("class", "symbol")
-  //   .append("text")
-  //   .attr("y", 6)
-  //   .attr("x", 12)
-  //   .attr("dy", ".71em")
-  //   .style("text-anchor", "start");
-
-  // color block
   svg
     .append('rect')
     .attr('class', 'symbols')
-    .attr('x', 16) //越大越右邊
-    .attr('y', 2) //越大越下面
+    .attr('x', 16)
+    .attr('y', 2)
     .attr('width', '155')
     .attr('height', '165')
     .attr('opacity', 0.15);
@@ -501,8 +471,6 @@ app.d3init = async function (data) {
     .yAnnotation([ohlcAnnotation, percentAnnotation, volumeAnnotation])
     .verticalWireRange([0, dim.plot.height])
     .on('move', (coords) => {
-      // let datas = window.localStorage.getItem('home');
-      // let data = JSON.parse(datas);
 
       let i;
       for (i = 0; i < data.length; i++) {
@@ -528,7 +496,6 @@ app.d3init = async function (data) {
   let d3data = {
     dim: dim,
     parseDate: parseDate,
-    // zoom: zoom,
     yInit: yInit,
     yPercentInit: yPercentInit,
     zoomableInit: zoomableInit,
@@ -580,11 +547,11 @@ app.d3init = async function (data) {
 app.zoom = (d3Graph)=>{
   return d3
   .zoom()
-  .scaleExtent([1, 5]) //設定縮放大小1 ~ 5倍
+  .scaleExtent([1, 5]) //setting zoom-in 1~5
   .translateExtent([
     [0, 0],
     [d3Graph.dim.plot.width, d3Graph.dim.plot.height],
-  ]) // 設定可以縮放的範圍，註解掉就可以任意拖曳
+  ]) // limit zoom-in area
   .extent([
     [d3Graph.dim.margin.left, d3Graph.dim.margin.top],
     [d3Graph.dim.plot.width, d3Graph.dim.plot.height],
@@ -601,7 +568,6 @@ app.zoom = (d3Graph)=>{
 app.draw = function (d3Graph) {
   d3Graph.svg.select('g.x.axis').call(d3Graph.xAxis);
   d3Graph.svg.select('g.ohlc .axis').call(d3Graph.yAxis);
-  // d3Graph.svg.select("g.volume.axis").call(d3Graph.volumeAxis);
   d3Graph.svg.select('g.percent.axis').call(d3Graph.percentAxis);
   d3Graph.svg.select('g.macd .axis.right').call(d3Graph.macdAxis);
   d3Graph.svg.select('g.rsi .axis.right').call(d3Graph.rsiAxis);
@@ -627,8 +593,6 @@ app.draw = function (d3Graph) {
 };
 
 app.smaAndema = function (d3Graph, graphData) {
-  // let localData = window.localStorage.getItem('home');
-  // let parseDate = JSON.parse(localData);
 
   let data = [];
   for (let i = 0; i < graphData.length; i++) {
@@ -723,13 +687,12 @@ app.kBarSetting = function (d3Graph, data) {
   d3Graph.ohlcSelection
     .append('g')
     .attr('class', 'candlestick')
-    // .attr("class", "close")
     .attr('clip-path', 'url(#ohlcClip)');
 
   let accessor = d3Graph.candlestick.accessor();
-    // Don't show where indicators don't have data
+  // Don't show where indicators don't have data
   // let accessor = close.accessor(),
-  //   indicatorPreRoll = 33; // Don't show where indicators don't have data
+  // indicatorPreRoll = 33; // Don't show where indicators don't have data
 
   d3Graph.x.domain(techan.scale.plot.time(data).domain());
   d3Graph.y.domain(techan.scale.plot.ohlc(data.slice(app.indicatorPreRoll)).domain());
@@ -743,12 +706,6 @@ app.kBarSetting = function (d3Graph, data) {
   d3Graph.rsiScale.domain(techan.scale.plot.rsi(rsiData).domain());
 
   d3Graph.svg.select('g.candlestick').datum(data).call(d3Graph.candlestick);
-
-  // d3Graph.svg
-  //   .select("g.close.annotation")
-  //   .datum([data[data.length - 1]])
-  //   .call(d3Graph.closeAnnotation);
-  // d3Graph.svg.select("g.volume").datum(data).call(d3Graph.volume);
 
   d3Graph.svg.select('g.macd .indicator-plot').datum(macdData).call(d3Graph.macd);
   d3Graph.svg.select('g.rsi .indicator-plot').datum(rsiData).call(d3Graph.rsi);
@@ -765,7 +722,6 @@ app.kBarSetting = function (d3Graph, data) {
 app.closeSetting = function (d3Graph, data) {
   d3Graph.ohlcSelection
     .append('g')
-    // .attr("class", "candlestick")
     .attr('class', 'close')
     .attr('clip-path', 'url(#ohlcClip)');
 
@@ -784,13 +740,6 @@ app.closeSetting = function (d3Graph, data) {
   d3Graph.rsiScale.domain(techan.scale.plot.rsi(rsiData).domain());
 
   d3Graph.svg.selectAll('g.close').datum(data).call(d3Graph.close);
-  // let a = svg.selectAll("g.close").datum(data).call(close);
-
-  // d3Graph.svg
-  //   .select("g.close.annotation")
-  //   .datum([data[data.length - 1]])
-  //   .call(d3Graph.closeAnnotation);
-  // d3Graph.svg.select("g.volume").datum(data).call(d3Graph.volume);
 
   d3Graph.svg.select('g.macd .indicator-plot').datum(macdData).call(d3Graph.macd);
   d3Graph.svg.select('g.rsi .indicator-plot').datum(rsiData).call(d3Graph.rsi);

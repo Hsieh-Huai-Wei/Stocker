@@ -19,8 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // CORS Control
 app.use('/api/', function (req, res, next) {
-  res.set('Access-Control-Allow-Origin', '*'); //允許所有的來源
-  res.set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization'); //其他可以嗎
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
   res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.set('Access-Control-Allow-Credentials', 'true');
   next();

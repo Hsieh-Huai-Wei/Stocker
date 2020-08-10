@@ -2,14 +2,9 @@ require('dotenv').config();
 const {assert, requester} = require('./set_up');
 const {users} = require('./fake_data');
 
-let stub;
-// const expectedExpireTime = process.env.TOKEN_EXPIRE;
 describe('user', () => {
 
-    /**
-     * Sign Up
-     */
-
+    // natvie sign up
     it('sign up', async () => {
         const user = {
             name: 'test',
@@ -92,13 +87,10 @@ describe('user', () => {
             .post('/api/1.0/user/signup')
             .send(user);
 
-        assert.equal(res.body.error, "信箱格式錯誤!");
+        assert.equal(res.body.error, '信箱格式錯誤!');
     });
 
-    /**
-     * Native Sign In
-     */
-
+    // native sign in
     it('native sign in with correct password', async () => {
         const user1 = users[0];
         const user = {
@@ -185,11 +177,7 @@ describe('user', () => {
         assert.equal(res.body.error, '信箱與密碼不可為空!，且密碼長度不得小於6位數!');
     });
 
-
-    /**
-     * Get User Profile
-     */
-
+    // get user profile
     it('get profile with invalid access_token', async () => {
         const user1 = users[0];
         const user = {

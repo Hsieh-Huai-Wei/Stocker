@@ -1,10 +1,10 @@
-const { transaction, commit, rollback, query } = require('../../util/dbcon');
+const { query } = require('../../util/dbcon');
 
 const stock = async (userSearch) => {
-  if (isNaN(Number(userSearch.stockCode))) { //輸入中文
+  if (isNaN(Number(userSearch.stockCode))) { // key in name
     const result = await query('SELECT stock.history_price.*, stock.information.* FROM stock.history_price INNER JOIN information ON stock.history_price.stock_id = stock.information.id WHERE stock.information.name = ? AND stock.history_price.date BETWEEN ? AND ? ORDER BY date;', [userSearch.stockCode, userSearch.startDate, userSearch.endDate]);
     return result;
-  } else { // 輸入代碼
+  } else { // key in code
     const result = await query('SELECT stock.history_price.*, stock.information.* FROM stock.history_price INNER JOIN information ON stock.history_price.stock_id = stock.information.id WHERE stock.information.code = ? AND stock.history_price.date BETWEEN ? AND ? ORDER BY date;', [parseInt(userSearch.stockCode), userSearch.startDate, userSearch.endDate]);
     return result;
   }
@@ -53,9 +53,3 @@ module.exports = {
   filterHistory,
   backTestHistory,
 };
-
-
-// SELECT stock.history_price.*, stock.information.*, stock.legal.* FROM stock.information
-// INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id
-// INNER JOIN stock.legal ON stock.legal.stock_id = stock.information.id AND stock.legal.date = stock.history_price.date
-// WHERE stock.information.code = 2059 AND stock.history_price.date BETWEEN 20200701 AND 20200703;

@@ -217,7 +217,6 @@ app.choiceStock = function (data) {
 app.renderList = async function () {
   if (window.localStorage.getItem('optionResult')) {
     let data = JSON.parse(window.localStorage.getItem('optionResult'));
-    // let date = window.localStorage.getItem('filterDate');
 
     let graph = '';
     if (data.inf.graph === 'reverseV') {
@@ -257,18 +256,6 @@ app.renderList = async function () {
     $('#userOption').append(tr);
 
     let target = 0;
-    // for (let i = 0; i < data.data[0].data.length; i++) {
-    //   if (data.data[0].data[i].date.toString() === date) {
-    //     target += i;
-    //     break;
-    //   }
-    // }
-    // let currentDate = $('<div>').attr('id', 'cDate').append(`${date}`);
-    // $('#currentDate').append(currentDate);
-
-    // for (let i = 0; i < data.data.length; i++) {
-    //   $('#recommend').remove();
-    // }
     for (let i = 0; i < data.data.length; i++) {
       let priceLen = target + 1;
       let code = data.data[i].data[priceLen - 1].code;
@@ -316,10 +303,6 @@ app.renderList = async function () {
           $('<td>')
             .attr('class', 'userChoice')
             .append(data.data[i].data[priceLen - 1].dealers),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].mc),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pe),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].dy),
-          // $("<td>").attr("class", "userChoice").append(data.data[i].data[priceLen - 1].pb),
           $('<td>')
             .attr('class', 'userChoice')
             .attr('value', `${i}`)

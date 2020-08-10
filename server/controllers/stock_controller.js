@@ -19,12 +19,12 @@ function dateCheck(start, end) {
 
 function uptrend(userSearch, stockPricePair) {
 
-  // 找到圖形符合之型態
+  // find graph for match
   let graphPosition = [];
-  // 對全部股票進行掃描
+  // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
     console.log('i', i);
-    // 對單一股票的歷史價格進行掃描
+    // scan history price of single stock
     let r = Number(userSearch.count);
     let increase = Number(userSearch.increase);
 
@@ -56,7 +56,7 @@ function uptrend(userSearch, stockPricePair) {
             ? r
             : stockPricePair[i].data.length - j;
 
-        // 從第0個到最高點是否close是否都大於第0個且m=-1佔7成
+        // check m=1 over 70% from 0 to high
         for (let k = 1; k < stockIndexLength; k++) {
           if (
             firstDay.close < stockIndex[k].close &&
@@ -83,7 +83,7 @@ function uptrend(userSearch, stockPricePair) {
     }
   }
 
-  // 剔除不符合條件的 stock
+  // drop doesn`t match stock
   let finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
     let item = finalStockPricePair.find(
@@ -115,12 +115,12 @@ function uptrend(userSearch, stockPricePair) {
 }
 
 function downtrend(userSearch, stockPricePair) {
-  // 找到圖形符合之型態
+  // find graph for match
   let graphPosition = [];
-  // 對全部股票進行掃描
+  // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
     console.log('i', i);
-    // 對單一股票的歷史價格進行掃描
+    // scan history price of single stock
     let r = Number(userSearch.count);
     let decrease = Number(userSearch.decrease);
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
@@ -151,7 +151,7 @@ function downtrend(userSearch, stockPricePair) {
             ? r
             : stockPricePair[i].data.length - j;
 
-        // 從第0個到最高點是否close是否都大於第0個且m=-1佔7成
+        // check m=-1 over 70% from 0 to high
         for (let k = 1; k < stockIndexLength; k++) {
           if (
             firstDay.close < stockIndex[k].close &&
@@ -177,7 +177,7 @@ function downtrend(userSearch, stockPricePair) {
       }
     }
   }
-  // 剔除不符合條件的 stock
+  // drop no match stock
   let finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
     let item = finalStockPricePair.find(
@@ -209,11 +209,11 @@ function downtrend(userSearch, stockPricePair) {
 }
 
 function reverseV(userSearch, stockPricePair) {
-  // 找到圖形符合之型態
+  // find graph for match
   let graphPosition = [];
-  // 對全部股票進行掃描
+  // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
-    // 對單一股票的歷史價格進行掃描
+    // scan history price of single stock
     console.log('i', i);
     let r = Number(userSearch.count);
     let low = Math.floor(r / 2) - 2;
@@ -249,13 +249,13 @@ function reverseV(userSearch, stockPricePair) {
       }
 
       if (check === true) {
-        // 確認左右平衡點
+        // check balance
         if (
           firstDay.close * 0.1 < lastDay.close &&
           lastDay.close < firstDay.close * 2
         ) {
 
-          // 找出中間的位置與close;
+          // find middle point and close;
           let minDay = firstDay;
           let minPosition = 0;
           let stockIndexLength =
@@ -263,7 +263,6 @@ function reverseV(userSearch, stockPricePair) {
               ? r
               : stockPricePair[i].data.length - j;
           for (let k = 1; k < stockIndexLength; k++) {
-            // console.log(stockIndex[j + k].close)
             if (minDay.close > stockIndex[j + k].close) {
               minDay = stockIndex[j + k];
               minPosition = k;
@@ -271,7 +270,7 @@ function reverseV(userSearch, stockPricePair) {
           }
 
           if (minPosition !== 0) {
-            // 從第0個到最低點是否close是否都小於第0個且m=-1佔7成
+            // check m=-1 more than 70% from 0 to middle point
             for (let k = 1; k < minPosition; k++) {
               if (
                 firstDay.close > stockIndex[k].close &&
@@ -281,7 +280,7 @@ function reverseV(userSearch, stockPricePair) {
                 lowCount += 1;
               }
             }
-            // 從最低點到最後一個是否close是否都大於最低點且m=1佔7成
+            // check m=1 more than 70% from middle point to last one
             for (let k = minPosition; k < stockIndexLength; k++) {
               if (
                 minDay.close < stockIndex[k].close &&
@@ -320,7 +319,7 @@ function reverseV(userSearch, stockPricePair) {
     }
   }
 
-  // 剔除不符合條件的 stock
+  // drop no match stock
   let finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
     let item = finalStockPricePair.find(
@@ -356,7 +355,7 @@ function noGraph(stockPricePair) {
 
   let graphPosition = stockPricePair;
 
-  // 剔除不符合條件的 stock
+  // drop no match stock
   let finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
     let item = finalStockPricePair.find(
@@ -445,15 +444,15 @@ const option = async (req, res, next) => {
     increase: req.query.increase,
     decrease: req.query.decrease,
   };
-  // 對 "價格區間" 與 "日期" 對 DB 進行篩選
+  // scan date range and price range
   let date = await dateCheck(userSearch.start, userSearch.end);
   userSearch.start = date.start;
   userSearch.end = date.end;
   let filterInit = await Product.filterInit(userSearch);
 
   // 進行 "圖形判斷"，取需要的值(顧客需求的天數與 % 數)，進行 array- object 排列
-
-  // 先將資料預處理 id-[price] pair
+  // graph check and get day count and %, sort by arr-obj
+  // pre-sort to id-[price] pair
   let stockPricePair = []; // id-[price] pair
 
   for (let i = 0; i < filterInit.length; i++) {
@@ -485,7 +484,7 @@ const option = async (req, res, next) => {
     }
   }
 
-  // 進行圖形分類判斷
+  // define graph
   let finalStockPricePair;
 
   if (userSearch.graph === 'na') {
@@ -501,7 +500,7 @@ const option = async (req, res, next) => {
   } else {
     finalStockPricePair = stockPricePair;
   }
-  // 找最終符合條件的 stock 回傳
+  // final stock
   let filterCode = [];
   let result = {};
   result.data = [];
@@ -590,22 +589,22 @@ const backTest = async (req, res, next) => {
   for (let i = 0; i < req.body.length; i++) {
 
     let stockData = req.body[i].data;
-    //找歷史資料
+    //search history price
     let caseInf = [];
     caseInf.push(parseInt(stockData.code));
     caseInf.push(parseInt(stockData.startDate));
     caseInf.push(parseInt(stockData.endDate));
     let caseResult = await Product.backTest(caseInf);
-    //帶入參數
+    // insert parameter
     let propertyInit = parseInt(stockData.property);
     let property = parseInt(stockData.property);
 
-    let increaseAct = stockData.increaseAct; // 漲 要買還是賣
-    let decreaseAct = stockData.decreaseAct; // 跌 要買還是賣
-    let increase = parseInt(stockData.increase); //漲 %
-    let decrease = parseInt(stockData.decrease); //跌 %
-    let increaseCount = parseInt(stockData.increaseCount); // 張
-    let decreaseCount = parseInt(stockData.decreaseCount); // 張
+    let increaseAct = stockData.increaseAct; // increase : buy or sell
+    let decreaseAct = stockData.decreaseAct; // decrease : buy or sell
+    let increase = parseInt(stockData.increase); //increase %
+    let decrease = parseInt(stockData.decrease); //decrease %
+    let increaseCount = parseInt(stockData.increaseCount); // count
+    let decreaseCount = parseInt(stockData.decreaseCount); // count
     let discount = (parseInt(stockData.discount)) / 100;
     const buyCostPercent = 0.001425;
     const sellCostPercent = 0.003;
@@ -620,14 +619,14 @@ const backTest = async (req, res, next) => {
       if (caseResult[i].changes >= increase) {
         if (increaseAct === 'buy' && property > caseResult[i].close) {
           let list = {};
-          // 購買手續費
+          // handling fee for buy
           let buyCost = caseResult[i].close * increaseCount * buyCostPercent * discount;
           list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2);
-          // 累積交易成本
+          // trade cost
           tradeCost += buyCost;
-          // 庫存stock數量
+          // stock count
           stock += increaseCount;
-          // 總資產扣除
+          // property
           property = property - buyCost - (caseResult[i].close * increaseCount);
           list.information = caseResult[i].date;
           list.situation = increaseAct;
@@ -639,17 +638,17 @@ const backTest = async (req, res, next) => {
           history.push(list);
         } else if (increaseAct === 'sell' && stock > 0) {
           let list = {};
-          // 賣出手續費
+          // handling fee for sell
           let sellCost = (caseResult[i].close * increaseCount * buyCostPercent * discount) + (caseResult[i].close * increaseCount * sellCostPercent);
 
           list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2);
 
-          // 累積交易成本
+          // trade cost
           tradeCost += sellCost;
-          // 庫存stock數量
+          // stock count
           stock -= increaseCount;
 
-          // 總資產扣除
+          // property
           property = property - sellCost + (caseResult[i].close * increaseCount);
 
           list.information = caseResult[i].date;
@@ -665,15 +664,15 @@ const backTest = async (req, res, next) => {
       } else if (caseResult[i].changes <= decrease) {
         if (decreaseAct === 'buy' && property > caseResult[i].close) {
           let list = {};
-          // 購買手續費
+          // handling fee for buy
           let buyCost = caseResult[i].close * decreaseCount * buyCostPercent * discount;
           list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2);
-          // 累積交易成本
+          // trade cost
           tradeCost += buyCost;
-          // 庫存stock數量
+          // stock count
           stock += decreaseCount;
 
-          // 總資產扣除
+          // property
           property = property - buyCost - (caseResult[i].close * decreaseCount);
 
           list.information = caseResult[i].date;
@@ -686,17 +685,17 @@ const backTest = async (req, res, next) => {
           history.push(list);
         } else if (decreaseAct === 'sell' && stock > 0) {
           let list = {};
-          // 賣出手續費
+          // handling fee for sell
           let sellCost = (caseResult[i].close * decreaseCount * buyCostPercent * discount) + (caseResult[i].close * decreaseCount * sellCostPercent);
 
           list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2);
 
-          // 累積交易成本
+          // trade cost
           tradeCost += sellCost;
-          // 庫存stock數量
+          // stock count
           stock -= decreaseCount;
 
-          // 總資產扣除
+          // property
           property = property - sellCost + (caseResult[i].close * decreaseCount);
 
           list.information = caseResult[i].date;

@@ -1,8 +1,3 @@
-* {
-  /* border: dotted 1px red; */
-  
-}
-
 body {
   margin: 0px;
   font-size: 16px;
@@ -16,7 +11,6 @@ body {
 header {
   display: flex;
   margin: 0 auto;
-  /* max-width: 1200px; */
   height: 70px;
   background-color: #262626;
   align-items: center;
@@ -159,7 +153,6 @@ main {
   margin: 20px auto;
   max-width: 1000px;
   background-color: #262626;
-  /* border: 1px solid #656565; */
   border-radius: 10px;
 }
 
@@ -174,8 +167,6 @@ main {
   width: 220px;
   height: 60px;
   margin-top: auto;
-  /* margin-right: 10px;
-  margin-left: 10px; */
   border-bottom: 1px solid #656565;
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
@@ -198,7 +189,6 @@ main {
 .picture {
   width: 200px;
   height: 200px;
-  /* border: 1px solid #ffffff; */
   border-radius: 30px;
   text-align: center;
 }
@@ -209,7 +199,6 @@ main {
   height: 170px;
   border: 2px solid #ffffff;
   border-radius: 85px;
-  /* margin-left: 10px; */
 }
 
 .information {
@@ -309,7 +298,6 @@ header > .feature > input.backtest:hover {
   border-right: 1px solid transparent;
   border-left: 1px solid transparent;
   font-size: small;
-  /* text-align: start; */
 }
 
 .graphOption {
@@ -347,10 +335,6 @@ header > .feature > input.backtest:hover {
   padding-top: 5px;
   background-color: #262626;
 }
-/* 
-#chart, #candle, #line {
-  font-size: 1em;
-} */
 
 .gun {
   margin-right: 7px;
@@ -416,7 +400,6 @@ header > .feature > input.backtest:hover {
   color: #ffffff;
   width: 15px;
   height: 15px;
-  /* border: 1px solid red; */
   text-align:center;
   margin-right: 10px;
   padding-bottom: 15px;
@@ -446,87 +429,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-image: url(../imgs/calendar.png);
   width: 17px;
   height: 17px;
-  /* margin-right: 5px; */
 }
-
-/* 萬年曆 */
-/* #date {
-  color: #ffffff;
-  width: 100px;
-  height: 30px;
-  border: 1px solid transparent;
-  margin-right: 10px;
-  font-size: 1em;
-  position: relative;
-}
-
-.date {
-  display: block;
-  background-color: #323232;
-  opacity: 0.9;
-  margin-top: 15px;
-  margin-left: -3px;
-  position: absolute;
-  z-index: 100;
-  width: 550px;
-  max-width: 1200px;
-  height: 300px;
-}
-
-.dateSearch {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.startDay,
-.endDay {
-  color: #ffffff;
-  flex: 0 0 200px;
-  height: 30px;
-  padding-left: 15px;
-  margin: 0px 20px;
-  border: 1px solid #ffffff;
-  border-radius: 8px;
-  background-color: #323232;
-}
-
-.dash {
-  max-width: 15px;
-  max-height: 15px;
-}
-
-.submit {
-  margin-top: 220px;
-  margin-left: 400px;
-}
-
-.date input.submit {
-  font-size: smaller;
-  color: #ffffff;
-  width: 100px;
-  padding: 8px 10px;
-  margin-right: 50px;
-  border: 1px solid #ffffff;
-  border-radius: 10px;
-  font-size: small;
-} */
-
-
-/* ------------------------------------------- */
 
 .info_block {
   text-align: center;
 }
 
-/* ------------------------------- */
-/* 座標文字 */
+/* svg */
+/* coordinate text */
 text {
   fill: #bbbbbb;
   font-size: 0.9em;
 }
 
-/* 內容文字 */
+/* container text */
 .value {
   fill: #bbbbbb;
   font-size: 0.8em;
@@ -549,7 +465,7 @@ path {
   stroke-width: 1;
 }
 
-/* 十字線 */
+/* crosshair */
 path.candle {
   stroke: #ffffff;
 }
@@ -710,10 +626,9 @@ path.zero {
   stroke-dasharray: 1, 1;
 }
 
-/* 十字標籤底色 */
+/* crosshair background color */
 .crosshair .axisannotation path {
   fill: #656565;
-  /* opacity: 0.8; */
 }
 
 .tradearrow path.tradearrow {
@@ -746,13 +661,8 @@ background-color: #262626;
 border-radius: 20px;
 }
 
-/* ------------------------------------------- */
-
-
 /* table */
-
 #infor, .infor, .resultTable {
-  /* width: 1200px; */
   max-width: 1200px;
   margin-bottom: 10px;
   align-items: center;
@@ -779,32 +689,8 @@ caption {
   font-size: 0.8em;
   padding: 10px 16px;
 }
-/* .infor, .resultTable {
-  border: 1px solid #656565;
-}
-
-.infor th, .resultTable th {
-  border: 1px solid #656565;
-  border-left: none;
-  border-top: none;
-}
-
-.infor td, .resultTable td {
-  border: 1px solid #656565;
-  border-left: none;
-  border-top: none;
-  border-bottom: none;
-  font-size: 0.8em;
-}
-
-.infor tr th:last-child{border-right:none;}
-.infor tr td:last-child{border-right:none;}
-.resultTable tr th:last-child{border-right:none;}
-.resultTable tr td:last-child{border-right:none;} */
-
 
 table {
-  /* width: 100%; */
   table-layout:fixed;
   text-align:center;
   border-collapse: collapse;
@@ -821,7 +707,6 @@ th, td {
 th {
   background-color: #565656;
 }
-
 
 .userChoice button {
   width: 45px;
@@ -873,87 +758,6 @@ header > .feature > input.backtest:hover {
   cursor: pointer;
 }
 
-.swal-overlay--show-modal .swal-modal {
-  opacity: 1;
-  pointer-events: auto;
-  box-sizing: border-box;
-  -webkit-animation: showSweetAlert .3s;
-  animation: showSweetAlert .3s;
-  will-change: transform;
-  border: 1px solid #656565;
-}
-
-.swal-modal {
-  width: 360px;
-  background-color: #323232;
-  border-radius: 13px;
-}
-
-.swal-text:first-child {
-    margin-top: 40px;
-    margin-bottom: 25px;
-}
-
-.swal-text {
-  width: 240px;
-  background-color: #323232;
-  color: #ffffff;
-  text-align: center;
-}
-
-.swal-button {
-  width: 85px;
-  padding: 4px 24px;
-  max-width: 150px;
-  margin-left: 10px;
-}
-
-.swal-title {
-  color: #ffffff;
-  background-color: #323232;
-}
-
-.swal-icon--success:before {
-  background-color: #323232;
-  /* display: none; */
-}
-
-.swal-icon--success:after {
-  background-color: #323232;
-  /* display: none; */
-}
-
-.swal-icon--success__ring {
-  background: rgba(50,50,50, 0.0);
-  color: red; 
-  /* display: none; */
-  /* background-color: red; */
-  border-color: rgb(8, 230, 126);
-  opacity: 0.3;
-}
-
-.swal-icon--success__hide-corners {
-  background-color: #323232;
-  /* display: none; */
-}
-
-.swal-icon--success__line--tip {
-  background: rgb(8, 230, 126);
-  /* display: none; */
-}
-
-.swal-icon--success__line--long {
-  background: rgb(8, 230, 126);
-  /* display: none; */
-}
-
-.swal-icon--success {
-    border-color: rgb(8, 230, 126);
-    background-color: #323232;
-}
-
-/* --------------------------- */
-
 .swal2-popup {
   font-size: 0.6rem;
   border: 2px solid #656565;
@@ -972,12 +776,9 @@ header > .feature > input.backtest:hover {
 footer {
   color: #ffffff;
   border-top: 2px solid #656565;
-  /* 設定footer的高度 */
   height: 1px;
   box-sizing: border-box;
-  /* 設定footer絕對位置在底部 */
   position: absolute;
-  /* 展開footer寬度 */
   width: 100%;
   font-size: 0.8em;
 }

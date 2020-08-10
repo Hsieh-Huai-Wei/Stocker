@@ -2,7 +2,6 @@
 window.localStorage.setItem('page', 'basic');
 
 let currentCode = '2330';
-// let currentName = '台積電';
 app.graphData = null;
 
 app.fetchPostData = async function (url, data) {
@@ -270,7 +269,6 @@ app.renderInit = async function () {
     body.data[i].date = new Date(y + m + d);
   }
   currentCode = body.data[0].code;
-  // currentName = body.data[0].name;
   let datas = JSON.stringify(body.data);
   window.localStorage.setItem('home', datas);
   app.renderKBar();

@@ -1,8 +1,3 @@
-* {
-  /* border: dotted 1px red; */
-
-}
-
 body {
   margin: 0px;
   font-size: 16px;
@@ -16,7 +11,6 @@ body {
 header {
   display: flex;
   margin: 0 auto;
-  /* max-width: 1200px; */
   height: 70px;
   background-color: #262626;
   align-items: center;
@@ -173,18 +167,10 @@ main {
   flex-direction: column;
 }
 
-
-
 caption {
   font-size: 1.3em;
   margin: 20px 0px;
-  /* border-bottom: 2px solid #656565; */
 }
-
-/* .summary, .testResult, .detail {
-  border: 1px solid #656565;
-} */
-
 
 table {
   width: 100%;
@@ -218,21 +204,9 @@ caption {
   font-size: 0.8em;
 }
 
-/* .summary tr th:last-child{border-right:#1f77b4  1px solid;}
-.testResult tr td:last-child{border-right:#1f77b4 1px solid;}
-.detail tr th:last-child{border-right:#1f77b4  1px solid;}
-.data tr td:last-child{border-right:#1f77b4  1px solid;}
-
-.summary tr th:first-child{border-left:#1f77b4  1px solid;}
-.testResult tr td:first-child{border-left:#1f77b4 1px solid;}
-.detail tr th:first-child{border-left:#1f77b4  1px solid;}
-.data tr td:first-child{border-left:#1f77b4  1px solid;} */
-
-
 #summary {
   margin: 10px 0px;
 }
-
 
 input, select, textarea{ 
   color: #ffffff; 
@@ -250,7 +224,7 @@ table >.case tr {
   font-size: large;
 }
 
-/* ------------------------------------------- */
+/* svg */
 
 text {
     fill: #ffffff;
@@ -275,7 +249,6 @@ path.candle.down {
 }
 
 path.volume {
-/*    opacity: 0.8;*/
     fill: #DDDDDD;
 }
 
@@ -342,7 +315,6 @@ path.volume.equal {
 }
 
 .save {
-  /* margin-right: 30px; */
   cursor: pointer;
 }
 
@@ -353,14 +325,11 @@ header > .feature > input.backtest:hover {
   cursor: pointer;
 }
 
-/* --------------------------- */
-
 .swal2-popup {
   font-size: 0.6rem;
   border: 2px solid #656565;
   border-radius: 20px;
 }
-
 
 .submit {
   width: 85px;
@@ -381,15 +350,14 @@ header > .feature > input.backtest:hover {
   background-color: #5b9bc3;
 }
 
+/* footer */
+
 footer {
   color: #ffffff;
   border-top: 2px solid #656565;
-  /* 設定footer的高度 */
   height: 1px;
   box-sizing: border-box;
-  /* 設定footer絕對位置在底部 */
   position: absolute;
-  /* 展開footer寬度 */
   width: 100%;
   font-size: 0.8em;
 }

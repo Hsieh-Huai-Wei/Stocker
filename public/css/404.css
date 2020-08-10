@@ -1,8 +1,3 @@
-* {
-  /* border: solid 1px red; */
-  /* background-color: #262626; */
-}
-
 body {
   margin: 0px;
   font-size: 16px;
@@ -18,7 +13,6 @@ body {
 header {
   display: flex;
   margin: 0 auto;
-  /* max-width: 1200px; */
   height: 70px;
   background-color: #262626;
   align-items: center;
@@ -154,12 +148,9 @@ header > .profile > .memberImg img {
 footer {
   color: #ffffff;
   border-top: 2px solid #656565;
-  /* 設定footer的高度 */
   height: 1px;
   box-sizing: border-box;
-  /* 設定footer絕對位置在底部 */
   position: absolute;
-  /* 展開footer寬度 */
   width: 100%;
   font-size: 0.8em;
 }

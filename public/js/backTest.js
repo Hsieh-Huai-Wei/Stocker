@@ -130,20 +130,6 @@ app.submitData = async function () {
     let decrease = $(`.decrease${i}`).val();
     let decreaseCount = $(`.decreaseText${i}`).val();
 
-    // let caseNo = `case1`;
-    // let code = "1101";
-    // let startDate = "20190101"
-    // let endDate = "20200701"
-    // let property = 10000;
-    // let discount = 40;
-    // let graph = $("input:radio[name=graph" + `${i}` + "]:checked").val();
-    // let increaseAct = "sell"
-    // let increase = 5;
-    // let increaseCount = 5;
-    // let decreaseAct = "buy"
-    // let decrease = 3;
-    // let decreaseCount = 3;
-
     let data = {
       code: code,
       startDate: startDate,

@@ -1,14 +1,12 @@
 require('dotenv').config();
 const {NODE_ENV} = process.env;
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const secret = 'secret';
 const {
   users,
 } = require('./fake_data');
 
 
-const {transaction, commit, query, end} = require('../util/dbcon');
+const {query, end} = require('../util/dbcon');
 
 function _createFakeUser () {
   const encryped_users = users.map(user => {

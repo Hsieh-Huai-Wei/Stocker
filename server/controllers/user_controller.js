@@ -120,9 +120,7 @@ const signIn = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    // const signInDate = Math.floor(Date.now() / 1000);
     let decode = jwt.verify(req.body.token, secret);
-    // if (decode.exp > signInDate) {
       let data = {
         email: decode.userEmail,
         token: req.body.token,
@@ -134,9 +132,6 @@ const getProfile = async (req, res) => {
       } else {
         res.status(200).json(result[0]);
       }
-    // } else {
-      // res.status(400).json({ error: '登入逾時，請重新登入!' });
-    // }
   } catch (e) {
     res.status(403).json({ error: '登入逾時，請重新登入!' });
   }
