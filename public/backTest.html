@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stocker - 歷史回測</title>
+  <link rel=icon href="./imgs/money.png" sizes="16x16" type="image/png">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark/dark.css">
+  <link rel="stylesheet" href="./css/backTest.css" />
+  <script src="./js/plugins/jquery-3.5.1.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <a href="./index.html"><img src="./imgs/logo.png" /></a>
+    </div>
+    <div class="feature">
+      <input type="text" class="search" name="tag" placeholder="2330" onclick="app.getData()" />
+      <a href="./option.html"><input type="button" class="option" value="趨勢觀測"></a>
+      <a href="./backTest.html"><input type="button" class="backtest" value="歷史回測"></a>
+    </div>
+    <div class="profile">
+      <a class="memberLink" onclick="app.checkPage()"><div class="member"></div></a>
+      <a onclick="app.checkPage()" class="memberImg"><img src="./imgs/member.png" /></a>
+    </div>
+  </header>
+  <main>
+    <div id="case">
+    </div>
+    <div class="backBtn">
+      <button type="submit" class="submit add" onclick="app.addCase();">新增方案</button>
+      <button type="submit" class="submit test" onclick="app.submitData();">開始回測</button>
+    </div>
+  </main>
+  <footer>
+    <div class="view">
+      <div class="copyright">
+        &copy; 2018. All rights reserved.
+      </div>
+      <div class="social">
+        <img src="imgs/line.png" />
+        <img src="imgs/twitter.png" />
+        <img src="imgs/facebook.png" />
+      </div>
+    </div>
+  </footer>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="./js/plugins/techan.min.js"></script>
+  <script src="./js/graph.js"></script>
+  <script type="text/javascript" src="./js/backTest.js"></script>
+
+  <body>
+
+</html>

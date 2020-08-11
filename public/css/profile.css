@@ -1,0 +1,811 @@
+body {
+  margin: 0px;
+  font-size: 16px;
+  font-family: "Noto Sans TC", "微軟正黑體", arial, sans-serif;
+  color: #ffffff;
+  align-items: center;
+  background-color: #262626;
+}
+
+/* header */
+header {
+  display: flex;
+  margin: 0 auto;
+  height: 70px;
+  background-color: #262626;
+  align-items: center;
+  border-bottom: 2px solid #656565;
+}
+
+header > .logo {
+  flex: none;
+  width: 110px;
+  margin-left: 20px;
+  margin-right: 35px;
+  margin-bottom: 10px;
+}
+
+header > .logo img {
+  width: auto;
+  height: 60px;
+}
+
+header > .logo a {
+  background-color: #262626;
+}
+
+header > .feature > .option img {
+  width: auto;
+  height: 30px;
+}
+
+header > .feature > .backtest img {
+  width: auto;
+  height: 30px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.feature {
+  display: flex;
+  width: 1500px;
+  margin-right: 35px;
+  align-items: center;
+  background-color: #262626;
+}
+header > .feature input.search {
+  width: 130px;
+  height: 10px;
+  margin-right: 30px;
+  padding: 10px;
+  padding-right: 40px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  background-image: url(../imgs/search.png);
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: 95% center;
+  background-color: #262626;
+  color: #ffffff;
+}
+
+header > .feature > a > input.option {
+  width: 110px;
+  height: 30px;
+  margin-right: 30px;
+  padding-right: 32px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  background-image: url(../imgs/filter.png);
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  background-position: 90% center;
+  background-color: #262626;
+  color: #ffffff;
+}
+
+header > .feature > a > input.backtest {
+  width: 110px;
+  height: 30px;
+  margin-right: 30px;
+  padding-right: 32px;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  background-image: url(../imgs/test.png);
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  background-position: 90% center;
+  background-color: #262626;
+  color: #ffffff;
+}
+
+header > .profile {
+  display: flex;
+  height: 25px;
+  margin-right: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+header > .profile > .rank {
+  white-space: nowrap;
+  width: auto;
+  min-width: 40px;
+  max-width: 200px;
+  margin-right: 5px;
+  color: #ffffff;
+  font-size: 1em;
+}
+
+header > .profile > a > .member {
+  white-space: nowrap;
+  width: auto;
+  min-width: 40px;
+  max-width: 200px;
+  margin-right: 5px;
+  color: #f4af1c;
+  font-size: 1em;
+}
+
+header > .profile > .rankImg img {
+  width: auto;
+  height: 20px;
+  margin-right: 20px;
+}
+
+header > .profile > .memberImg img {
+  width: auto;
+  height: 20px;
+  margin-right: 8px;
+  margin-left: 10px;
+}
+
+/* main */
+main {
+  background-color: #262626;
+  min-height: calc(100vh - 9rem);
+}
+
+.main {
+  margin: 20px auto;
+  max-width: 1000px;
+  background-color: #262626;
+  border-radius: 10px;
+}
+
+.basicInfo {
+  display: flex;
+  width: 600px;
+  margin: 10px auto;
+}
+
+.basicInfo > button {
+  color: #656565;
+  width: 220px;
+  height: 60px;
+  margin-top: auto;
+  border-bottom: 1px solid #656565;
+  border-top: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  font-size: small;
+  background-color: #262626;
+}
+
+.context {
+  border-radius: 20px;
+}
+
+.profile {
+  display: flex;
+  width: 600px;
+  border-radius: 20px;
+  margin: 0px auto;
+}
+
+.picture {
+  width: 200px;
+  height: 200px;
+  border-radius: 30px;
+  text-align: center;
+}
+
+.picture > img{
+  margin-top: 33px;
+  width: 170px;
+  height: 170px;
+  border: 2px solid #ffffff;
+  border-radius: 85px;
+}
+
+.information {
+  width: 400px;
+  margin-bottom: 30px;
+  margin-left: 20px;
+}
+
+.item {
+  flex: 1 1 100%;
+  margin: 30px 20px 15px 20px;
+}
+
+.name, .email {
+  flex: 1 1 100%;
+  margin: 0px 20px;
+  width: 200px;
+  background: #656565;
+  height: 30px;  
+  border-radius: 8px;
+  padding-left: 10px;
+  padding-top: 7px;
+}
+
+.filter {
+  margin: 20px 30px;
+}
+
+button:hover,
+input:hover {
+  background-color: #262626;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-image: url(../imgs/calendar.png);
+  width: 17px;
+  height: 17px;
+}
+
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  width: 350px;
+  height: 65px;
+  margin-right: auto;
+  margin-top: 20px;
+  border-bottom: 1px solid #656565;
+}
+
+.name {
+  flex: 1 1 100%;
+  height: 30px;
+  font-size: 1.2em;
+}
+
+.price {
+  color: red;
+  height: 25px;
+  font-size: 1.6em;
+  margin-right: 10px;
+}
+
+.change {
+  color: green;
+  font-size: 0.9em;
+  height: 20px;
+  padding-top: 12px;
+}
+
+.graph {
+  display: flex;
+  margin-bottom: 20px;
+  margin-right: auto;
+  height: 50px;
+  max-width: 935px;
+  width: 620px;
+}
+
+.graph > button {
+  color: #656565;
+  width: 120px;
+  height: 28px;
+  margin-top: auto;
+  border-bottom: 1px solid #656565;
+  border-top: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  font-size: small;
+}
+
+.graphOption {
+  display: flex;
+  width: 935px;
+  height: 40px;
+  background-color: #262626;
+  margin-right: auto;
+  margin-top: 20px;
+  align-items: center;
+  position: relative;
+  margin-left: 50px;
+}
+
+.graphOptionFilter {
+  display: flex;
+  width: 935px;
+  height: 40px;
+  background-color: #262626;
+  margin-right: auto;
+  margin-top: 20px;
+  align-items: center;
+  position: relative;
+  margin-left: 50px;
+}
+
+.chart {
+  color: #ffffff;
+  width: 85px;
+  height: 30px;
+  border: 1px solid transparent;
+  margin-right: 10px;
+  font-size: 1em;
+  padding-left: 3px;
+  padding-top: 5px;
+  background-color: #262626;
+}
+
+.gun {
+  margin-right: 7px;
+}
+
+#indicate {
+  color: #ffffff;
+  width: 70px;
+  height: 30px;
+  border: 1px solid transparent;
+  margin-right: 25px;
+  font-size: 1em;
+  padding-top: 5px;
+  background-color: #262626;
+}
+
+.indicate {
+  display: none;
+  flex-direction: column;
+  background-color: #323232;
+  opacity: 0.9;
+  margin-top: 90px;
+  margin-left: 120px;
+  position: absolute;
+  z-index: 100;
+  width: 160px;
+  height: 60px;
+}
+
+#volumes,
+#ma {
+  margin-top: 7px;
+  margin-left: 10px;
+  text-align: start;
+  background-color: #323232;
+  font-size: 0.9em;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  margin-left: auto;
+  padding-right: 5px;
+}
+
+.date input.startDay,
+.date input.endDay {
+  font-size: smaller;
+  color: #ffffff;
+  width: 125px;
+  height: 10px;
+  padding: 8px 10px;
+  margin-right: 10px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  font-size: 0.9em;
+}
+
+.dash {
+  font-size: medium;
+  color: #ffffff;
+  width: 15px;
+  height: 15px;
+  text-align:center;
+  margin-right: 10px;
+  padding-bottom: 15px;
+}
+
+.date input.endDay {
+  margin-right: 20px;
+}
+
+.submit {
+  width: 60px;
+  height: 25px;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  background-color: #656565;
+  border-radius: 2px;
+}
+
+button:hover,
+input:hover {
+  background-color: #262626;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-image: url(../imgs/calendar.png);
+  width: 17px;
+  height: 17px;
+}
+
+.info_block {
+  text-align: center;
+}
+
+/* svg */
+/* coordinate text */
+text {
+  fill: #bbbbbb;
+  font-size: 0.9em;
+}
+
+/* container text */
+.value {
+  fill: #bbbbbb;
+  font-size: 0.8em;
+}
+
+.symbols {
+  fill: #bbbbbb;
+}
+
+.value-section {
+  fill: #bbbbbb;
+}
+
+text.symbol {
+  fill: #bbbbbb;
+}
+
+path {
+  fill: none;
+  stroke-width: 1;
+}
+
+/* crosshair */
+path.candle {
+  stroke: #ffffff;
+}
+
+path.candle.body {
+  stroke-width: 0;
+}
+
+path.line {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1;
+}
+
+path.candle.up {
+  fill: #ff0000;
+  stroke: #ff0000;
+}
+
+path.candle.down {
+  fill: #00aa00;
+  stroke: #00aa00;
+}
+
+.close.annotation.up path {
+  fill: #ff0000;
+}
+
+path.volume {
+  fill: #ebebeb;
+  opacity: 0.9;
+}
+
+path.volume.up {
+  fill: #ffa9a9;
+  opacity: 0.9;
+}
+
+path.volume.down {
+  fill: #daffc9;
+  opacity: 0.9;
+}
+
+.indicator-plot path.line {
+  fill: none;
+  stroke-width: 1;
+}
+
+.ma-0 path.line {
+  stroke: #ee8379;
+}
+
+.ma-1 path.line {
+  stroke: #64a0dd;
+}
+
+.ma-2 path.line {
+  stroke: #49b8bb;
+}
+
+path.macd {
+  stroke: #64a0dd;
+}
+
+path.signal {
+  stroke: #ee8379;
+}
+
+path.zero {
+  stroke: #bbbbbb;
+  stroke-dasharray: 0;
+  stroke-opacity: 0.5;
+}
+
+path.difference {
+  fill: #bbbbbb;
+  opacity: 0.5;
+}
+
+path.rsi {
+  stroke: skyblue;
+}
+
+path.overbought,
+path.oversold {
+  stroke: #ff9999;
+  stroke-dasharray: 5, 5;
+}
+
+path.middle,
+path.zero {
+  stroke: #bbbbbb;
+  stroke-dasharray: 5, 5;
+}
+
+.analysis path,
+.analysis circle {
+  stroke: rgb(52, 186, 248);
+  stroke-width: 3.8;
+}
+
+.trendline circle {
+  stroke-width: 0;
+  display: none;
+}
+
+.mouseover .trendline path {
+  stroke-width: 4.5;
+}
+
+.mouseover .trendline circle {
+  stroke-width: 4;
+  display: inline;
+}
+
+.dragging .trendline path,
+.dragging .trendline circle {
+  stroke: rgb(102, 139, 0);
+}
+
+.interaction path,
+.interaction circle {
+  pointer-events: all;
+}
+
+.interaction .body {
+  cursor: move;
+}
+
+.trendlines .interaction .start,
+.trendlines .interaction .end {
+  cursor: nwse-resize;
+}
+
+.supstance path {
+  stroke-dasharray: 2, 2;
+}
+
+.supstances .interaction path {
+  pointer-events: all;
+  cursor: ns-resize;
+}
+
+.mouseover .supstance path {
+  stroke-width: 1.5;
+}
+
+.dragging .supstance path {
+  stroke: skyblue;
+}
+
+.crosshair {
+  cursor: crosshair;
+}
+
+.crosshair path.wire {
+  stroke: #dddddd;
+  stroke-dasharray: 1, 1;
+}
+
+/* crosshair background color */
+.crosshair .axisannotation path {
+  fill: #656565;
+}
+
+.tradearrow path.tradearrow {
+  stroke: none;
+}
+
+.tradearrow path.buy {
+  fill: #00e1ff;
+}
+
+.tradearrow path.sell {
+  fill: #00e1ff;
+}
+
+.tradearrow path.highlight {
+  fill: none;
+  stroke-width: 2;
+}
+
+.tradearrow path.highlight.buy {
+  stroke: #0000ff;
+}
+
+.tradearrow path.highlight.sell {
+  stroke: #9900ff;
+}
+
+svg {
+background-color: #262626;
+border-radius: 20px;
+}
+
+/* table */
+#infor, .infor, .resultTable {
+  max-width: 1200px;
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 0px auto;
+}
+
+caption {
+  text-align: center;
+  font-size: 1.2em;
+  margin: 10px auto;
+  border-bottom: 1px solid #ffffff;
+  width: 100px;
+}
+
+#itemName th, #itemName th, .userOption td {
+  text-align: center;
+  font-size: 0.8em;
+  padding: 10px 16px;
+}
+
+#itemName th, #itemName th, .userOptionFilter td {
+  text-align: center;
+  font-size: 0.8em;
+  padding: 10px 16px;
+}
+
+table {
+  table-layout:fixed;
+  text-align:center;
+  border-collapse: collapse;
+  margin: 0px auto;
+}
+
+th, td {
+  vertical-align:middle;
+  padding: 10px 16px;
+  border: 1px solid #ffffff; 
+  font-size: 0.8em;
+}
+
+th {
+  background-color: #565656;
+}
+
+.userChoice button {
+  width: 45px;
+  height: 25px;
+  background-color: #5b9bc3;
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+  border-radius: 8px;
+  margin: 0px auto;
+  font-size: 1em;
+}
+
+.resultTable td:first-child:hover {
+  background-color: #ffffff7a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.resultTable td:nth-child(2):hover {
+  background-color: #ffffff7a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.save {
+  width: 48px;
+  height: 33px;
+  background-color: #5b9bc3;
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+  border-radius: 8px;
+  margin-left: 741px;
+  font-size: 0.8em;
+
+}
+
+.save:hover {
+  transform:scale(1,1);
+  transition:all 1s ease-out;
+  transform:scale(1.2,1.2);
+  cursor: pointer;
+  background-color: #5b9bc3;
+}
+
+header > .feature > input.option:hover {
+  cursor: pointer;
+}
+header > .feature > input.backtest:hover {
+  cursor: pointer;
+}
+
+.swal2-popup {
+  font-size: 0.6rem;
+  border: 2px solid #656565;
+  border-radius: 20px;
+}
+
+.stockName {
+  flex: 1 1 100%;
+}
+
+.backTest {
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  color: #ffffff;
+  border-top: 2px solid #656565;
+  height: 1px;
+  box-sizing: border-box;
+  position: absolute;
+  width: 100%;
+  font-size: 0.8em;
+}
+
+.view {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  margin: 0px auto;
+  width: 935px;
+  height: 50px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+.view > .social {
+  width: 300px;
+  margin-top: 9px;
+}
+
+.view > .social > img{
+  width: 20px;
+  margin: 0px 5px;
+}
+
+.copyright {
+  width: 400px;
+  margin-top: 4px;
+  margin-right: 50px;
+}
