@@ -12,6 +12,7 @@ const mysqlConfig = {
     user: USERNAME2, // MYSQL USERNAME
     password: PASSWORD, // MYSQL PASSWORD
     database: DATABASE, // MYSQL DB NAME
+    multipleStatements: true,
   },
   development: {
     // for localhost development
@@ -19,6 +20,7 @@ const mysqlConfig = {
     user: USERNAME2, // MYSQL USERNAME
     password: PASSWORD, // MYSQL PASSWORD
     database: DATABASE, // MYSQL DB NAME
+    multipleStatements: true,
   },
   test: {
     // for automation testing (command: npm run test)
@@ -26,6 +28,7 @@ const mysqlConfig = {
     user: USERNAME2,
     password: PASSWORD,
     database: DATABASE_TEST,
+    multipleStatements: true,
   },
 };
 

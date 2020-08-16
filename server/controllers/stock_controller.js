@@ -2,7 +2,6 @@ const Product = require('../models/stock_model');
 const moment = require('moment'); // calculate time
 
 function dateCheck(start, end) {
-
   return new Promise((resolve) => {
     const startString = start.split('-');
     const startTime = startString[0] + startString[1] + startString[2];
@@ -18,7 +17,6 @@ function dateCheck(start, end) {
 }
 
 function uptrend(userSearch, stockPricePair) {
-
   // find graph for match
   let graphPosition = [];
   // scan all of stock
@@ -68,14 +66,14 @@ function uptrend(userSearch, stockPricePair) {
         }
 
         if (upCount / r > 0.7) {
-          let index = {};
-          index.id = stockPricePair[i].id;
-          index.startDate = firstDay.date;
-          index.startPrice = firstDay.close;
-          index.endDate = lastDay.date;
-          index.endPrice = lastDay.close;
+          let obj = {};
+          obj.id = stockPricePair[i].id;
+          obj.startDate = firstDay.date;
+          obj.startPrice = firstDay.close;
+          obj.endDate = lastDay.date;
+          obj.endPrice = lastDay.close;
 
-          graphPosition.push(index);
+          graphPosition.push(obj);
 
           j = j + r;
         }
@@ -294,21 +292,21 @@ function reverseV(userSearch, stockPricePair) {
 
             if (upCount / minPosition > 0.5 && lowCount / minPosition > 0.5) {
 
-              let index = {};
-              index.id = stockPricePair[i].id;
-              index.startDate = firstDay.date;
-              index.startPrice = firstDay.close;
-              index.endDate = minDay.date;
-              index.endPrice = minDay.close;
-              graphPosition.push(index);
+              let objLeft = {};
+              objLeft.id = stockPricePair[i].id;
+              objLeft.startDate = firstDay.date;
+              objLeft.startPrice = firstDay.close;
+              objLeft.endDate = minDay.date;
+              objLeft.endPrice = minDay.close;
+              graphPosition.push(objLeft);
 
-              let indexs = {};
-              indexs.id = stockPricePair[i].id;
-              indexs.startDate = minDay.date;
-              indexs.startPrice = minDay.close;
-              indexs.endDate = lastDay.date;
-              indexs.endPrice = lastDay.close;
-              graphPosition.push(indexs);
+              let objRight = {};
+              objRight.id = stockPricePair[i].id;
+              objRight.startDate = minDay.date;
+              objRight.startPrice = minDay.close;
+              objRight.endDate = lastDay.date;
+              objRight.endPrice = lastDay.close;
+              graphPosition.push(objRight);
 
               j = j + r;
 
@@ -450,7 +448,6 @@ const option = async (req, res, next) => {
   userSearch.end = date.end;
   let filterInit = await Product.filterInit(userSearch);
 
-  // 進行 "圖形判斷"，取需要的值(顧客需求的天數與 % 數)，進行 array- object 排列
   // graph check and get day count and %, sort by arr-obj
   // pre-sort to id-[price] pair
   let stockPricePair = []; // id-[price] pair
@@ -516,34 +513,34 @@ const option = async (req, res, next) => {
     if (stockInf.length !== 0) {
       let price = [];
       for (let i = 0; i < stockInf.length; i++) {
-        let index = {};
-        index.date = stockInf[i].date; // date
-        index.code = stockInf[i].code; // code
-        index.name = stockInf[i].name; // name
-        index.open = stockInf[i].open; // open
-        index.high = stockInf[i].high; // high
-        index.low = stockInf[i].low; // low
-        index.close = stockInf[i].close; // close
+        let obj = {};
+        obj.date = stockInf[i].date; // date
+        obj.code = stockInf[i].code; // code
+        obj.name = stockInf[i].name; // name
+        obj.open = stockInf[i].open; // open
+        obj.high = stockInf[i].high; // high
+        obj.low = stockInf[i].low; // low
+        obj.close = stockInf[i].close; // close
         if (stockInf[i].close - stockInf[i].open >= 0) {
-          index.change = stockInf[i].changes; // changes
+          obj.change = stockInf[i].changes; // changes
         } else {
-          index.change = '-' + String(stockInf[i].changes); // changes
+          obj.change = '-' + String(stockInf[i].changes); // changes
         }
-        index.percentChange = String((((stockInf[i].close - stockInf[i].open) / stockInf[i].open) * 100).toFixed(2)); // changes %
+        obj.percentChange = String((((stockInf[i].close - stockInf[i].open) / stockInf[i].open) * 100).toFixed(2)); // changes %
 
         let volumeSql = stockInf[i].volume.split(',');
         let volumeNum = '';
         for (let i = 0; i < volumeSql.length; i++){
           volumeNum += volumeSql[i];
         }
-        index.volume = Number(volumeNum); // volumn
-        index.pe = stockInf[i].pe;
-        index.fd = stockInf[i].fi_count;
-        index.sitc = stockInf[i].sitc_count;
-        index.dealers = stockInf[i].dealers_count;
-        index.total = stockInf[i].total;
-        index.industry = stockInf[i].industry;
-        price.push(index);
+        obj.volume = Number(volumeNum); // volumn
+        obj.pe = stockInf[i].pe;
+        obj.fd = stockInf[i].fi_count;
+        obj.sitc = stockInf[i].sitc_count;
+        obj.dealers = stockInf[i].dealers_count;
+        obj.total = stockInf[i].total;
+        obj.industry = stockInf[i].industry;
+        price.push(obj);
       }
 
       result.data.push(
@@ -608,8 +605,6 @@ const backTest = async (req, res, next) => {
     let discount = (parseInt(stockData.discount)) / 100;
     const buyCostPercent = 0.001425;
     const sellCostPercent = 0.003;
-
-
 
     let stock = 0;
     let tradeCost = 0;
