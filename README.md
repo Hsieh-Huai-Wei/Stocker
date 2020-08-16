@@ -72,13 +72,13 @@ Help novice investors who enter the market the first time and don’t know where
 * Listed return on investment and transaction details, among them, the back test calculation includes transaction taxes.
 ## Demonstration
 ### Historical Price Query Page
-![Demo Historical Price Query Page alpha](https://i.imgur.com/vVx6aPq.gif)
+![Demo Historical Price Query Page alpha](https://i.imgur.com/O4HgH5C.gif)
 ### Technical Analysis Page
-![Demo Technical Analysis Page alpha](https://i.imgur.com/okAoqDi.gif)
+![Demo Technical Analysis Page alpha](https://i.imgur.com/4mlA6Ke.gif)
 ### Back Test Page
-![Demo Back Test Page alpha](https://i.imgur.com/wmQRXZg.gif)
+![Demo Back Test Page alpha](https://i.imgur.com/8Y0u9Zb.gif)
 ### User Page
-![Demo User Page alpha](https://i.imgur.com/ogOEv6x.gif)
+![Demo User Page alpha](https://i.imgur.com/oiyx2tD.gif)
 
 ## Inspiration
 Project inspired by [Fugle](https://www.fugle.tw/) and [Yahoo Finance](hhttps://finance.yahoo.com/), questions based on [Taiwan Stock Exchange Corporation (TWSE) ](https://www.twse.com.tw/en/)
