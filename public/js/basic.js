@@ -168,12 +168,9 @@ app.renderKBar = async function () {
 app.renderClose = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
-  let d3Graph = await app.d3init();
-
   let localData = window.localStorage.getItem('home');
-
   app.graphData = JSON.parse(localData);
-
+  let d3Graph = await app.d3init(app.graphData);
   await app.renderInfor(app.graphData);
 
   let data = [];
