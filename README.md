@@ -72,7 +72,7 @@ Help novice investors who enter the market the first time and don’t know where
 * Listed return on investment and transaction details, among them, the back test calculation includes transaction taxes.
 ## Demonstration
 ### Historical Price Query Page
-![Demo Historical Price Query Page alpha](https://i.imgur.com/O4HgH5C.gif)
+![Demo Historical Price Query Page alpha](https://i.imgur.com/joXyXAu.gif)
 ### Technical Analysis Page
 ![Demo Technical Analysis Page alpha](https://i.imgur.com/4mlA6Ke.gif)
 ### Back Test Page
