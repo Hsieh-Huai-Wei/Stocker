@@ -2,13 +2,17 @@
 require('dotenv').config();
 const { NODE_ENV, PORT, PORT_TEST, API_VERSION} = process.env;
 const port = NODE_ENV == 'test' ? PORT_TEST : PORT;
-
+const schedule = require('node-schedule');
 // Express Initialization
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.set('json spaces', 2);
+
+// crawel function
+const crawel = require('./script/dailyCrawel');
+schedule.scheduleJob('0 0 1 * * *', crawel.runDailyCrawler);
 
 // let body converted to JSON
 app.use(express.static(__dirname + '/public'));

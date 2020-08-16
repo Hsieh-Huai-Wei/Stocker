@@ -5,18 +5,39 @@ const got = require('got'); // fetch page in server
 
 async function insertData(historyData) {
   const result = await Product.getStockId();
-  let sqlArr = [];
   for (let i = 0; i < historyData.length; i++) {
     for (let j = 0; j < result.length; j++) {
       if (historyData[i].code === result[j].code) {
         historyData[i].code = result[j].id;
-        let arr = Object.values(historyData[i]);
-        sqlArr.push(arr);
         break;
       }
     }
   }
-  await Product.insertStockData(sqlArr);
+
+  let insertDataLen = [];
+  let insertData = [];
+  for (let i = 0; i < historyData.length; i++) {
+    if (typeof historyData[i].code !== 'string' ) {
+      let index = [];
+      let v = historyData[i].trend_slope;
+      index.push(v);
+      insertData.push(v);
+      if (isNaN(Number(historyData[i].code))) {
+        let c = 1;
+        index.push(c);
+        insertData.push(c);
+      } else {
+        let c = Number(historyData[i].code);
+        index.push(c);
+        insertData.push(c);
+      }
+      let d = Number(historyData[i].date);
+      index.push(d);
+      insertData.push(d);
+      insertDataLen.push(index);
+    }
+  }
+  await Product.insertTrendSlope(insertData, insertDataLen);
   return;
 }
 
@@ -27,26 +48,23 @@ async function getData(date, URL) {
     let historyData = [];
     for (let i = 0; i < data.data9.length; i++) {
       let product = {};
-      product.code = data.data9[i][0];
-      product.date = parseInt(date);
-      product.volumn = data.data9[i][2];
-      if (data.data9[i][5] === '--') {
-        product.open = parseFloat(0);
-        product.high = parseFloat(0);
-        product.low = parseFloat(0);
-        product.close = parseFloat(0);
-      } else {
-        product.open = parseFloat(data.data9[i][5]);
-        product.high = parseFloat(data.data9[i][6]);
-        product.low = parseFloat(data.data9[i][7]);
-        product.close = parseFloat(data.data9[i][8]);
+      let mData = data.data9[i][9];
+      let sign = mData.split('>')[1];
+      if (sign !== undefined) {
+        if (sign[0] === '+') {
+          product.trend_slope = 1;
+        } else if (sign[0] === '-') {
+          product.trend_slope = -1;
+        } else {
+          product.trend_slope = 0;
+        }
+        product.code = data.data9[i][0];
+        product.date = date.toString();
+        historyData.push(product);
       }
-      product.change = parseFloat(data.data9[i][10]);
-      product.pe = parseFloat(data.data9[i][15]);
-      product.trend_slope = 0;
-      historyData.push(product);
     }
     console.log(date + ': ' + data.data9.length);
+
     await insertData(historyData);
     return;
   } else {
@@ -62,11 +80,10 @@ async function sleep(millis) {
   );
 }
 
-async function runCrawler() {
+async function runTrendSlope() {
   try {
     for (let i = 0; i < 3650; i++) {
       const date = moment().subtract(i, 'days').format('YYYYMMDD');
-      console.log(date);
       const URL = `https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=${date}&type=ALLBUT0999`;
       await getData(date, URL);
       await sleep(5000);
@@ -79,4 +96,4 @@ async function runCrawler() {
   }
 }
 
-runCrawler();
+runTrendSlope();
