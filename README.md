@@ -59,7 +59,7 @@ Help novice investors who enter the market the first time and don’t know where
 * fetch
 
 ## Structure
-![Structure screenshot](https://i.imgur.com/872Swv6.png)
+![Structure screenshot](https://i.imgur.com/eAZ8G31.png)
 
 ## Database design
 ![Example screenshot](https://i.imgur.com/ITlDiPa.png)
