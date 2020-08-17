@@ -2,7 +2,8 @@
 
 Help novice investors who enter the market the first time and don’t know where to start. This project provide data visualization screening and back-test tools find their own trading strategies without spending any money.
 
-#### Website URL: https://www.tradestocker.xyz/
+#### Website URL: https://www.tradestocker.xyz/ 
+( Recommended browser : Chrome )
 
 ## Table of content
 * [Technologies](#Technologies)
@@ -58,7 +59,7 @@ Help novice investors who enter the market the first time and don’t know where
 * fetch
 
 ## Structure
-![Structure screenshot](https://i.imgur.com/mnBIrna.png)
+![Structure screenshot](https://i.imgur.com/872Swv6.png)
 
 ## Database design
 ![Example screenshot](https://i.imgur.com/ITlDiPa.png)
