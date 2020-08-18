@@ -5,21 +5,18 @@ const port = NODE_ENV == 'test' ? PORT_TEST : PORT;
 const schedule = require('node-schedule');
 // Express Initialization
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
 
 app.set('json spaces', 2);
 
 // crawel function
 const crawel = require('./script/dailyCrawel');
-schedule.scheduleJob('0 0 1 * * *', crawel.runDailyCrawler);
+schedule.scheduleJob('0 30 12 * * *', crawel.runDailyCrawler);
 
 // let body converted to JSON
 app.use(express.static(__dirname + '/public'));
 app.use('/admin', express.static('public'));
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json()); // the same with bodyparser json
 
 // CORS Control
 app.use('/api/', function (req, res, next) {

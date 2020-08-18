@@ -143,7 +143,7 @@ async function getLegalData(date, URL) {
 
 // stock price
 async function insertPriceData(historyData) {
-  const result = Product.getStockId();
+  const result = await Product.getStockId();
   let sqlArr = [];
   for (let i = 0; i < historyData.length; i++) {
     for (let j = 0; j < result.length; j++) {
@@ -182,6 +182,7 @@ async function getPriceData(date, URL) {
       }
       product.change = parseFloat(data.data9[i][10]);
       product.pe = parseFloat(data.data9[i][15]);
+      product.trend_slope = 0;
       historyData.push(product);
     }
     console.log(date + ': ' + data.data9.length);
