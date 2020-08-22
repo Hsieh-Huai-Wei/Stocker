@@ -2,7 +2,7 @@
 window.localStorage.setItem('page', 'index');
 
 app.fetchPostData = async function (url, data) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: new Headers({
@@ -14,7 +14,7 @@ app.fetchPostData = async function (url, data) {
 
 app.checkAuth = async function (num) {
   if ($('.member').text() === 'Sign up / Log in') {
-    let result = await Swal.fire({
+    const result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,
@@ -42,8 +42,8 @@ app.checkUser = async function () {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
-    let url = 'api/1.0/user/profile';
-    let body = await app.fetchPostData(url, data);
+    const url = 'api/1.0/user/profile';
+    const body = await app.fetchPostData(url, data);
     if (body.error) {
       $('.memberLink').attr('href', './signin.html');
       $('.member').text('Sign up / Log in');

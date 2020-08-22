@@ -2,7 +2,7 @@
 window.localStorage.setItem('page', 'result');
 
 async function fetchPostData(url, data) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: new Headers({
@@ -28,7 +28,7 @@ $('.search').on('keypress', function (e) {
 // main function
 app.renderList = function () {
 
-  let today = new Date();
+  const today = new Date();
   // let ey = (today.getFullYear()).toString();
   let em = (today.getMonth() + 1).toString();
   if (em.length === 1) {
@@ -39,15 +39,15 @@ app.renderList = function () {
     ed = '0' + ed;
   }
 
-  let c = 'rgba(51, 51, 51, 0.902)';
-  let r = 'red';
-  let g = 'green';
+  const c = 'rgba(51, 51, 51, 0.902)';
+  const r = 'red';
+  const g = 'green';
 
   if (window.localStorage.getItem('backTestToken')) {
-    let data = JSON.parse(window.localStorage.getItem('backTestToken'));
+    const data = JSON.parse(window.localStorage.getItem('backTestToken'));
     for (let i = 0; i < data.data.length; i++) {
 
-      let tr = $('<tr>').attr('class', 'itemName').append(
+      const tr = $('<tr>').attr('class', 'itemName').append(
         $('<th>').attr('class', 'number').text('#'),
         $('<th>').attr('class', 'date').text('日期'),
         $('<th>').attr('class', 'situation').text('委託狀況'),
@@ -57,20 +57,20 @@ app.renderList = function () {
         $('<th>').attr('class', 'property').text('資產狀況'),
         $('<th>').attr('class', 'profit').text('獲利'),
       );
-      let thead = $('<thead>').append(tr);
-      let caption = $('<caption>').attr('class', `case${i+1}`).text(`Case #${i+1}`);
-      let table = $('<table>').attr('class', 'detail');
+      const thead = $('<thead>').append(tr);
+      const caption = $('<caption>').attr('class', `case${i+1}`).text(`Case #${i+1}`);
+      const table = $('<table>').attr('class', 'detail');
       // let tbody = $("<tbody>").attr("class", "data");
       table.append(caption);
       table.append(thead);
       // table.append(tbody)
 
 
-      let tbody = $('<tbody>').attr('class', `detail${i+1}`);
+      const tbody = $('<tbody>').attr('class', `detail${i+1}`);
       for (let j = 0; j < data.data[i].history.length; j++) {
         let tr;
         if (data.data[i].history[j].situation === 'buy') {
-          let profitPercentFont = data.data[i].history[j].profitPercent;
+          const profitPercentFont = data.data[i].history[j].profitPercent;
           if (profitPercentFont[0] !== '-') {
             tr = $('<tr>').attr('class', `detail${i + 1}`).append(
               $('<td>').attr('class', 'number').css('background-color', c).append(`${j + 1}`),
@@ -96,7 +96,7 @@ app.renderList = function () {
           }
 
         } else {
-          let profitPercentFont = data.data[i].history[j].profitPercent;
+          const profitPercentFont = data.data[i].history[j].profitPercent;
           if (profitPercentFont[0] !== '-') {
             tr = $('<tr>').attr('class', `detail${i + 1}`).append(
               $('<td>').attr('class', 'number').append(`${j + 1}`),
@@ -143,10 +143,10 @@ app.renderList = function () {
     // let summaryNum = $('<table>').attr('class', `detail`).append(tr)
 
     for (let i = 0; i < data.data.length; i++) {
-      let earningRateFont = (data.data[i].summary.earningRate).toString();
+      const earningRateFont = (data.data[i].summary.earningRate).toString();
       if (earningRateFont[0] !== '-') {
-        let inputCheck = $('<input>').attr('class', `save${i}`).attr('type', 'checkbox').attr('value', i);
-        let tr = $('<tr>').attr('class', `summaryData${i}`).append(
+        const inputCheck = $('<input>').attr('class', `save${i}`).attr('type', 'checkbox').attr('value', i);
+        const tr = $('<tr>').attr('class', `summaryData${i}`).append(
           $('<td>').attr('class', 'case').append(`case #${i+1}`),
           $('<td>').attr('class', 'code').append(data.data[i].case.code),
           $('<td>').attr('class', 'date').append(data.data[i].case.startDate + '</br>' + '~' + '</br>' + data.data[i].case.endDate),
@@ -160,8 +160,8 @@ app.renderList = function () {
         );
         $('.summaryData').append(tr);
       } else {
-        let inputCheck = $('<input>').attr('class', `save${i}`).attr('type', 'checkbox').attr('value', i);
-        let tr = $('<tr>').attr('class', `summaryData${i}`).append(
+        const inputCheck = $('<input>').attr('class', `save${i}`).attr('type', 'checkbox').attr('value', i);
+        const tr = $('<tr>').attr('class', `summaryData${i}`).append(
           $('<td>').attr('class', 'case').append(`case #${i+1}`),
           $('<td>').attr('class', 'code').append(data.data[i].case.code),
           $('<td>').attr('class', 'date').append(data.data[i].case.startDate + '</br>' + '~' + '</br>' + data.data[i].case.endDate),
@@ -187,15 +187,15 @@ app.saveBacktestHistory = async function () {
   $('.save').attr('disabled', true);
   if (window.localStorage.getItem('backTestToken')) {
 
-    let dataString = window.localStorage.getItem('backTestToken');
-    let data = JSON.parse(dataString);
-    let num = data.data.length;
+    const dataString = window.localStorage.getItem('backTestToken');
+    const data = JSON.parse(dataString);
+    const num = data.data.length;
 
-    let results = {};
+    const results = {};
     results.data = [];
     for (let i = 0; i < num; i++) {
       if ($(`.save${i}:checked`).val() !== undefined) {
-        let result = {
+        const result = {
           case: data.data[i].case,
           history: data.data[i].history,
           summary: data.data[i].summary,
@@ -215,8 +215,8 @@ app.saveBacktestHistory = async function () {
       return;
     }
     results.user = window.localStorage.getItem('userToken');
-    let url = 'api/1.0/saveBackTest';
-    let body = await fetchPostData(url, results);
+    const url = 'api/1.0/saveBackTest';
+    const body = await fetchPostData(url, results);
     $('.save').attr('disabled', false);
     if (body.error) {
       Swal.fire({
@@ -243,11 +243,11 @@ app.checkUser = async function () {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
-    let url = 'api/1.0/user/profile';
-    let body = await fetchPostData(url, data);
+    const url = 'api/1.0/user/profile';
+    const body = await fetchPostData(url, data);
 
     if (body.error) {
-      let result = Swal.fire({
+      const result = Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -269,7 +269,7 @@ app.checkUser = async function () {
     }
 
   } else {
-    let result = Swal.fire({
+    const result = Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,

@@ -6,7 +6,7 @@ const cheerio = require('cheerio'); // analyze and get html structure
 
 // catch stock name and code
 const url = 'https://isin.twse.com.tw/isin/C_public.jsp?strMode=2';
-let options = {
+const options = {
   uri: url,
   encoding: null,
   transform: function (body) {
@@ -18,9 +18,9 @@ let options = {
 request(options)
   .then(async function ($) {
     const table_tr = $('.h4 tbody tr');
-    let data = [];
+    const data = [];
     for (let i = 2; i < 946; i++) {
-      let index = [];
+      const index = [];
       index.push(table_tr.eq(i).find('td').eq(0).text().split('　')[0]);
       index.push(table_tr.eq(i).find('td').eq(0).text().split('　')[1]);
       index.push(table_tr.eq(i).find('td').eq(4).text());

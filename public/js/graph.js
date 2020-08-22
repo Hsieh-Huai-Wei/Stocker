@@ -1,12 +1,12 @@
 /* global $, techan, d3 */
 
-let app = {
+const app = {
   indicatorPreRoll : 33,
   currd3Graph : null,
 };
 
 app.d3init = async function (data) {
-  let dim = { // graph arena
+  const dim = { // graph arena
     width: 930,
     height: 750, // bottom x axis
     margin: { top: 50, right: 60, bottom: 50, left: 60 },
@@ -21,27 +21,27 @@ app.d3init = async function (data) {
   dim.indicator.bottom =
     dim.indicator.top + dim.indicator.height + dim.indicator.padding; // + open - close
 
-  let indicatorTop = d3
+  const indicatorTop = d3
     .scaleLinear()
     .range([dim.indicator.top, dim.indicator.bottom]);
 
   const parseDate = d3.timeParse('%Y%m%d');
 
-  let x = techan.scale.financetime().range([0, dim.plot.width]); // k bar graph x axis
+  const x = techan.scale.financetime().range([0, dim.plot.width]); // k bar graph x axis
 
-  let y = d3.scaleLinear().range([dim.ohlc.height, 0]); // k bar graph y axis
+  const y = d3.scaleLinear().range([dim.ohlc.height, 0]); // k bar graph y axis
 
-  let yPercent = y.copy(); // Same as y at this stage, will get a different domain later
+  const yPercent = y.copy(); // Same as y at this stage, will get a different domain later
 
   let yInit, yPercentInit, zoomableInit;
 
-  let yVolume = d3.scaleLinear().range([y(0), y(0.2)]); // volume y
+  const yVolume = d3.scaleLinear().range([y(0), y(0.2)]); // volume y
 
-  let candlestick = techan.plot.candlestick().xScale(x).yScale(y); //k bar
+  const candlestick = techan.plot.candlestick().xScale(x).yScale(y); //k bar
 
-  let close = techan.plot.close().xScale(x).yScale(y);  //close
+  const close = techan.plot.close().xScale(x).yScale(y);  //close
 
-  let tradearrow = techan.plot
+  const tradearrow = techan.plot
     .tradearrow()
     .xScale(x)
     .yScale(y)
@@ -51,26 +51,26 @@ app.d3init = async function (data) {
       else return y(d.price);
     });
 
-  let sma0 = techan.plot.sma().xScale(x).yScale(y);
+  const sma0 = techan.plot.sma().xScale(x).yScale(y);
 
-  let sma1 = techan.plot.sma().xScale(x).yScale(y);
+  const sma1 = techan.plot.sma().xScale(x).yScale(y);
 
-  let ema2 = techan.plot.ema().xScale(x).yScale(y);
+  const ema2 = techan.plot.ema().xScale(x).yScale(y);
 
-  let volume = techan.plot
+  const volume = techan.plot
     .volume()
     .accessor(close.accessor())
     .xScale(x)
     .yScale(yVolume);
 
-  let trendline = techan.plot.trendline().xScale(x).yScale(y);
+  const trendline = techan.plot.trendline().xScale(x).yScale(y);
 
-  let supstance = techan.plot.supstance().xScale(x).yScale(y);
+  const supstance = techan.plot.supstance().xScale(x).yScale(y);
 
-  let xAxis = d3.axisBottom(x);
+  const xAxis = d3.axisBottom(x);
 
   // setting crosschair display time
-  let timeAnnotation = techan.plot // bottom x axis time
+  const timeAnnotation = techan.plot // bottom x axis time
     .axisannotation()
     .axis(xAxis)
     .orient('bottom')
@@ -79,10 +79,10 @@ app.d3init = async function (data) {
     .height(20)
     .translate([0, dim.plot.height]); //rect coordinate
 
-  let yAxis = d3.axisRight(y); // y coordinate of close for right
+  const yAxis = d3.axisRight(y); // y coordinate of close for right
 
   // tag of right for mouse
-  let ohlcAnnotation = techan.plot
+  const ohlcAnnotation = techan.plot
     .axisannotation()
     .axis(yAxis)
     .orient('right') // tag of right
@@ -92,7 +92,7 @@ app.d3init = async function (data) {
     .height(20);
 
   // last close tag on right axis
-  let closeAnnotation = techan.plot
+  const closeAnnotation = techan.plot
     .axisannotation()
     .axis(yAxis)
     .orient('right')
@@ -102,11 +102,11 @@ app.d3init = async function (data) {
     .width(60)
     .height(20);
 
-  let percentAxis = d3
+  const percentAxis = d3
     .axisLeft(yPercent) // tag % of left for mouse
     .tickFormat(d3.format('+.1%')); //base on f, return 100 and add %
 
-  let percentAnnotation = techan.plot
+  const percentAnnotation = techan.plot
     .axisannotation()
     .axis(percentAxis)
     .orient('left') // tag % of left for mouse
@@ -114,13 +114,13 @@ app.d3init = async function (data) {
     .height(20);
 
   // last close tag on left axis
-  let volumeAxis = d3
+  const volumeAxis = d3
     .axisRight(yVolume)
     .ticks(3) // gap of volume axis
     .tickFormat(d3.format(',.3s')); // base on r, and include unit
 
  // last volume tag on left axis
-  let volumeAnnotation = techan.plot
+  const volumeAnnotation = techan.plot
     .axisannotation()
     .axis(volumeAxis)
     .orient('right')
@@ -129,15 +129,15 @@ app.d3init = async function (data) {
 
   // ------------------- macd ------------------
 
-  let macdScale = d3
+  const macdScale = d3
     .scaleLinear()
     .range([indicatorTop(0) + dim.indicator.height, indicatorTop(0)]);
 
-  let macd = techan.plot.macd().xScale(x).yScale(macdScale);
+  const macd = techan.plot.macd().xScale(x).yScale(macdScale);
 
-  let macdAxis = d3.axisRight(macdScale).ticks(3); // macd gap of right
+  const macdAxis = d3.axisRight(macdScale).ticks(3); // macd gap of right
 
-  let macdAnnotation = techan.plot
+  const macdAnnotation = techan.plot
     .axisannotation()
     .axis(macdAxis)
     .orient('right')
@@ -146,9 +146,9 @@ app.d3init = async function (data) {
     .width(60)
     .height(20);
 
-  let macdAxisLeft = d3.axisLeft(macdScale).ticks(3);
+  const macdAxisLeft = d3.axisLeft(macdScale).ticks(3);
 
-  let macdAnnotationLeft = techan.plot
+  const macdAnnotationLeft = techan.plot
     .axisannotation()
     .axis(macdAxisLeft)
     .orient('left')
@@ -158,15 +158,15 @@ app.d3init = async function (data) {
 
   // ------------------- ris ------------------
 
-  let rsiScale = macdScale
+  const rsiScale = macdScale
     .copy()
     .range([indicatorTop(1) + dim.indicator.height, indicatorTop(1)]);
 
-  let rsi = techan.plot.rsi().xScale(x).yScale(rsiScale);
+  const rsi = techan.plot.rsi().xScale(x).yScale(rsiScale);
 
-  let rsiAxis = d3.axisRight(rsiScale).ticks(3);
+  const rsiAxis = d3.axisRight(rsiScale).ticks(3);
 
-  let rsiAnnotation = techan.plot
+  const rsiAnnotation = techan.plot
     .axisannotation()
     .axis(rsiAxis)
     .orient('right')
@@ -175,9 +175,9 @@ app.d3init = async function (data) {
     .width(60)
     .height(20);
 
-  let rsiAxisLeft = d3.axisLeft(rsiScale).ticks(3);
+  const rsiAxisLeft = d3.axisLeft(rsiScale).ticks(3);
 
-  let rsiAnnotationLeft = techan.plot
+  const rsiAnnotationLeft = techan.plot
     .axisannotation()
     .axis(rsiAxisLeft)
     .orient('left')
@@ -185,7 +185,7 @@ app.d3init = async function (data) {
     .width(60)
     .height(20);
 
-  let macdCrosshair = techan.plot
+  const macdCrosshair = techan.plot
     .crosshair()
     .xScale(timeAnnotation.axis().scale())
     .yScale(macdAnnotation.axis().scale())
@@ -193,7 +193,7 @@ app.d3init = async function (data) {
     .yAnnotation([macdAnnotation, macdAnnotationLeft])
     .verticalWireRange([0, dim.plot.height]);
 
-  let rsiCrosshair = techan.plot
+  const rsiCrosshair = techan.plot
     .crosshair()
     .xScale(timeAnnotation.axis().scale())
     .yScale(rsiAnnotation.axis().scale())
@@ -201,7 +201,7 @@ app.d3init = async function (data) {
     .yAnnotation([rsiAnnotation, rsiAnnotationLeft])
     .verticalWireRange([0, dim.plot.height]);
 
-  let a = $('<div>').attr('class', 'graphlayout');
+  const a = $('<div>').attr('class', 'graphlayout');
   $('#select').append(a);
 
   let svg = d3
@@ -210,7 +210,7 @@ app.d3init = async function (data) {
     .attr('width', dim.width)
     .attr('height', dim.height);
 
-  let defs = svg.append('defs');
+  const defs = svg.append('defs');
 
   defs
     .append('clipPath')
@@ -249,7 +249,7 @@ app.d3init = async function (data) {
     .attr('class', 'x axis')
     .attr('transform', 'translate(0,' + dim.plot.height + ')');
 
-  let ohlcSelection = svg
+  const ohlcSelection = svg
     .append('g')
     .attr('class', 'ohlc')
     .attr('transform', 'translate(0,0)');
@@ -291,7 +291,7 @@ app.d3init = async function (data) {
 
   ohlcSelection.append('g').attr('class', 'volume axis');
 
-  let indicatorSelection = svg
+  const indicatorSelection = svg
     .selectAll('svg > g.indicator')
     .data(['macd', 'rsi'])
     .enter()
@@ -463,7 +463,7 @@ app.d3init = async function (data) {
     .attr('y', 160)
     .text('');
 
-  let ohlcCrosshair = techan.plot
+  const ohlcCrosshair = techan.plot
     .crosshair()
     .xScale(timeAnnotation.axis().scale())
     .yScale(ohlcAnnotation.axis().scale())
@@ -475,10 +475,10 @@ app.d3init = async function (data) {
       let i;
       for (i = 0; i < data.length; i++) {
         if (coords.x.toString() === new Date(data[i].date).toString()) {
-          let day = new Date(coords.x);
-          let y = day.getFullYear();
-          let m = day.getMonth() + 1;
-          let d = day.getDate();
+          const day = new Date(coords.x);
+          const y = day.getFullYear();
+          const m = day.getMonth() + 1;
+          const d = day.getDate();
           corp_text.text(data[0].name);
           date_text.text(y + '/' + m + '/' + d);
           open_text.text(data[i].open);
@@ -493,7 +493,7 @@ app.d3init = async function (data) {
     });
 
 
-  let d3data = {
+  const d3data = {
     dim: dim,
     parseDate: parseDate,
     yInit: yInit,
@@ -594,9 +594,9 @@ app.draw = function (d3Graph) {
 
 app.smaAndema = function (d3Graph, graphData) {
 
-  let data = [];
+  const data = [];
   for (let i = 0; i < graphData.length; i++) {
-    let oldDate = graphData[i].date;
+    const oldDate = graphData[i].date;
     graphData[i].date = new Date(oldDate);
     data.push(graphData[i]);
   }
@@ -665,9 +665,9 @@ app.volumeCancel = function (d3Graph) {
 
 app.volumeRender = function (d3Graph, graphData) {
 
-  let data = [];
+  const data = [];
   for (let i = 0; i < graphData.length; i++) {
-    let oldDate = graphData[i].date;
+    const oldDate = graphData[i].date;
     graphData[i].date = new Date(oldDate);
     data.push(graphData[i]);
   }
@@ -689,7 +689,7 @@ app.kBarSetting = function (d3Graph, data) {
     .attr('class', 'candlestick')
     .attr('clip-path', 'url(#ohlcClip)');
 
-  let accessor = d3Graph.candlestick.accessor();
+  const accessor = d3Graph.candlestick.accessor();
   // Don't show where indicators don't have data
   // let accessor = close.accessor(),
   // indicatorPreRoll = 33; // Don't show where indicators don't have data
@@ -700,9 +700,9 @@ app.kBarSetting = function (d3Graph, data) {
     techan.scale.plot.percent(d3Graph.y, accessor(data[app.indicatorPreRoll])).domain()
   );
 
-  let macdData = techan.indicator.macd()(data);
+  const macdData = techan.indicator.macd()(data);
   d3Graph.macdScale.domain(techan.scale.plot.macd(macdData).domain());
-  let rsiData = techan.indicator.rsi()(data);
+  const rsiData = techan.indicator.rsi()(data);
   d3Graph.rsiScale.domain(techan.scale.plot.rsi(rsiData).domain());
 
   d3Graph.svg.select('g.candlestick').datum(data).call(d3Graph.candlestick);
@@ -725,7 +725,7 @@ app.closeSetting = function (d3Graph, data) {
     .attr('class', 'close')
     .attr('clip-path', 'url(#ohlcClip)');
 
-  let accessor = d3Graph.close.accessor();
+  const accessor = d3Graph.close.accessor();
     // indicatorPreRoll = 33; // Don't show where indicators don't have data
 
   d3Graph.x.domain(techan.scale.plot.time(data).domain());
@@ -734,9 +734,9 @@ app.closeSetting = function (d3Graph, data) {
     techan.scale.plot.percent(d3Graph.y, accessor(data[app.indicatorPreRoll])).domain()
   );
 
-  let macdData = techan.indicator.macd()(data);
+  const macdData = techan.indicator.macd()(data);
   d3Graph.macdScale.domain(techan.scale.plot.macd(macdData).domain());
-  let rsiData = techan.indicator.rsi()(data);
+  const rsiData = techan.indicator.rsi()(data);
   d3Graph.rsiScale.domain(techan.scale.plot.rsi(rsiData).domain());
 
   d3Graph.svg.selectAll('g.close').datum(data).call(d3Graph.close);
@@ -762,11 +762,11 @@ app.trendSetting = function (d3Graph, data) {
 };
 
 app.trendDataSort = function (trendData) {
-  let trend = [];
+  const trend = [];
   for (let i = 0; i < trendData.length; i++) {
-    let startOldDates = trendData[i].startDate.toString();
-    let endOldDates = trendData[i].endDate.toString();
-    let startDate =
+    const startOldDates = trendData[i].startDate.toString();
+    const endOldDates = trendData[i].endDate.toString();
+    const startDate =
       startOldDates[0] +
       startOldDates[1] +
       startOldDates[2] +
@@ -777,7 +777,7 @@ app.trendDataSort = function (trendData) {
       '/' +
       startOldDates[6] +
       startOldDates[7];
-    let endDate =
+    const endDate =
       endOldDates[0] +
       endOldDates[1] +
       endOldDates[2] +
@@ -797,9 +797,9 @@ app.trendDataSort = function (trendData) {
     trend.push(trendObj);
   }
 
-  let trendlineData = [];
+  const trendlineData = [];
   for (let i = 0; i < trend.length; i++) {
-    let index = {
+    const index = {
       start: {
         date: trend[i].startDate,
         value: trend[i].startPrice,
@@ -832,7 +832,7 @@ app.checkMA = function checkMA() {
 };
 
 app.indicate = function indicate() {
-  let display = $('.indicate').css('display');
+  const display = $('.indicate').css('display');
   if (display === 'none') {
     $('.indicate').css('display', 'block');
   } else {

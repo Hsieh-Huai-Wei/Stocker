@@ -2,7 +2,7 @@
 window.localStorage.setItem('page', 'option');
 
 app.fetchPostData = async function  (url, data) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: new Headers({
@@ -40,8 +40,8 @@ app.submitData = async () => {
   }
 
   if ($('.searchEndDay').val() === '') {
-    let today = new Date();
-    let ey = today.getFullYear().toString();
+    const today = new Date();
+    const ey = today.getFullYear().toString();
     let em = (today.getMonth() + 1).toString();
     if (em.length === 1) {
       em = '0' + em;
@@ -82,15 +82,15 @@ app.submitData = async () => {
     decrease = 0;
   }
 
-  let graph = $('input:checked').val();
+  const graph = $('input:checked').val();
 
   let y = Number(searchEndDay.split('-')[0]);
-  let m = searchEndDay.split('-')[1];
-  let d = searchEndDay.split('-')[2];
+  const m = searchEndDay.split('-')[1];
+  const d = searchEndDay.split('-')[2];
   y = y - 1;
-  let searchStartDay = `${y}` + '-' + `${m}` + '-' + `${d}`;
+  const searchStartDay = `${y}` + '-' + `${m}` + '-' + `${d}`;
 
-  let userFilter = {
+  const userFilter = {
     start: searchStartDay,
     end: searchEndDay,
     upper: upperPrice,
@@ -110,15 +110,15 @@ app.submitData = async () => {
 };
 
 app.checkGraph = function () {
-  let radioValue = $('input:checked').val();
-  let optional = $('<div>').attr('class', 'optional');
-  let graphNote = $('.graphNote');
+  const radioValue = $('input:checked').val();
+  const optional = $('<div>').attr('class', 'optional');
+  const graphNote = $('.graphNote');
   if (radioValue === 'reverseV') {
     $('.optional').remove();
     $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
-    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/vTrend.png');
+    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
+    const countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
+    const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/vTrend.png');
     optional.append(countDays);
     optional.append(inputs);
     graphNote.append(img);
@@ -126,11 +126,11 @@ app.checkGraph = function () {
   } else if (radioValue === 'uptrend') {
     $('.optional').remove();
     $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
-    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5');
-    let increase = $('<div>').attr('id', 'itemss').attr('class', 'increase').text('上漲 %');
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/upTrend.png');
+    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
+    const countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
+    const input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5');
+    const increase = $('<div>').attr('id', 'itemss').attr('class', 'increase').text('上漲 %');
+    const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/upTrend.png');
     optional.append(countDays);
     optional.append(inputs);
     optional.append(increase);
@@ -140,11 +140,11 @@ app.checkGraph = function () {
   } else if (radioValue === 'downtrend') {
     $('.optional').remove();
     $('.explain').remove();
-    let inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
-    let countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    let input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5');
-    let decrease = $('<div>').attr('id', 'itemss').attr('class', 'decrease').text('下跌 %');
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/downTrend.png');
+    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
+    const countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
+    const input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5');
+    const decrease = $('<div>').attr('id', 'itemss').attr('class', 'decrease').text('下跌 %');
+    const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/downTrend.png');
     optional.append(countDays);
     optional.append(inputs);
     optional.append(decrease);
@@ -154,15 +154,15 @@ app.checkGraph = function () {
   } else {
     $('.optional').remove();
     $('.explain').remove();
-    let img = $('<img>').attr('class', 'explain').attr('src', '../imgs/rangeTrend.png');
+    const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/rangeTrend.png');
     graphNote.append(img);
     $('.dif').append(optional);
   }
 };
 
 app.renderToday = function () {
-  let now = new Date();
-  let ey = now.getFullYear().toString();
+  const now = new Date();
+  const ey = now.getFullYear().toString();
   let em = (now.getMonth() + 1).toString();
   if (em.length === 1) {
     em = '0' + em;
@@ -171,7 +171,7 @@ app.renderToday = function () {
   if (ed.length === 1) {
     ed = '0' + ed;
   }
-  let searchEndDay = ey + '-' + em + '-' + ed;
+  const searchEndDay = ey + '-' + em + '-' + ed;
   $('.searchEndDay').val(searchEndDay);
 };
 
@@ -181,11 +181,11 @@ app.checkUser = async function () {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
-    let url = 'api/1.0/user/profile';
-    let body = await app.fetchPostData(url, data);
+    const url = 'api/1.0/user/profile';
+    const body = await app.fetchPostData(url, data);
 
     if (body.error) {
-      let result = await Swal.fire({
+      const result = await Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -207,7 +207,7 @@ app.checkUser = async function () {
     }
 
   } else {
-    let result = await Swal.fire({
+    const result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,
