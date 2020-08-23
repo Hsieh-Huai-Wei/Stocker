@@ -29,9 +29,15 @@ const filter = async (data) => {
 };
 
 const backTest = async (data) => {
-  const result = await query(`SELECT stock.history_price.*, stock.information.* FROM stock.information 
-INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id WHERE (code = ?) AND (date between ? and ?) ORDER BY date;`,data);
-  return result;
+  if (isNaN(Number(data[0]))) {
+    const result = await query(`SELECT stock.history_price.*, stock.information.* FROM stock.information 
+  INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id WHERE (name = ?) AND (date between ? and ?) ORDER BY date;`, data);
+    return result;
+  } else {
+    const result = await query(`SELECT stock.history_price.*, stock.information.* FROM stock.information 
+  INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id WHERE (code = ?) AND (date between ? and ?) ORDER BY date;`, data);
+    return result;
+  }
 };
 
 const filterHistory = async (data) => {

@@ -21,7 +21,6 @@ function uptrend(userSearch, stockPricePair) {
   const graphPosition = [];
   // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
-    console.log('i', i);
     // scan history price of single stock
     const r = Number(userSearch.count);
     const increase = Number(userSearch.increase);
@@ -117,7 +116,6 @@ function downtrend(userSearch, stockPricePair) {
   const graphPosition = [];
   // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
-    console.log('i', i);
     // scan history price of single stock
     const r = Number(userSearch.count);
     const decrease = Number(userSearch.decrease);
@@ -212,7 +210,6 @@ function reverseV(userSearch, stockPricePair) {
   // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
     // scan history price of single stock
-    console.log('i', i);
     const r = Number(userSearch.count);
     const low = Math.floor(r / 2) - 2;
     const up = Math.floor(r / 2) + 2;
@@ -316,7 +313,6 @@ function reverseV(userSearch, stockPricePair) {
       }
     }
   }
-
   // drop no match stock
   const finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
@@ -345,7 +341,6 @@ function reverseV(userSearch, stockPricePair) {
       finalStockPricePair.push(index);
     }
   }
-
   return finalStockPricePair;
 }
 
@@ -451,7 +446,6 @@ const option = async (req, res, next) => {
   // graph check and get day count and %, sort by arr-obj
   // pre-sort to id-[price] pair
   const stockPricePair = []; // id-[price] pair
-
   for (let i = 0; i < filterInit.length; i++) {
     const item = stockPricePair.find(item => item.id === filterInit[i].stock_id);
     if (item) {
@@ -480,7 +474,6 @@ const option = async (req, res, next) => {
       stockPricePair.push(index);
     }
   }
-
   // define graph
   let finalStockPricePair;
 
@@ -576,7 +569,6 @@ const option = async (req, res, next) => {
   }
 
   result.inf = userSearch;
-  console.log(result);
   res.send(result);
 };
 
@@ -588,10 +580,13 @@ const backTest = async (req, res, next) => {
     const stockData = req.body[i].data;
     //search history price
     const caseInf = [];
-    caseInf.push(parseInt(stockData.code));
+    caseInf.push(stockData.code);
     caseInf.push(parseInt(stockData.startDate));
     caseInf.push(parseInt(stockData.endDate));
     const caseResult = await Product.backTest(caseInf);
+    if (caseResult.length === 0) {
+      res.status(400).send({ error: '查無此股票或此日期區間無股價!' });
+    }
     // insert parameter
     const propertyInit = parseInt(stockData.property);
     let property = parseInt(stockData.property);
@@ -705,7 +700,9 @@ const backTest = async (req, res, next) => {
 
       }
     }
-
+    if (history.length === 0) {
+      res.status(400).send({ error: '無任何交易產生，請重新選擇條件' });
+    }
     const len = caseResult.length;
     const caseData = {
       case: stockData,
@@ -723,7 +720,6 @@ const backTest = async (req, res, next) => {
 
     data.push(caseData);
   }
-  console.log({data});
   res.status(200).send({ data });
 };
 
