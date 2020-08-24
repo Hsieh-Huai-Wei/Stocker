@@ -2,6 +2,7 @@ require('dotenv').config();
 const Product = require('../server/models/admin_model');
 const moment = require('moment'); // calculate time
 const got = require('got'); // fetch page in server
+const sendEmail = require('../util/mail');
 
 async function insertData(historyData) {
   const result = await Product.getStockId();
@@ -88,9 +89,12 @@ async function runTrendSlope() {
       await getData(date, URL);
       await sleep(5000);
     }
+    const msg = 'stock trend slope insert OK';
+    sendEmail.sendEmail(msg);
     console.log('insert OK');
     return;
   } catch (err) {
+    sendEmail.sendEmail(err);
     console.log(err);
     return;
   }

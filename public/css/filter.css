@@ -618,13 +618,7 @@ th {
   font-size: 1em;
 }
 
-.resultTable td:first-child:hover {
-  background-color: #ffffff7a;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-.resultTable td:nth-child(2):hover {
+.resultTable td:hover {
   background-color: #ffffff7a;
   color: #ffffff;
   cursor: pointer;

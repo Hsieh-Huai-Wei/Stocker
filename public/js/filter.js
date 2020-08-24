@@ -211,6 +211,8 @@ app.choiceStock = function (data) {
       break;
     }
   }
+  const mainHeight = $('body').prop('scrollHeight');
+  $('html, body').animate({ scrollTop: mainHeight-150 }, 1200);
   app.renderKBar(app.choiceStockTrend);
 };
 
@@ -281,27 +283,51 @@ app.renderList = async function () {
             .append(data.data[i].data[priceLen - 1].name),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].close),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].percentChange),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].volume),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].industry),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].total),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].fd),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].sitc),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].dealers),
           $('<td>')
             .attr('class', 'userChoice')

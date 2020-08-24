@@ -2,6 +2,7 @@ require('dotenv').config();
 const Product = require('../server/models/admin_model');
 const moment = require('moment'); // calculate time
 const got = require('got'); // fetch page in server
+const sendEmail = require('../util/mail');
 
 // trend slope
 async function insertTrendSlope(historyData) {
@@ -196,18 +197,20 @@ async function getPriceData(date, URL) {
 // crawler data
 async function runDailyCrawler() {
   try {
-    console.log('scheduleCronstyle:' + new Date());
+    const msgDate = 'scheduleCronstyle:' + new Date();
     const date = moment().subtract(1, 'days').format('YYYYMMDD');
-    console.log(date);
     const priceURL = `https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=${date}&type=ALLBUT0999`;
     await getPriceData(date, priceURL);
-    console.log(`Date: ${date}, stock daily price inserted completed.`);
+    const msgDailyPrice = `Date: ${date}, stock daily price inserted completed.`;
     await getTrendSlope(date, priceURL);
-    console.log(`Date: ${date}, stock daily trend slope inserted completed.`);
+    const msgTrendSlope = `Date: ${date}, stock daily trend slope inserted completed.`;
     const legalURL = `https://www.twse.com.tw/fund/T86?response=json&date=${date}&selectType=ALLBUT0999`;
     await getLegalData(date, legalURL);
-    console.log(`Date: ${date}, stock daily legal inserted completed.`);
+    const msgLegal = `Date: ${date}, stock daily legal inserted completed.`;
+    const msg = `${msgDate}</br>${msgDailyPrice}</br>${msgTrendSlope}</br>${msgLegal}</br>`;
+    sendEmail.sendEmail(msg);
   } catch (err) {
+    sendEmail.sendEmail(err);
     console.log(err);
     return;
   }

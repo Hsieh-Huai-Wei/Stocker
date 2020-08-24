@@ -41,30 +41,16 @@ $('.search').on('keypress', function (e) {
 
 // render graph
 app.renderInfor = function (data) {
-  $('.name').remove();
-  $('.price').remove();
-  $('.change').remove();
+  $('.stockName').remove();
   const len = data.length;
   const infor = data[len - 1];
   const name = $('<div>')
     .attr('class', 'stockName')
     .append(`${infor.name}(${infor.code}.TW)`);
-  const price = $('<div>')
-    .attr('class', 'price')
-    .append(`${infor.close}`)
-    .css('color', '#ffffff');
-  const change = $('<div>')
-    .attr('class', 'change')
-    .append(`${infor.change}` + ' ' + `(${infor.percentChange}%)`);
 
-  if (infor.change[0] !== '-') {
-    change.css('color', 'red');
-  } else if (infor.change[0] === '0') {
-    change.css('color', '#ffffff');
-  } else {
-    change.css('color', 'green');
-  }
-  $('.info').append(name).append(price).append(change);
+  $('.stockInf').append(name);
+  const mainHeight = $('.inforFilter').prop('scrollHeight');
+  $('html, body').animate({ scrollTop: mainHeight+170 }, 1200);
 };
 
 app.renderKBar = async function (trendData) {
@@ -127,8 +113,8 @@ app.renderStock = async function (data) {
     code: app.filterHistoryData[data].stock_code,
   };
 
-  const backTestTrend = JSON.parse(app.filterHistoryData[data].trend);
-  app.choiceStockTrend = backTestTrend;
+  const filterHistoryTrend = JSON.parse(app.filterHistoryData[data].trend);
+  app.choiceStockTrend = filterHistoryTrend;
 
   const url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
   const body = await app.fetchGetData(url);
@@ -143,8 +129,7 @@ app.renderStock = async function (data) {
     body.data[i].date = newDate;
   }
   app.choiceStockData = body.data;
-
-  app.renderKBar(backTestTrend);
+  app.renderKBar(filterHistoryTrend);
 };
 
 app.checkVolume = function () {
@@ -260,8 +245,8 @@ app.choiceStock = async function (data) {
     code: app.filterHistoryData[data].stock_code,
   };
 
-  const backTestTrend = JSON.parse(app.filterHistoryData[data].trend);
-  app.choiceStockTrend = backTestTrend;
+  const filterHistoryTrend = JSON.parse(app.filterHistoryData[data].trend);
+  app.choiceStockTrend = filterHistoryTrend;
 
   const url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
   const body = await app.fetchGetData(url);
@@ -276,8 +261,7 @@ app.choiceStock = async function (data) {
     body.data[i].date = newDate;
   }
   app.choiceStockData = body.data;
-
-  app.renderKBar(backTestTrend);
+  app.renderKBar(filterHistoryTrend);
 };
 
 // back test page

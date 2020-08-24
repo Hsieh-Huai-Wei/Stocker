@@ -6,7 +6,6 @@ const schedule = require('node-schedule');
 // Express Initialization
 const express = require('express');
 const app = express();
-
 app.set('json spaces', 2);
 
 // crawel function
