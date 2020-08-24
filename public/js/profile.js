@@ -5,7 +5,7 @@ app.choiceStockData = null;
 app.backTestHistoryData = null;
 
 app.fetchPostData = async function (url, data) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: new Headers({
@@ -16,7 +16,7 @@ app.fetchPostData = async function (url, data) {
 };
 
 app.fetchGetData = async function (url) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'GET',
     headers: new Headers({
       'Content-Type': 'application/json',
@@ -41,49 +41,35 @@ $('.search').on('keypress', function (e) {
 
 // render graph
 app.renderInfor = function (data) {
-  $('.name').remove();
-  $('.price').remove();
-  $('.change').remove();
-  let len = data.length;
-  let infor = data[len - 1];
-  let name = $('<div>')
+  $('.stockName').remove();
+  const len = data.length;
+  const infor = data[len - 1];
+  const name = $('<div>')
     .attr('class', 'stockName')
     .append(`${infor.name}(${infor.code}.TW)`);
-  let price = $('<div>')
-    .attr('class', 'price')
-    .append(`${infor.close}`)
-    .css('color', '#ffffff');
-  let change = $('<div>')
-    .attr('class', 'change')
-    .append(`${infor.change}` + ' ' + `(${infor.percentChange}%)`);
 
-  if (infor.change[0] !== '-') {
-    change.css('color', 'red');
-  } else if (infor.change[0] === '0') {
-    change.css('color', '#ffffff');
-  } else {
-    change.css('color', 'green');
-  }
-  $('.info').append(name).append(price).append(change);
+  $('.stockInf').append(name);
+  const mainHeight = $('.inforFilter').prop('scrollHeight');
+  $('html, body').animate({ scrollTop: mainHeight+170 }, 1200);
 };
 
 app.renderKBar = async function (trendData) {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
 
-  let d3Graph = await app.d3init(app.choiceStockData);
+  const d3Graph = await app.d3init(app.choiceStockData);
 
-  let datas = app.choiceStockData;
+  const datas = app.choiceStockData;
 
   await app.renderInfor(datas);
 
-  let data = [];
+  const data = [];
   for (let i = 0; i < datas.length; i++) {
-    let oldDate = datas[i].date;
+    const oldDate = datas[i].date;
     datas[i].date = new Date(oldDate);
     data.push(datas[i]);
   }
-  let trendlineData = await app.trendDataSort(trendData);
+  const trendlineData = await app.trendDataSort(trendData);
 
   await app.kBarSetting(d3Graph, data);
 
@@ -97,20 +83,20 @@ app.renderKBar = async function (trendData) {
 app.renderClose = async function (trendData) {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
-  let d3Graph = await app.d3init(app.choiceStockData);
+  const d3Graph = await app.d3init(app.choiceStockData);
 
-  let datas = app.choiceStockData;
+  const datas = app.choiceStockData;
 
   await app.renderInfor(datas);
 
-  let data = [];
+  const data = [];
   for (let i = 0; i < datas.length; i++) {
-    let oldDate = datas[i].date;
+    const oldDate = datas[i].date;
     datas[i].date = new Date(oldDate);
     data.push(datas[i]);
   }
 
-  let trendlineData = await app.trendDataSort(trendData);
+  const trendlineData = await app.trendDataSort(trendData);
 
   await app.closeSetting(d3Graph, data);
   await app.trendSetting(d3Graph, trendlineData);
@@ -121,30 +107,29 @@ app.renderClose = async function (trendData) {
 };
 
 app.renderStock = async function (data) {
-  let stockInf = {
+  const stockInf = {
     start: app.filterHistoryData[data].start,
     end: app.filterHistoryData[data].end,
     code: app.filterHistoryData[data].stock_code,
   };
 
-  let backTestTrend = JSON.parse(app.filterHistoryData[data].trend);
-  app.choiceStockTrend = backTestTrend;
+  const filterHistoryTrend = JSON.parse(app.filterHistoryData[data].trend);
+  app.choiceStockTrend = filterHistoryTrend;
 
-  let url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
-  let body = await app.fetchGetData(url);
+  const url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
+  const body = await app.fetchGetData(url);
 
   for (let i = 0; i < body.data.length; i++) {
-    let oldDate = body.data[i].date.toString();
-    let y = oldDate[0] + oldDate[1] + oldDate[2] + oldDate[3];
-    let m = oldDate[4] + oldDate[5];
-    let d = oldDate[6] + oldDate[7];
-    let newDateString = y + '-' + m + '-' + d;
-    let newDate = new Date(newDateString);
+    const oldDate = body.data[i].date.toString();
+    const y = oldDate[0] + oldDate[1] + oldDate[2] + oldDate[3];
+    const m = oldDate[4] + oldDate[5];
+    const d = oldDate[6] + oldDate[7];
+    const newDateString = y + '-' + m + '-' + d;
+    const newDate = new Date(newDateString);
     body.data[i].date = newDate;
   }
   app.choiceStockData = body.data;
-
-  app.renderKBar(backTestTrend);
+  app.renderKBar(filterHistoryTrend);
 };
 
 app.checkVolume = function () {
@@ -164,7 +149,7 @@ app.checkMA = function () {
 };
 
 app.indicate = function () {
-  let display = $('.indicate').css('display');
+  const display = $('.indicate').css('display');
   if (display === 'none') {
     $('.indicate').css('display', 'block');
   } else {
@@ -230,8 +215,8 @@ app.renderGraphRecord = async function () {
     return;
   }
 
-  let url = 'api/1.0/user/graphView';
-  let body = await app.fetchGetData(url);
+  const url = 'api/1.0/user/graphView';
+  const body = await app.fetchGetData(url);
   app.filterHistoryData = body;
   for (let i = 0; i < body.length; i++) {
     // user search condition
@@ -254,30 +239,29 @@ app.renderGraphRecord = async function () {
 };
 
 app.choiceStock = async function (data) {
-  let stockInf = {
+  const stockInf = {
     start: app.filterHistoryData[data].start,
     end: app.filterHistoryData[data].end,
     code: app.filterHistoryData[data].stock_code,
   };
 
-  let backTestTrend = JSON.parse(app.filterHistoryData[data].trend);
-  app.choiceStockTrend = backTestTrend;
+  const filterHistoryTrend = JSON.parse(app.filterHistoryData[data].trend);
+  app.choiceStockTrend = filterHistoryTrend;
 
-  let url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
-  let body = await app.fetchGetData(url);
+  const url = `api/1.0/stock?code=${stockInf.code}&start=${stockInf.start}&end=${stockInf.end}`;
+  const body = await app.fetchGetData(url);
 
   for (let i = 0; i < body.data.length; i++) {
-    let oldDate = body.data[i].date.toString();
-    let y = oldDate[0] + oldDate[1] + oldDate[2] + oldDate[3];
-    let m = oldDate[4] + oldDate[5];
-    let d = oldDate[6] + oldDate[7];
-    let newDateString = y + '-' + m + '-' + d;
-    let newDate = new Date(newDateString);
+    const oldDate = body.data[i].date.toString();
+    const y = oldDate[0] + oldDate[1] + oldDate[2] + oldDate[3];
+    const m = oldDate[4] + oldDate[5];
+    const d = oldDate[6] + oldDate[7];
+    const newDateString = y + '-' + m + '-' + d;
+    const newDate = new Date(newDateString);
     body.data[i].date = newDate;
   }
   app.choiceStockData = body.data;
-
-  app.renderKBar(backTestTrend);
+  app.renderKBar(filterHistoryTrend);
 };
 
 // back test page
@@ -311,8 +295,8 @@ app.renderBackTestRecord = async function () {
     return;
   }
 
-  let url = 'api/1.0/user/backTestView';
-  let body = await app.fetchGetData(url);
+  const url = 'api/1.0/user/backTestView';
+  const body = await app.fetchGetData(url);
   for (let i = 0; i < body.length; i++) {
     // user search condition
     var tr = $('<tr>').attr('class', 'userOption').append(
@@ -348,11 +332,11 @@ app.checkUser = async function () {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
-    let url = 'api/1.0/user/profile';
-    let body = await app.fetchPostData(url, data);
+    const url = 'api/1.0/user/profile';
+    const body = await app.fetchPostData(url, data);
 
     if (body.error) {
-      let result = await Swal.fire({
+      const result = await Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -376,7 +360,7 @@ app.checkUser = async function () {
     }
 
   } else {
-    let result = await Swal.fire({
+    const result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,

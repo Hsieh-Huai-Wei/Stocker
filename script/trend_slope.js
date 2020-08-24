@@ -2,6 +2,7 @@ require('dotenv').config();
 const Product = require('../server/models/admin_model');
 const moment = require('moment'); // calculate time
 const got = require('got'); // fetch page in server
+const sendEmail = require('../util/mail');
 
 async function insertData(historyData) {
   const result = await Product.getStockId();
@@ -14,24 +15,24 @@ async function insertData(historyData) {
     }
   }
 
-  let insertDataLen = [];
-  let insertData = [];
+  const insertDataLen = [];
+  const insertData = [];
   for (let i = 0; i < historyData.length; i++) {
     if (typeof historyData[i].code !== 'string' ) {
-      let index = [];
-      let v = historyData[i].trend_slope;
+      const index = [];
+      const v = historyData[i].trend_slope;
       index.push(v);
       insertData.push(v);
       if (isNaN(Number(historyData[i].code))) {
-        let c = 1;
+        const c = 1;
         index.push(c);
         insertData.push(c);
       } else {
-        let c = Number(historyData[i].code);
+        const c = Number(historyData[i].code);
         index.push(c);
         insertData.push(c);
       }
-      let d = Number(historyData[i].date);
+      const d = Number(historyData[i].date);
       index.push(d);
       insertData.push(d);
       insertDataLen.push(index);
@@ -42,14 +43,14 @@ async function insertData(historyData) {
 }
 
 async function getData(date, URL) {
-  let result = await got(URL);
-  let data = JSON.parse(result.body);
+  const result = await got(URL);
+  const data = JSON.parse(result.body);
   if (data.stat === 'OK') {
-    let historyData = [];
+    const historyData = [];
     for (let i = 0; i < data.data9.length; i++) {
-      let product = {};
-      let mData = data.data9[i][9];
-      let sign = mData.split('>')[1];
+      const product = {};
+      const mData = data.data9[i][9];
+      const sign = mData.split('>')[1];
       if (sign !== undefined) {
         if (sign[0] === '+') {
           product.trend_slope = 1;
@@ -88,9 +89,12 @@ async function runTrendSlope() {
       await getData(date, URL);
       await sleep(5000);
     }
+    const msg = 'stock trend slope insert OK';
+    sendEmail.sendEmail(msg);
     console.log('insert OK');
     return;
   } catch (err) {
+    sendEmail.sendEmail(err);
     console.log(err);
     return;
   }

@@ -6,7 +6,7 @@ app.choiceStockData = null;
 app.choiceStockTrend = null;
 
 app.fetchPostData = async function (url, data) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: new Headers({
@@ -17,7 +17,7 @@ app.fetchPostData = async function (url, data) {
 };
 
 app.fetchGetData = async function (url) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'GET',
     headers: new Headers({
       'Content-Type': 'application/json',
@@ -44,16 +44,16 @@ app.renderInfor = function (data) {
   $('.name').remove();
   $('.price').remove();
   $('.change').remove();
-  let len = data.length;
-  let infor = data[len - 1];
-  let name = $('<div>')
+  const len = data.length;
+  const infor = data[len - 1];
+  const name = $('<div>')
     .attr('class', 'name')
     .append(`${infor.name}(${infor.code}.TW)`);
-  let price = $('<div>')
+  const price = $('<div>')
     .attr('class', 'price')
     .append(`${infor.close}`)
     .css('color', '#ffffff');
-  let change = $('<div>')
+  const change = $('<div>')
     .attr('class', 'change')
     .append(`${infor.change}` + ' ' + `(${infor.percentChange}%)`);
 
@@ -71,21 +71,21 @@ app.renderKBar = async function (trendData) {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
 
-  let d3Graph = await app.d3init(app.choiceStockData);
+  const d3Graph = await app.d3init(app.choiceStockData);
 
-  let datas = app.choiceStockData;
+  const datas = app.choiceStockData;
 
   await app.renderInfor(datas);
 
-  let data = [];
+  const data = [];
 
   for (let i = 0; i < datas.length; i++) {
-    let oldDate = datas[i].date;
+    const oldDate = datas[i].date;
     datas[i].date = new Date(oldDate);
     data.push(datas[i]);
   }
 
-  let trendlineData = await app.trendDataSort(trendData);
+  const trendlineData = await app.trendDataSort(trendData);
 
   await app.kBarSetting(d3Graph, data);
 
@@ -99,22 +99,22 @@ app.renderKBar = async function (trendData) {
 app.renderClose = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
-  let d3Graph = await app.d3init(app.choiceStockData);
+  const d3Graph = await app.d3init(app.choiceStockData);
 
-  let datas = app.choiceStockData;
-  let trendData = app.choiceStockTrend;
+  const datas = app.choiceStockData;
+  const trendData = app.choiceStockTrend;
 
   await app.renderInfor(datas);
 
-  let data = [];
+  const data = [];
 
   for (let i = 0; i < datas.length; i++) {
-    let oldDate = datas[i].date;
+    const oldDate = datas[i].date;
     datas[i].date = new Date(oldDate);
     data.push(datas[i]);
   }
 
-  let trendlineData = await app.trendDataSort(trendData);
+  const trendlineData = await app.trendDataSort(trendData);
 
   await app.closeSetting(d3Graph, data);
   await app.trendSetting(d3Graph, trendlineData);
@@ -141,7 +141,7 @@ app.checkMA = function () {
 };
 
 app.indicate = function () {
-  let display = $('.indicate').css('display');
+  const display = $('.indicate').css('display');
   if (display === 'none') {
     $('.indicate').css('display', 'block');
   } else {
@@ -152,30 +152,30 @@ app.indicate = function () {
 
 // main function
 app.choiceStock = function (data) {
-  let optionStock = window.localStorage.getItem('optionResult');
-  let optionResult = JSON.parse(optionStock);
+  const optionStock = window.localStorage.getItem('optionResult');
+  const optionResult = JSON.parse(optionStock);
   app.currentCode = data[0].code;
-  let choiceStock = app.currentCode;
+  const choiceStock = app.currentCode;
   for (let i = 0; i < optionResult.data.length; i++) {
     if (optionResult.data[i].id === choiceStock) {
       for (let j = 0; j < optionResult.data[i].data.length; j++) {
-        let strDate = optionResult.data[i].data[j].date.toString();
-        let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + '/';
-        let m = strDate[4] + strDate[5] + '/';
-        let d = strDate[6] + strDate[7];
+        const strDate = optionResult.data[i].data[j].date.toString();
+        const y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + '/';
+        const m = strDate[4] + strDate[5] + '/';
+        const d = strDate[6] + strDate[7];
         optionResult.data[i].data[j].date = new Date(y + m + d);
       }
       for (let j = 0; j < optionResult.data[i].trend.length; j++) {
         for (let k = 0; k < optionResult.data[i].trend[j].length; k++) {
-          let startDate = optionResult.data[i].trend[j][k].startDate.toString();
-          let endDate = optionResult.data[i].trend[j][k].endDate.toString();
-          let sy =
+          const startDate = optionResult.data[i].trend[j][k].startDate.toString();
+          const endDate = optionResult.data[i].trend[j][k].endDate.toString();
+          const sy =
             startDate[0] + startDate[1] + startDate[2] + startDate[3] + '/';
-          let sm = startDate[4] + startDate[5] + '/';
-          let sd = startDate[6] + startDate[7];
-          let ey = endDate[0] + endDate[1] + endDate[2] + endDate[3] + '/';
-          let em = endDate[4] + endDate[5] + '/';
-          let ed = endDate[6] + endDate[7];
+          const sm = startDate[4] + startDate[5] + '/';
+          const sd = startDate[6] + startDate[7];
+          const ey = endDate[0] + endDate[1] + endDate[2] + endDate[3] + '/';
+          const em = endDate[4] + endDate[5] + '/';
+          const ed = endDate[6] + endDate[7];
           optionResult.data[i].trend[j][k].startDate = new Date(sy + sm + sd);
           optionResult.data[i].trend[j][k].endDate = new Date(ey + em + ed);
         }
@@ -185,16 +185,16 @@ app.choiceStock = function (data) {
       $('.price').remove();
       $('.change').remove();
 
-      let len = optionResult.data[0].data.length;
-      let infor = optionResult.data[0].data[len - 1];
-      let name = $('<div>')
+      const len = optionResult.data[0].data.length;
+      const infor = optionResult.data[0].data[len - 1];
+      const name = $('<div>')
         .attr('class', 'name')
         .append(`${infor.name}(${infor.code}.TW)`);
-      let price = $('<div>')
+      const price = $('<div>')
         .attr('class', 'price')
         .append(`${infor.close}`)
         .css('color', '#ffffff');
-      let change = $('<div>')
+      const change = $('<div>')
         .attr('class', 'change')
         .append(`${infor.change}` + ' ' + `(${infor.percentChange}%)`);
 
@@ -211,12 +211,14 @@ app.choiceStock = function (data) {
       break;
     }
   }
+  const mainHeight = $('body').prop('scrollHeight');
+  $('html, body').animate({ scrollTop: mainHeight-150 }, 1200);
   app.renderKBar(app.choiceStockTrend);
 };
 
 app.renderList = async function () {
   if (window.localStorage.getItem('optionResult')) {
-    let data = JSON.parse(window.localStorage.getItem('optionResult'));
+    const data = JSON.parse(window.localStorage.getItem('optionResult'));
 
     let graph = '';
     if (data.inf.graph === 'reverseV') {
@@ -255,15 +257,15 @@ app.renderList = async function () {
     );
     $('#userOption').append(tr);
 
-    let target = 0;
+    const target = 0;
     for (let i = 0; i < data.data.length; i++) {
-      let priceLen = target + 1;
-      let code = data.data[i].data[priceLen - 1].code;
-      let inputCheck = $('<input>')
+      const priceLen = target + 1;
+      const code = data.data[i].data[priceLen - 1].code;
+      const inputCheck = $('<input>')
         .attr('class', `save${i}`)
         .attr('value', `${code}`)
         .attr('type', 'checkbox');
-      let tr = $('<tr>')
+      const tr = $('<tr>')
         .attr('class', 'userOption')
         .append(
           $('<td>')
@@ -281,27 +283,51 @@ app.renderList = async function () {
             .append(data.data[i].data[priceLen - 1].name),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].close),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].percentChange),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].volume),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].industry),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].total),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].fd),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].sitc),
           $('<td>')
             .attr('class', 'userChoice')
+            .click(function () {
+              `${app.choiceStock(data.data[i].data)}`;
+            })
             .append(data.data[i].data[priceLen - 1].dealers),
           $('<td>')
             .attr('class', 'userChoice')
@@ -310,7 +336,7 @@ app.renderList = async function () {
         );
       $('.resultTable').append(tr);
     }
-    let firstCode = data.data[0].data;
+    const firstCode = data.data[0].data;
     app.choiceStock(firstCode);
   } else {
     await Swal.fire({
@@ -327,15 +353,15 @@ app.renderList = async function () {
 app.saveData = async function () {
   $('.save').attr('disabled', true);
   if (window.localStorage.getItem('optionResult')) {
-    let dataString = window.localStorage.getItem('optionResult');
-    let data = JSON.parse(dataString);
-    let num = data.data.length;
-    let results = {};
+    const dataString = window.localStorage.getItem('optionResult');
+    const data = JSON.parse(dataString);
+    const num = data.data.length;
+    const results = {};
     results.data = [];
     for (let i = 0; i < num; i++) {
       for (let j = 0; j < num; j++) {
         if ($(`.save${i}:checked`).val() === data.data[j].id) {
-          let result = {
+          const result = {
             id: data.data[j].id,
             trend: data.data[j].trend,
           };
@@ -356,8 +382,8 @@ app.saveData = async function () {
       return;
     }
 
-    let url = 'api/1.0/saveFilter';
-    let body = await app.fetchPostData(url, results);
+    const url = 'api/1.0/saveFilter';
+    const body = await app.fetchPostData(url, results);
     $('.save').attr('disabled', false);
     if (body.error) {
       Swal.fire({
@@ -393,14 +419,14 @@ app.renderInit = async function () {
 
   const urlParams = new URLSearchParams(window.location.search);
 
-  let startDate = urlParams.get('startDate');
-  let endDate = urlParams.get('endDate');
-  let upper = urlParams.get('upper');
-  let lower = urlParams.get('lower');
-  let graph = urlParams.get('graph');
-  let count = urlParams.get('count');
-  let increase = urlParams.get('increase');
-  let decrease = urlParams.get('decrease');
+  const startDate = urlParams.get('startDate');
+  const endDate = urlParams.get('endDate');
+  const upper = urlParams.get('upper');
+  const lower = urlParams.get('lower');
+  const graph = urlParams.get('graph');
+  const count = urlParams.get('count');
+  const increase = urlParams.get('increase');
+  const decrease = urlParams.get('decrease');
 
   if (startDate === null || endDate === null || upper === null || lower === null || graph === null || count === null || increase === null || decrease === null) {
     await Swal.fire({
@@ -412,7 +438,7 @@ app.renderInit = async function () {
     return;
   }
 
-  let url = `api/1.0/option?startDate=${startDate}&endDate=${endDate}&upper=${upper}&lower=${lower}&graph=${graph}&count=${count}&increase=${increase}&decrease=${decrease}`;
+  const url = `api/1.0/option?startDate=${startDate}&endDate=${endDate}&upper=${upper}&lower=${lower}&graph=${graph}&count=${count}&increase=${increase}&decrease=${decrease}`;
 
   const body = await app.fetchGetData(url);
   if (body.error) {
@@ -432,7 +458,7 @@ app.renderInit = async function () {
     window.location.replace('/option.html');
     return;
   }
-  let data = JSON.stringify(body);
+  const data = JSON.stringify(body);
   window.localStorage.setItem('optionResult', data);
   await Swal.fire({
     icon: 'success',
@@ -448,11 +474,11 @@ app.checkUser = async function () {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
-    let url = 'api/1.0/user/profile';
-    let body = await app.fetchPostData(url, data);
+    const url = 'api/1.0/user/profile';
+    const body = await app.fetchPostData(url, data);
 
     if (body.error) {
-      let result = await Swal.fire({
+      const result = await Swal.fire({
         title: '登入逾時，請重新登入',
         icon: 'warning',
         showCancelButton: true,
@@ -474,7 +500,7 @@ app.checkUser = async function () {
     }
 
   } else {
-    let result = await Swal.fire({
+    const result = await Swal.fire({
       title: '請登入會員，激活此功能',
       icon: 'warning',
       showCancelButton: true,

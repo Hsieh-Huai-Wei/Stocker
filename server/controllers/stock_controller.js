@@ -7,7 +7,7 @@ function dateCheck(start, end) {
     const startTime = startString[0] + startString[1] + startString[2];
     const endString = end.split('-');
     const endTime = endString[0] + endString[1] + endString[2];
-    let result = {
+    const result = {
       start: parseInt(startTime),
       end: parseInt(endTime),
     };
@@ -18,18 +18,17 @@ function dateCheck(start, end) {
 
 function uptrend(userSearch, stockPricePair) {
   // find graph for match
-  let graphPosition = [];
+  const graphPosition = [];
   // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
-    console.log('i', i);
     // scan history price of single stock
-    let r = Number(userSearch.count);
-    let increase = Number(userSearch.increase);
+    const r = Number(userSearch.count);
+    const increase = Number(userSearch.increase);
 
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
-      let stockIndex = stockPricePair[i].data;
-      let firstDay = stockIndex[j];
-      let lastDay = stockIndex[j + r - 1];
+      const stockIndex = stockPricePair[i].data;
+      const firstDay = stockIndex[j];
+      const lastDay = stockIndex[j + r - 1];
       let upCount = 0;
 
       let check = true;
@@ -49,7 +48,7 @@ function uptrend(userSearch, stockPricePair) {
       }
 
       if (check === true) {
-        let stockIndexLength =
+        const stockIndexLength =
           stockPricePair[i].data.length - j > r - 1
             ? r
             : stockPricePair[i].data.length - j;
@@ -66,7 +65,7 @@ function uptrend(userSearch, stockPricePair) {
         }
 
         if (upCount / r > 0.7) {
-          let obj = {};
+          const obj = {};
           obj.id = stockPricePair[i].id;
           obj.startDate = firstDay.date;
           obj.startPrice = firstDay.close;
@@ -82,9 +81,9 @@ function uptrend(userSearch, stockPricePair) {
   }
 
   // drop doesn`t match stock
-  let finalStockPricePair = [];
+  const finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
-    let item = finalStockPricePair.find(
+    const item = finalStockPricePair.find(
       (item) => item.id === graphPosition[i].id
     );
     if (item) {
@@ -95,7 +94,7 @@ function uptrend(userSearch, stockPricePair) {
         endPrice: graphPosition[i].endPrice,
       });
     } else {
-      let index = {
+      const index = {
         id: graphPosition[i].id,
         trend: [
           {
@@ -114,17 +113,16 @@ function uptrend(userSearch, stockPricePair) {
 
 function downtrend(userSearch, stockPricePair) {
   // find graph for match
-  let graphPosition = [];
+  const graphPosition = [];
   // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
-    console.log('i', i);
     // scan history price of single stock
-    let r = Number(userSearch.count);
-    let decrease = Number(userSearch.decrease);
+    const r = Number(userSearch.count);
+    const decrease = Number(userSearch.decrease);
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
-      let stockIndex = stockPricePair[i].data;
-      let firstDay = stockIndex[j];
-      let lastDay = stockIndex[j + r - 1];
+      const stockIndex = stockPricePair[i].data;
+      const firstDay = stockIndex[j];
+      const lastDay = stockIndex[j + r - 1];
       let upCount = 0;
 
       let check = true;
@@ -144,7 +142,7 @@ function downtrend(userSearch, stockPricePair) {
       }
 
       if (check === true) {
-        let stockIndexLength =
+        const stockIndexLength =
           stockPricePair[i].data.length - j > r - 1
             ? r
             : stockPricePair[i].data.length - j;
@@ -161,7 +159,7 @@ function downtrend(userSearch, stockPricePair) {
         }
 
         if (upCount / r > 0.5) {
-          let index = {};
+          const index = {};
           index.id = stockPricePair[i].id;
           index.startDate = firstDay.date;
           index.startPrice = firstDay.close;
@@ -176,9 +174,9 @@ function downtrend(userSearch, stockPricePair) {
     }
   }
   // drop no match stock
-  let finalStockPricePair = [];
+  const finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
-    let item = finalStockPricePair.find(
+    const item = finalStockPricePair.find(
       (item) => item.id === graphPosition[i].id
     );
     if (item) {
@@ -189,7 +187,7 @@ function downtrend(userSearch, stockPricePair) {
         endPrice: graphPosition[i].endPrice,
       });
     } else {
-      let index = {
+      const index = {
         id: graphPosition[i].id,
         trend: [
           {
@@ -208,19 +206,18 @@ function downtrend(userSearch, stockPricePair) {
 
 function reverseV(userSearch, stockPricePair) {
   // find graph for match
-  let graphPosition = [];
+  const graphPosition = [];
   // scan all of stock
   for (let i = 0; i < stockPricePair.length; i++) {
     // scan history price of single stock
-    console.log('i', i);
-    let r = Number(userSearch.count);
-    let low = Math.floor(r / 2) - 2;
-    let up = Math.floor(r / 2) + 2;
+    const r = Number(userSearch.count);
+    const low = Math.floor(r / 2) - 2;
+    const up = Math.floor(r / 2) + 2;
     for (let j = 0; j < stockPricePair[i].data.length - r; j++) {
 
-      let stockIndex = stockPricePair[i].data;
-      let firstDay = stockIndex[j];
-      let lastDay = stockIndex[j + r - 1];
+      const stockIndex = stockPricePair[i].data;
+      const firstDay = stockIndex[j];
+      const lastDay = stockIndex[j + r - 1];
       let lowCount = 0;
       let upCount = 0;
 
@@ -256,7 +253,7 @@ function reverseV(userSearch, stockPricePair) {
           // find middle point and close;
           let minDay = firstDay;
           let minPosition = 0;
-          let stockIndexLength =
+          const stockIndexLength =
             stockPricePair[i].data.length - j > r - 1
               ? r
               : stockPricePair[i].data.length - j;
@@ -292,7 +289,7 @@ function reverseV(userSearch, stockPricePair) {
 
             if (upCount / minPosition > 0.5 && lowCount / minPosition > 0.5) {
 
-              let objLeft = {};
+              const objLeft = {};
               objLeft.id = stockPricePair[i].id;
               objLeft.startDate = firstDay.date;
               objLeft.startPrice = firstDay.close;
@@ -300,7 +297,7 @@ function reverseV(userSearch, stockPricePair) {
               objLeft.endPrice = minDay.close;
               graphPosition.push(objLeft);
 
-              let objRight = {};
+              const objRight = {};
               objRight.id = stockPricePair[i].id;
               objRight.startDate = minDay.date;
               objRight.startPrice = minDay.close;
@@ -316,11 +313,10 @@ function reverseV(userSearch, stockPricePair) {
       }
     }
   }
-
   // drop no match stock
-  let finalStockPricePair = [];
+  const finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
-    let item = finalStockPricePair.find(
+    const item = finalStockPricePair.find(
       (item) => item.id === graphPosition[i].id
     );
     if (item) {
@@ -331,7 +327,7 @@ function reverseV(userSearch, stockPricePair) {
         endPrice: graphPosition[i].endPrice,
       });
     } else {
-      let index = {
+      const index = {
         id: graphPosition[i].id,
         trend: [
           {
@@ -345,18 +341,17 @@ function reverseV(userSearch, stockPricePair) {
       finalStockPricePair.push(index);
     }
   }
-
   return finalStockPricePair;
 }
 
 function noGraph(stockPricePair) {
 
-  let graphPosition = stockPricePair;
+  const graphPosition = stockPricePair;
 
   // drop no match stock
-  let finalStockPricePair = [];
+  const finalStockPricePair = [];
   for (let i = 0; i < graphPosition.length; i++) {
-    let item = finalStockPricePair.find(
+    const item = finalStockPricePair.find(
       (item) => item.id === graphPosition[i].id
     );
     if (item) {
@@ -367,7 +362,7 @@ function noGraph(stockPricePair) {
         endPrice: 0,
       });
     } else {
-      let index = {
+      const index = {
         id: graphPosition[i].id,
         trend: [
           {
@@ -386,7 +381,7 @@ function noGraph(stockPricePair) {
 
 const stock = async (req, res, next) => {
 
-  let userSearch = {
+  const userSearch = {
     stockCode: req.query.code,
     startDate: req.query.start,
     endDate: req.query.end,
@@ -396,11 +391,11 @@ const stock = async (req, res, next) => {
   const endString = (moment(userSearch.endDate).format('YYYYMMDD'));
   userSearch.startDate = Number(startString);
   userSearch.endDate = Number(endString);
-  let historyPrice = await Product.stock(userSearch);
+  const historyPrice = await Product.stock(userSearch);
   if (historyPrice.length !== 0) {
-    let data = [];
+    const data = [];
     for (let i = 0; i < historyPrice.length; i++) {
-      let index = {};
+      const index = {};
       index.date = historyPrice[i].date; // date
       index.code = historyPrice[i].code; // code
       index.name = historyPrice[i].name; // name
@@ -415,7 +410,7 @@ const stock = async (req, res, next) => {
       }
       index.percentChange = String((((historyPrice[i].close - historyPrice[i].open) / historyPrice[i].open) * 100).toFixed(2)); // changes %
 
-      let volumeSql = (historyPrice[i].volume).split(',');
+      const volumeSql = (historyPrice[i].volume).split(',');
       let volumeNum = '';
       for (let i = 0; i < volumeSql.length; i++) {
         volumeNum += volumeSql[i];
@@ -423,7 +418,7 @@ const stock = async (req, res, next) => {
       index.volume = Number(volumeNum); // volumn
       data.push(index);
     }
-    let result = {};
+    const result = {};
     result.data = data;
     res.send(result);
   } else {
@@ -432,7 +427,7 @@ const stock = async (req, res, next) => {
 };
 
 const option = async (req, res, next) => {
-  let userSearch = {
+  const userSearch = {
     start: req.query.startDate,
     end: req.query.endDate,
     upper: req.query.upper,
@@ -443,17 +438,16 @@ const option = async (req, res, next) => {
     decrease: req.query.decrease,
   };
   // scan date range and price range
-  let date = await dateCheck(userSearch.start, userSearch.end);
+  const date = await dateCheck(userSearch.start, userSearch.end);
   userSearch.start = date.start;
   userSearch.end = date.end;
-  let filterInit = await Product.filterInit(userSearch);
+  const filterInit = await Product.filterInit(userSearch);
 
   // graph check and get day count and %, sort by arr-obj
   // pre-sort to id-[price] pair
-  let stockPricePair = []; // id-[price] pair
-
+  const stockPricePair = []; // id-[price] pair
   for (let i = 0; i < filterInit.length; i++) {
-    let item = stockPricePair.find(item => item.id === filterInit[i].stock_id);
+    const item = stockPricePair.find(item => item.id === filterInit[i].stock_id);
     if (item) {
       item['data'].push(
         {
@@ -465,7 +459,7 @@ const option = async (req, res, next) => {
         }
       );
     } else {
-      let index = {
+      const index = {
         id: filterInit[i].stock_id,
         data: [
           {
@@ -480,7 +474,6 @@ const option = async (req, res, next) => {
       stockPricePair.push(index);
     }
   }
-
   // define graph
   let finalStockPricePair;
 
@@ -498,22 +491,22 @@ const option = async (req, res, next) => {
     finalStockPricePair = stockPricePair;
   }
   // final stock
-  let filterCode = [];
-  let result = {};
+  const filterCode = [];
+  const result = {};
   result.data = [];
 
   for (let i = 0; i < finalStockPricePair.length; i++) {
 
-    let searchCode = {
+    const searchCode = {
       id: finalStockPricePair[i].id,
       start: userSearch.start,
       end: userSearch.end,
     };
-    let stockInf = await Product.filter(searchCode);
+    const stockInf = await Product.filter(searchCode);
     if (stockInf.length !== 0) {
-      let price = [];
+      const price = [];
       for (let i = 0; i < stockInf.length; i++) {
-        let obj = {};
+        const obj = {};
         obj.date = stockInf[i].date; // date
         obj.code = stockInf[i].code; // code
         obj.name = stockInf[i].name; // name
@@ -528,7 +521,7 @@ const option = async (req, res, next) => {
         }
         obj.percentChange = String((((stockInf[i].close - stockInf[i].open) / stockInf[i].open) * 100).toFixed(2)); // changes %
 
-        let volumeSql = stockInf[i].volume.split(',');
+        const volumeSql = stockInf[i].volume.split(',');
         let volumeNum = '';
         for (let i = 0; i < volumeSql.length; i++){
           volumeNum += volumeSql[i];
@@ -576,46 +569,48 @@ const option = async (req, res, next) => {
   }
 
   result.inf = userSearch;
-  console.log(result);
   res.send(result);
 };
 
 const backTest = async (req, res, next) => {
 
-  let data = [];
+  const data = [];
   for (let i = 0; i < req.body.length; i++) {
 
-    let stockData = req.body[i].data;
+    const stockData = req.body[i].data;
     //search history price
-    let caseInf = [];
-    caseInf.push(parseInt(stockData.code));
+    const caseInf = [];
+    caseInf.push(stockData.code);
     caseInf.push(parseInt(stockData.startDate));
     caseInf.push(parseInt(stockData.endDate));
-    let caseResult = await Product.backTest(caseInf);
+    const caseResult = await Product.backTest(caseInf);
+    if (caseResult.length === 0) {
+      res.status(400).send({ error: '查無此股票或此日期區間無股價!' });
+    }
     // insert parameter
-    let propertyInit = parseInt(stockData.property);
+    const propertyInit = parseInt(stockData.property);
     let property = parseInt(stockData.property);
 
-    let increaseAct = stockData.increaseAct; // increase : buy or sell
-    let decreaseAct = stockData.decreaseAct; // decrease : buy or sell
-    let increase = parseInt(stockData.increase); //increase %
-    let decrease = parseInt(stockData.decrease); //decrease %
-    let increaseCount = parseInt(stockData.increaseCount); // count
-    let decreaseCount = parseInt(stockData.decreaseCount); // count
-    let discount = (parseInt(stockData.discount)) / 100;
+    const increaseAct = stockData.increaseAct; // increase : buy or sell
+    const decreaseAct = stockData.decreaseAct; // decrease : buy or sell
+    const increase = parseInt(stockData.increase); //increase %
+    const decrease = parseInt(stockData.decrease); //decrease %
+    const increaseCount = parseInt(stockData.increaseCount); // count
+    const decreaseCount = parseInt(stockData.decreaseCount); // count
+    const discount = (parseInt(stockData.discount)) / 100;
     const buyCostPercent = 0.001425;
     const sellCostPercent = 0.003;
 
     let stock = 0;
     let tradeCost = 0;
-    let history = [];
+    const history = [];
 
     for (let i = 0; i < caseResult.length; i++) {
       if (caseResult[i].changes >= increase) {
         if (increaseAct === 'buy' && property > caseResult[i].close) {
-          let list = {};
+          const list = {};
           // handling fee for buy
-          let buyCost = caseResult[i].close * increaseCount * buyCostPercent * discount;
+          const buyCost = caseResult[i].close * increaseCount * buyCostPercent * discount;
           list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2);
           // trade cost
           tradeCost += buyCost;
@@ -632,9 +627,9 @@ const backTest = async (req, res, next) => {
           list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
           history.push(list);
         } else if (increaseAct === 'sell' && stock > 0) {
-          let list = {};
+          const list = {};
           // handling fee for sell
-          let sellCost = (caseResult[i].close * increaseCount * buyCostPercent * discount) + (caseResult[i].close * increaseCount * sellCostPercent);
+          const sellCost = (caseResult[i].close * increaseCount * buyCostPercent * discount) + (caseResult[i].close * increaseCount * sellCostPercent);
 
           list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2);
 
@@ -658,9 +653,9 @@ const backTest = async (req, res, next) => {
 
       } else if (caseResult[i].changes <= decrease) {
         if (decreaseAct === 'buy' && property > caseResult[i].close) {
-          let list = {};
+          const list = {};
           // handling fee for buy
-          let buyCost = caseResult[i].close * decreaseCount * buyCostPercent * discount;
+          const buyCost = caseResult[i].close * decreaseCount * buyCostPercent * discount;
           list.profitPercent = (((property + (stock * caseResult[i].close)) - buyCost) - propertyInit).toFixed(2);
           // trade cost
           tradeCost += buyCost;
@@ -679,9 +674,9 @@ const backTest = async (req, res, next) => {
           list.property = Number((property + (caseResult[i].close * stock)).toFixed(2));
           history.push(list);
         } else if (decreaseAct === 'sell' && stock > 0) {
-          let list = {};
+          const list = {};
           // handling fee for sell
-          let sellCost = (caseResult[i].close * decreaseCount * buyCostPercent * discount) + (caseResult[i].close * decreaseCount * sellCostPercent);
+          const sellCost = (caseResult[i].close * decreaseCount * buyCostPercent * discount) + (caseResult[i].close * decreaseCount * sellCostPercent);
 
           list.profitPercent = (((property + (stock * caseResult[i].close)) - sellCost) - propertyInit).toFixed(2);
 
@@ -705,9 +700,11 @@ const backTest = async (req, res, next) => {
 
       }
     }
-
-    let len = caseResult.length;
-    let caseData = {
+    if (history.length === 0) {
+      res.status(400).send({ error: '無任何交易產生，請重新選擇條件' });
+    }
+    const len = caseResult.length;
+    const caseData = {
       case: stockData,
       summary: {
         finalStock: stock,
@@ -723,7 +720,6 @@ const backTest = async (req, res, next) => {
 
     data.push(caseData);
   }
-  console.log({data});
   res.status(200).send({ data });
 };
 

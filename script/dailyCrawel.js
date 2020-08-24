@@ -2,6 +2,7 @@ require('dotenv').config();
 const Product = require('../server/models/admin_model');
 const moment = require('moment'); // calculate time
 const got = require('got'); // fetch page in server
+const sendEmail = require('../util/mail');
 
 // trend slope
 async function insertTrendSlope(historyData) {
@@ -15,24 +16,24 @@ async function insertTrendSlope(historyData) {
     }
   }
 
-  let insertDataLen = [];
-  let insertData = [];
+  const insertDataLen = [];
+  const insertData = [];
   for (let i = 0; i < historyData.length; i++) {
     if (typeof historyData[i].code !== 'string') {
-      let index = [];
-      let v = historyData[i].trend_slope;
+      const index = [];
+      const v = historyData[i].trend_slope;
       index.push(v);
       insertData.push(v);
       if (isNaN(Number(historyData[i].code))) {
-        let c = 1;
+        const c = 1;
         index.push(c);
         insertData.push(c);
       } else {
-        let c = Number(historyData[i].code);
+        const c = Number(historyData[i].code);
         index.push(c);
         insertData.push(c);
       }
-      let d = Number(historyData[i].date);
+      const d = Number(historyData[i].date);
       index.push(d);
       insertData.push(d);
       insertDataLen.push(index);
@@ -43,14 +44,14 @@ async function insertTrendSlope(historyData) {
 }
 
 async function getTrendSlope(date, URL) {
-  let result = await got(URL);
-  let data = JSON.parse(result.body);
+  const result = await got(URL);
+  const data = JSON.parse(result.body);
   if (data.stat === 'OK') {
-    let historyData = [];
+    const historyData = [];
     for (let i = 0; i < data.data9.length; i++) {
-      let product = {};
-      let mData = data.data9[i][9];
-      let sign = mData.split('>')[1];
+      const product = {};
+      const mData = data.data9[i][9];
+      const sign = mData.split('>')[1];
       if (sign !== undefined) {
         if (sign[0] === '+') {
           product.trend_slope = 1;
@@ -76,12 +77,12 @@ async function getTrendSlope(date, URL) {
 // legal volume
 async function insertLegalData(historyData) {
   const result = await Product.getStockId();
-  let sqlArr = [];
+  const sqlArr = [];
   for (let i = 0; i < historyData.length; i++) {
     for (let j = 0; j < result.length; j++) {
       if (historyData[i].code === parseInt(result[j].code)) {
         historyData[i].code = result[j].id;
-        let arr = Object.values(historyData[i]);
+        const arr = Object.values(historyData[i]);
         sqlArr.push(arr);
         break;
       }
@@ -92,19 +93,19 @@ async function insertLegalData(historyData) {
 }
 
 async function getLegalData(date, URL) {
-  let result = await got(URL);
-  let data = JSON.parse(result.body);
+  const result = await got(URL);
+  const data = JSON.parse(result.body);
   if (data.stat === 'OK') {
-    let historyData = [];
+    const historyData = [];
     if (Number(date) >= 20171218) {
       for (let i = 0; i < data.data.length; i++) {
-        let product = {};
+        const product = {};
         if (data.data[i][0].length <= 4) {
           product.code = parseInt(data.data[i][0]);
           product.date = parseInt(date);
           if (data.data[i][7] !== '0') {
-            let china = parseInt(data.data[i][4]);
-            let foreign = parseInt(data.data[i][7]);
+            const china = parseInt(data.data[i][4]);
+            const foreign = parseInt(data.data[i][7]);
             product.fd = (china + foreign).toString();
           } else {
             product.fd = data.data[i][4];
@@ -121,7 +122,7 @@ async function getLegalData(date, URL) {
       }
     } else {
       for (let i = 0; i < data.data.length; i++) {
-        let product = {};
+        const product = {};
         if (data.data[i][0].length <= 4) {
           product.code = parseInt(data.data[i][0]);
           product.date = parseInt(date);
@@ -144,12 +145,12 @@ async function getLegalData(date, URL) {
 // stock price
 async function insertPriceData(historyData) {
   const result = await Product.getStockId();
-  let sqlArr = [];
+  const sqlArr = [];
   for (let i = 0; i < historyData.length; i++) {
     for (let j = 0; j < result.length; j++) {
       if (historyData[i].code === result[j].code) {
         historyData[i].code = result[j].id;
-        let arr = Object.values(historyData[i]);
+        const arr = Object.values(historyData[i]);
         sqlArr.push(arr);
         break;
       }
@@ -160,12 +161,12 @@ async function insertPriceData(historyData) {
 }
 
 async function getPriceData(date, URL) {
-  let result = await got(URL);
-  let data = JSON.parse(result.body);
+  const result = await got(URL);
+  const data = JSON.parse(result.body);
   if (data.stat === 'OK') {
-    let historyData = [];
+    const historyData = [];
     for (let i = 0; i < data.data9.length; i++) {
-      let product = {};
+      const product = {};
       product.code = data.data9[i][0];
       product.date = parseInt(date);
       product.volumn = data.data9[i][2];
@@ -196,18 +197,20 @@ async function getPriceData(date, URL) {
 // crawler data
 async function runDailyCrawler() {
   try {
-    console.log('scheduleCronstyle:' + new Date());
+    const msgDate = 'scheduleCronstyle:' + new Date();
     const date = moment().subtract(1, 'days').format('YYYYMMDD');
-    console.log(date);
     const priceURL = `https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=${date}&type=ALLBUT0999`;
     await getPriceData(date, priceURL);
-    console.log(`Date: ${date}, stock daily price inserted completed.`);
+    const msgDailyPrice = `Date: ${date}, stock daily price inserted completed.`;
     await getTrendSlope(date, priceURL);
-    console.log(`Date: ${date}, stock daily trend slope inserted completed.`);
+    const msgTrendSlope = `Date: ${date}, stock daily trend slope inserted completed.`;
     const legalURL = `https://www.twse.com.tw/fund/T86?response=json&date=${date}&selectType=ALLBUT0999`;
     await getLegalData(date, legalURL);
-    console.log(`Date: ${date}, stock daily legal inserted completed.`);
+    const msgLegal = `Date: ${date}, stock daily legal inserted completed.`;
+    const msg = `${msgDate}</br>${msgDailyPrice}</br>${msgTrendSlope}</br>${msgLegal}</br>`;
+    sendEmail.sendEmail(msg);
   } catch (err) {
+    sendEmail.sendEmail(err);
     console.log(err);
     return;
   }

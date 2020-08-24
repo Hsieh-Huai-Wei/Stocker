@@ -764,10 +764,6 @@ header > .feature > input.backtest:hover {
   border-radius: 20px;
 }
 
-.stockName {
-  flex: 1 1 100%;
-}
-
 .backTest {
   display: flex;
   justify-content: center;
@@ -808,4 +804,18 @@ footer {
   width: 400px;
   margin-top: 4px;
   margin-right: 50px;
+}
+
+.stockName {
+  width: 175px;
+  margin-left: 10px;
+  font-size: 1.2em;
+  border-bottom: 1px solid #656565;
+  text-align: center;
+}
+
+.userOptionFilter td:hover {
+  background-color: #ffffff7a;
+  color: #ffffff;
+  cursor: pointer;
 }

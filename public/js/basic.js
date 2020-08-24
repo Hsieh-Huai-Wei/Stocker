@@ -5,7 +5,7 @@ let currentCode = '2330';
 app.graphData = null;
 
 app.fetchPostData = async function (url, data) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(data),
     headers: new Headers({
@@ -16,7 +16,7 @@ app.fetchPostData = async function (url, data) {
 };
 
 app.fetchGetData = async function (url) {
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: 'GET',
     headers: new Headers({
       'Content-Type': 'application/json',
@@ -58,15 +58,15 @@ app.searchDate = async function () {
       return;
     }
   } else if ($('.startDay').val() === '' && $('.endDay').val() !== '') {
-    let end = $('.endDay').val();
-    let sy = ((end.split('-')[0]) - 1).toString();
-    let sm = ((end.split('-')[1])).toString();
-    let sd = ((end.split('-')[2])).toString();
+    const end = $('.endDay').val();
+    const sy = ((end.split('-')[0]) - 1).toString();
+    const sm = ((end.split('-')[1])).toString();
+    const sd = ((end.split('-')[2])).toString();
     startDate = sy + '-' + sm + '-' + sd;
     endDate = $('.endDay').val();
   } else if ($('.startDay').val() !== '' && $('.endDay').val() === '') {
-    let today = new Date();
-    let ey = (today.getFullYear()).toString();
+    const today = new Date();
+    const ey = (today.getFullYear()).toString();
     let em = (today.getMonth() + 1).toString();
     if (em.length === 1) {
       em = '0' + em;
@@ -96,7 +96,7 @@ app.searchDate = async function () {
     code = currentCode;
   }
 
-  let userSearch = {
+  const userSearch = {
     stockCode: code,
     startDate: startDate,
     endDate: endDate,
@@ -120,16 +120,16 @@ app.renderInfor = function (data) {
   $('.price').remove();
   $('.change').remove();
 
-  let len = data.length;
-  let infor = data[len - 1];
-  let name = $('<div>')
+  const len = data.length;
+  const infor = data[len - 1];
+  const name = $('<div>')
     .attr('class', 'name')
     .append(`${infor.name}(${infor.code}.TW)`);
-  let price = $('<div>')
+  const price = $('<div>')
     .attr('class', 'price')
     .append(`${infor.close}`)
     .css('color', '#ffffff');
-  let change = $('<div>')
+  const change = $('<div>')
     .attr('class', 'change')
     .append(`${infor.change}` + ' ' + `(${infor.percentChange}%)`);
 
@@ -146,15 +146,15 @@ app.renderInfor = function (data) {
 app.renderKBar = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
-  let localData = window.localStorage.getItem('home');
+  const localData = window.localStorage.getItem('home');
   app.graphData = JSON.parse(localData);
-  let d3Graph = await app.d3init(app.graphData);
+  const d3Graph = await app.d3init(app.graphData);
   await app.renderInfor(app.graphData);
 
-  let data = [];
+  const data = [];
 
   for (let i = 0; i < app.graphData.length; i++) {
-    let oldDate = app.graphData[i].date;
+    const oldDate = app.graphData[i].date;
     app.graphData[i].date = new Date(oldDate);
     data.push(app.graphData[i]);
   }
@@ -168,15 +168,15 @@ app.renderKBar = async function () {
 app.renderClose = async function () {
   d3.select('.graphlayout').remove();
   app.currGraph = null;
-  let localData = window.localStorage.getItem('home');
+  const localData = window.localStorage.getItem('home');
   app.graphData = JSON.parse(localData);
-  let d3Graph = await app.d3init(app.graphData);
+  const d3Graph = await app.d3init(app.graphData);
   await app.renderInfor(app.graphData);
 
-  let data = [];
+  const data = [];
 
   for (let i = 0; i < app.graphData.length; i++) {
-    let oldDate = app.graphData[i].date;
+    const oldDate = app.graphData[i].date;
     app.graphData[i].date = new Date(oldDate);
     data.push(app.graphData[i]);
   }
@@ -204,7 +204,7 @@ app.checkMA = function () {
 };
 
 app.indicate = function () {
-  let display = $('.indicate').css('display');
+  const display = $('.indicate').css('display');
   if (display === 'none') {
     $('.indicate').css('display', 'block');
   } else {
@@ -225,8 +225,8 @@ app.renderInit = async function () {
   }
 
   if (startDate === null && endDate === null) {
-    let today = new Date();
-    let ey = (today.getFullYear()).toString();
+    const today = new Date();
+    const ey = (today.getFullYear()).toString();
     let em = (today.getMonth() + 1).toString();
     if (em.length === 1) {
       em = '0' + em;
@@ -236,10 +236,10 @@ app.renderInit = async function () {
       ed = '0' + ed;
     }
     endDate = ey + '-' + em + '-' + ed;
-    let sy = (today.getFullYear() - 1).toString();
+    const sy = (today.getFullYear() - 1).toString();
     startDate = sy + '-' + em + '-' + ed;
   }
-  let userSearch = {
+  const userSearch = {
     stockCode: code,
     startDate: startDate,
     endDate: endDate,
@@ -248,25 +248,25 @@ app.renderInit = async function () {
   $('.startDay').val(startDate);
   $('.endDay').val(endDate);
 
-  let url = `/api/1.0/stock?code=${userSearch.stockCode}&start=${userSearch.startDate}&end=${userSearch.endDate}`;
-  let body = await app.fetchGetData(url);
+  const url = `/api/1.0/stock?code=${userSearch.stockCode}&start=${userSearch.startDate}&end=${userSearch.endDate}`;
+  const body = await app.fetchGetData(url);
   if (body.error) {
     await Swal.fire({
       icon: 'error',
       title: '查無相符股票，請重新選擇條件',
-    }).
+    });
     window.location.replace('/basic.html');
     return;
   }
   for (let i = 0; i < body.data.length; i++) {
-    let strDate = body.data[i].date.toString();
-    let y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + '/';
-    let m = strDate[4] + strDate[5] + '/';
-    let d = strDate[6] + strDate[7];
+    const strDate = body.data[i].date.toString();
+    const y = strDate[0] + strDate[1] + strDate[2] + strDate[3] + '/';
+    const m = strDate[4] + strDate[5] + '/';
+    const d = strDate[6] + strDate[7];
     body.data[i].date = new Date(y + m + d);
   }
   currentCode = body.data[0].code;
-  let datas = JSON.stringify(body.data);
+  const datas = JSON.stringify(body.data);
   window.localStorage.setItem('home', datas);
   app.renderKBar();
 };
@@ -276,8 +276,8 @@ app.checkUser = async function () {
     const data = {
       token: window.localStorage.getItem('userToken'),
     };
-    let url = 'api/1.0/user/profile';
-    let body = await app.fetchPostData(url, data);
+    const url = 'api/1.0/user/profile';
+    const body = await app.fetchPostData(url, data);
     if (body.error) {
       $('.memberLink').attr('href', './signin.html');
       $('.member').text('Sign up / Log in');
@@ -297,7 +297,7 @@ app.checkPage = function () {
 };
 
 $('.chart').change(function () {
-  var t = $(this).val();
+  const t = $(this).val();
   if (t === 'candle') {
     app.renderKBar();
   } else if (t === 'line') {

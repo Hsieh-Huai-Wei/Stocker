@@ -5,16 +5,16 @@ const User = require('../models/user_model');
 
 const filter = async (req, res, next) => {
   try {
-    let userToken = req.body.user;
-    let decode = jwt.verify(userToken, secret);
-    let userData = {
+    const userToken = req.body.user;
+    const decode = jwt.verify(userToken, secret);
+    const userData = {
       email: decode.userEmail,
       token: userToken,
     };
-    let userResult = await User.profile(userData);
-    let num = req.body.data.length;
+    const userResult = await User.profile(userData);
+    const num = req.body.data.length;
     for (let i = 0; i < num; i++) {
-      let data = {
+      const data = {
         user_id: parseInt(userResult[0].id),
         stock_code: req.body.data[i].id,
         trend: JSON.stringify(req.body.data[i].trend),
@@ -37,16 +37,16 @@ const filter = async (req, res, next) => {
 
 const backTest = async (req, res, next) => {
   try {
-    let userToken = req.body.user;
-    let decode = jwt.verify(userToken, secret);
-    let userData = {
+    const userToken = req.body.user;
+    const decode = jwt.verify(userToken, secret);
+    const userData = {
       email: decode.userEmail,
       token: userToken,
     };
-    let userResult = await User.profile(userData);
-    let num = req.body.data.length;
+    const userResult = await User.profile(userData);
+    const num = req.body.data.length;
     for (let i = 0; i < num; i++) {
-      let summary = {
+      const summary = {
         user_id: userResult[0].id,
         stock_code: parseInt(req.body.data[i].condition.code),
         property: req.body.data[i].condition.property,

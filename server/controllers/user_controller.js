@@ -24,7 +24,7 @@ const signUp = async (req, res) => {
       pwd: req.body.pwd,
     };
 
-    let checkAccount = await User.signUpCheck(data);
+    const checkAccount = await User.signUpCheck(data);
 
     if (checkAccount.length > 0) {
       res.status(400).send({ error: '帳號已存在!' });
@@ -41,7 +41,7 @@ const signUp = async (req, res) => {
         secret
       );
 
-      let userData = {
+      const userData = {
         id: randomID,
         name: req.body.name,
         email: req.body.email,
@@ -53,7 +53,7 @@ const signUp = async (req, res) => {
       };
 
       await User.signUp(userData);
-      let user = {
+      const user = {
         id: randomID,
         provider: 'native',
         name: req.body.name,
@@ -65,7 +65,7 @@ const signUp = async (req, res) => {
       data.access_token = token;
       data.access_expired = signInDate;
       data.user = user;
-      let results = {};
+      const results = {};
       results.data = data;
       res.status(200).json(results);
     }
@@ -89,7 +89,7 @@ const signIn = async (req, res) => {
       pwd: userPwd,
     };
 
-    let checkAccount = await User.signInCheck(data);
+    const checkAccount = await User.signInCheck(data);
     if (checkAccount.length === 0) {
       res.status(403).send({ error: '信箱不存在或密碼錯誤!' });
     } else {
@@ -105,13 +105,13 @@ const signIn = async (req, res) => {
         token: token,
       };
       await User.signInUpdate(data);
-      let getUserInfor = await User.signIn(data);
-      let user = getUserInfor[0];
+      const getUserInfor = await User.signIn(data);
+      const user = getUserInfor[0];
       data = {};
       data.access_token = token;
       data.access_expired = signInDate;
       data.user = user;
-      let results = {};
+      const results = {};
       results.data = data;
       res.status(200).json(results);
     }
@@ -120,12 +120,12 @@ const signIn = async (req, res) => {
 
 const getProfile = async (req, res) => {
   try {
-    let decode = jwt.verify(req.body.token, secret);
-      let data = {
+    const decode = jwt.verify(req.body.token, secret);
+      const data = {
         email: decode.userEmail,
         token: req.body.token,
       };
-      let result = await User.profile(data);
+      const result = await User.profile(data);
       if (result.length === 0) {
         res.status(400).json({ error: '用戶不存在!' });
         return;
@@ -139,24 +139,24 @@ const getProfile = async (req, res) => {
 };
 
 const graphView = async (req, res) => {
-  let token = (req.headers.authorization).split(' ')[1];
-  let decode = jwt.verify(token, secret);
-  let data = {
+  const token = (req.headers.authorization).split(' ')[1];
+  const decode = jwt.verify(token, secret);
+  const data = {
     email: decode.userEmail,
     token: req.body.token,
   };
-  let result = await Product.filterHistory(data);
+  const result = await Product.filterHistory(data);
   res.status(200).json(result);
 };
 
 const backTestView = async (req, res) => {
-  let token = (req.headers.authorization).split(' ')[1];
-  let decode = jwt.verify(token, secret);
-  let data = {
+  const token = (req.headers.authorization).split(' ')[1];
+  const decode = jwt.verify(token, secret);
+  const data = {
     email: decode.userEmail,
     token: req.body.token,
   };
-  let result = await Product.backTestHistory(data);
+  const result = await Product.backTestHistory(data);
   res.status(200).json(result);
 };
 

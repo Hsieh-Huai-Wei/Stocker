@@ -2,15 +2,16 @@ require('dotenv').config();
 const Product = require('../server/models/admin_model');
 const moment = require('moment'); // calculate time
 const got = require('got'); // fetch page in server
+const sendEmail = require('../util/mail');
 
 async function insertData(historyData) {
   const result = await Product.getStockId();
-  let sqlArr = [];
+  const sqlArr = [];
   for (let i = 0; i < historyData.length; i++) {
     for (let j = 0; j < result.length; j++) {
       if (historyData[i].code === result[j].code) {
         historyData[i].code = result[j].id;
-        let arr = Object.values(historyData[i]);
+        const arr = Object.values(historyData[i]);
         sqlArr.push(arr);
         break;
       }
@@ -21,12 +22,12 @@ async function insertData(historyData) {
 }
 
 async function getData(date, URL) {
-  let result = await got(URL);
-  let data = JSON.parse(result.body);
+  const result = await got(URL);
+  const data = JSON.parse(result.body);
   if (data.stat === 'OK') {
-    let historyData = [];
+    const historyData = [];
     for (let i = 0; i < data.data9.length; i++) {
-      let product = {};
+      const product = {};
       product.code = data.data9[i][0];
       product.date = parseInt(date);
       product.volumn = data.data9[i][2];
@@ -71,9 +72,12 @@ async function runCrawler() {
       await getData(date, URL);
       await sleep(5000);
     }
+    const msg = 'stock history price insert OK';
+    sendEmail.sendEmail(msg);
     console.log('insert OK');
     return;
   } catch (err) {
+    sendEmail.sendEmail(err);
     console.log(err);
     return;
   }
