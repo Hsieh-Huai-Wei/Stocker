@@ -16,7 +16,7 @@ const option = async (data) => {
 };
 
 const filterInit = async (data) => {
-  const result = await query('SELECT * FROM stock.history_price WHERE(date between ? and ?) AND (close between ? and ?) ORDER BY stock_id, date;', [data.start, data.end, data.lower, data.upper]);
+  const result = await query('SELECT * FROM stock.history_price WHERE(date between ? and ?) AND (close between ? and ?) ORDER BY stock_id desc, date asc;', [data.start, data.end, data.lower, data.upper]);
   return result;
 };
 

@@ -64,6 +64,7 @@ async function getData(date, URL) {
       }
     }
     await insertData(historyData);
+    console.log(date, 'insert OK');
     return;
   } else {
     console.log(date, '沒有data');
@@ -82,7 +83,7 @@ async function sleep(millis) {
 // note: before 106-12-15 combine
 async function runCrawler() {
   try {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 442; i < 3650; i++) {
       const date = moment().subtract(i, 'days').format('YYYYMMDD');
       const URL = `https://www.twse.com.tw/fund/T86?response=json&date=${date}&selectType=ALLBUT0999`;
       await getData(date, URL);
