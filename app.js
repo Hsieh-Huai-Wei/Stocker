@@ -10,7 +10,7 @@ app.set('json spaces', 2);
 
 // crawel function
 const crawel = require('./script/dailyCrawel');
-schedule.scheduleJob('0 6 6 * * *', crawel.runDailyCrawler);
+schedule.scheduleJob('0 6 3 * * *', crawel.runDailyCrawler);
 
 // let body converted to JSON
 app.use(express.static(__dirname + '/public'));

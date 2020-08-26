@@ -116,7 +116,14 @@ app.checkGraph = function () {
   if (radioValue === 'reverseV') {
     $('.optional').remove();
     $('.explain').remove();
-    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
+    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').keydown(function checkInput(e) {
+      const code = parseInt(e.keyCode);
+      if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     const countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
     const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/vTrend.png');
     optional.append(countDays);
@@ -126,9 +133,23 @@ app.checkGraph = function () {
   } else if (radioValue === 'uptrend') {
     $('.optional').remove();
     $('.explain').remove();
-    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
+    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').keydown(function checkInput(e) {
+      const code = parseInt(e.keyCode);
+      if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     const countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    const input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5');
+    const input = $('<input>').attr('id', 'increase').attr('type', 'text').attr('placeholder', 'ex. 5').keydown(function checkInput(e) {
+      const code = parseInt(e.keyCode);
+      if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     const increase = $('<div>').attr('id', 'itemss').attr('class', 'increase').text('上漲 %');
     const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/upTrend.png');
     optional.append(countDays);
@@ -140,9 +161,23 @@ app.checkGraph = function () {
   } else if (radioValue === 'downtrend') {
     $('.optional').remove();
     $('.explain').remove();
-    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25');
+    const inputs = $('<input>').attr('id', 'countDays').attr('class', 'countDays').attr('type', 'text').attr('placeholder', 'ex. 25').keydown(function checkInput(e) {
+      const code = parseInt(e.keyCode);
+      if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     const countDays = $('<div>').attr('id', 'itemss').attr('class', 'countDays').text('圖形區間');
-    const input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5');
+    const input = $('<input>').attr('id', 'decrease').attr('type', 'text').attr('placeholder', 'ex. 5').keydown(function checkInput(e) {
+      const code = parseInt(e.keyCode);
+      if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     const decrease = $('<div>').attr('id', 'itemss').attr('class', 'decrease').text('下跌 %');
     const img = $('<img>').attr('class', 'explain').attr('src', '../imgs/downTrend.png');
     optional.append(countDays);
@@ -158,6 +193,22 @@ app.checkGraph = function () {
     graphNote.append(img);
     $('.dif').append(optional);
   }
+  $('.upperPrice').keydown(function checkInput(e) {
+    const code = parseInt(e.keyCode);
+    if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  $('.lowerPrice').keydown(function checkInput(e) {
+    const code = parseInt(e.keyCode);
+    if (code >= 96 && code <= 105 || code >= 48 && code <= 57 || code == 8) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 };
 
 app.renderToday = function () {

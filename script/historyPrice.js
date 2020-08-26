@@ -21,7 +21,7 @@ async function insertData(historyData) {
   return;
 }
 
-async function getData(date, URL) {
+async function getDataNew(date, URL) {
   const result = await got(URL);
   const data = JSON.parse(result.body);
   if (data.stat === 'OK') {
@@ -55,6 +55,40 @@ async function getData(date, URL) {
   }
 }
 
+async function getDataOld(date, URL) {
+  const result = await got(URL);
+  const data = JSON.parse(result.body);
+  if (data.stat === 'OK') {
+    const historyData = [];
+    for (let i = 0; i < data.data8.length; i++) {
+      const product = {};
+      product.code = data.data8[i][0];
+      product.date = parseInt(date);
+      product.volumn = data.data8[i][2];
+      if (data.data8[i][5] === '--') {
+        product.open = parseFloat(0);
+        product.high = parseFloat(0);
+        product.low = parseFloat(0);
+        product.close = parseFloat(0);
+      } else {
+        product.open = parseFloat(data.data8[i][5]);
+        product.high = parseFloat(data.data8[i][6]);
+        product.low = parseFloat(data.data8[i][7]);
+        product.close = parseFloat(data.data8[i][8]);
+      }
+      product.change = parseFloat(data.data8[i][10]);
+      product.pe = parseFloat(data.data8[i][15]);
+      product.trend_slope = 0;
+      historyData.push(product);
+    }
+    console.log(date + ': ' + data.data8.length);
+    await insertData(historyData);
+    return;
+  } else {
+    console.log(date, '沒有data');
+  }
+}
+
 async function sleep(millis) {
   return new Promise((resolve) =>
     setTimeout(() => {
@@ -63,13 +97,17 @@ async function sleep(millis) {
   );
 }
 
-async function runCrawler() {
+async function runCrawler() { //20110729
   try {
-    for (let i = 0; i < 3650; i++) {
+    for (let i = 3315; i < 3650; i++) {
       const date = moment().subtract(i, 'days').format('YYYYMMDD');
-      console.log(date);
       const URL = `https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=${date}&type=ALLBUT0999`;
-      await getData(date, URL);
+      console.log(date)
+      if (Number(date) - 20110729 <= 0) {
+        await getDataOld(date, URL);
+      } else {
+        await getDataNew(date, URL);
+      }
       await sleep(5000);
     }
     const msg = 'stock history price insert OK';
