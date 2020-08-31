@@ -285,4 +285,4 @@ app.checkUser();
 
 app.checkGraph();
 
-app.renderToday();
+app.renderToday(); 

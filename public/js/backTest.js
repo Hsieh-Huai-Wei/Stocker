@@ -232,41 +232,41 @@ app.submitData = async function () {
       };
       result.push(index);
     }
-    $('.test').text('計算中').attr('disabled', true).css('width', '94px').css('background-color', '#f15e5e');
+  }
+  $('.test').text('計算中').attr('disabled', true).css('width', '94px').css('background-color', '#f15e5e');
 
+  Swal.fire({
+    icon: 'info',
+    title: '計算中，請稍後!',
+    timerProgressBar: true,
+    allowOutsideClick: false,
+    onBeforeOpen: () => {
+      Swal.showLoading();
+    }
+  });
+  const url = 'api/1.0/backTest';
+  const body = await app.fetchPostData(url, result);
+  console.log(body);
+  if (body.error) {
+    $('.alters').remove();
     Swal.fire({
-      icon: 'info',
-      title: '計算中，請稍後!',
-      timerProgressBar: true,
-      allowOutsideClick: false,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      }
+      icon: 'error',
+      title: `${body.error}`,
+      text: '請重新選擇條件',
     });
-    const url = 'api/1.0/backTest';
-    const body = await app.fetchPostData(url, result);
-    console.log(body);
-    if (body.error) {
-      $('.alters').remove();
-      Swal.fire({
-        icon: 'error',
-        title: `${body.error}`,
-        text: '請重新選擇條件',
-      });
-      $('.test').text('開始回測').attr('disabled', false).css('width', '94px').css('background-color', '#5b9bc3');
-      return;
-    }
-    const data = JSON.stringify(body);
-    window.localStorage.setItem('backTestToken', data);
-    await Swal.fire({
-      icon: 'success',
-      title: '查詢成功，即將轉向...',
-      showConfirmButton: false,
-      timer: 1500,
-    });
-    window.location.replace('/result.html');
-    }
-};
+    $('.test').text('開始回測').attr('disabled', false).css('width', '94px').css('background-color', '#5b9bc3');
+    return;
+  }
+  const data = JSON.stringify(body);
+  window.localStorage.setItem('backTestToken', data);
+  await Swal.fire({
+    icon: 'success',
+    title: '查詢成功，即將轉向...',
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  window.location.replace('/result.html');
+  };
 
 // init function
 app.checkUser = async function () {

@@ -17,16 +17,6 @@ app.use(express.static(__dirname + '/public'));
 app.use('/admin', express.static('public'));
 app.use(express.json()); // the same with bodyparser json
 
-// CORS Control
-app.use('/api/', function (req, res, next) {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization');
-  res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.set('Access-Control-Allow-Credentials', 'true');
-  next();
-});
-
-
 // API routes
 app.use('/api/' + API_VERSION, [
   require('./server/routes/save_route'),
