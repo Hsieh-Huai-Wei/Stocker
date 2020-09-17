@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const secret = 'secret';
 const User = require('../models/user_model');
 
-const filter = async (req, res, next) => {
+const filter = async (req, res) => {
   try {
     const userToken = req.body.user;
     const decode = jwt.verify(userToken, secret);
@@ -35,7 +35,7 @@ const filter = async (req, res, next) => {
   }
 };
 
-const backTest = async (req, res, next) => {
+const backTest = async (req, res) => {
   try {
     const userToken = req.body.user;
     const decode = jwt.verify(userToken, secret);

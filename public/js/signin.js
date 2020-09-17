@@ -126,20 +126,25 @@ app.signIn = async function () {
       window.localStorage.setItem('userToken', token);
       if (window.localStorage.getItem('page')) {
         const page = window.localStorage.getItem('page');
-        if (page === 'index') {
-          window.location.replace('/index.html');
-        } else if (page === 'basic') {
-          window.location.replace('/basic.html');
-        } else if (page === 'option') {
-          window.location.replace('/option.html');
-        } else if (page === 'filter') {
-          window.location.replace('/filter.html');
-        } else if (page === 'backTest') {
-          window.location.replace('/backTest.html');
-        } else if (page === 'result') {
-          window.location.replace('/result.html');
-        } else {
-          window.location.replace('/profile.html');
+        switch (page) {
+          case 'index':
+            window.location.replace('/index.html');
+            break;
+          case 'basic':
+            window.location.replace('/basic.html');
+            break;
+          case 'option':
+            window.location.replace('/option.html');
+            break;
+          case 'filter':
+            window.location.replace('/filter.html');
+            break;
+          case 'backTest':
+            window.location.replace('/backTest.html');
+            break;
+          case 'result':
+            window.location.replace('/result.html');
+            break;
         }
       } else {
         window.location.replace('/profile.html');

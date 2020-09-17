@@ -128,20 +128,6 @@ app.renderList = function () {
       $('.testResult').append(table);
     }
 
-
-
-    // let tr = $('<tr>').attr('class', `detail`).append(
-    //   $("<th>").attr('class', 'case').text(`Case #`),
-    //   $("<th>").attr('class', 'qty').text("Stock qty"),
-    //   $("<th>").attr('class', 'income').text("Income"),
-    //   $("<th>").attr('class', 'cost').text("Trade cost"),
-    //   $("<th>").attr('class', 'property').text("Property"),
-    //   $("<th>").attr('class', 'profit').text("Profit"),
-    //   $("<th>").attr('class', 'save').text("Save"),
-    // );
-
-    // let summaryNum = $('<table>').attr('class', `detail`).append(tr)
-
     for (let i = 0; i < data.data.length; i++) {
       const earningRateFont = (data.data[i].summary.earningRate).toString();
       if (earningRateFont[0] !== '-') {
@@ -175,11 +161,7 @@ app.renderList = function () {
         );
         $('.summaryData').append(tr);
       }
-
     }
-
-    // $(".summary").append(summaryNum)
-
   }
 };
 
