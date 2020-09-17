@@ -16,7 +16,7 @@ const signUp = async (req, res) => {
     return;
   } else if (!validator.isEmail(req.body.email)) {
     res.status(400).send({ error: '信箱格式錯誤!' });
-      return;
+    return;
   } else {
     let data = {
       name: req.body.name,

@@ -33,7 +33,7 @@ app.submitData = async () => {
   let increase = '';
   let decrease = '';
 
-  if ($('#countDays').val() === '') {
+  if ($('#countDays').val() === '' || $('#countDays').val() === undefined) {
     countDays = '25';
   } else {
     countDays = $('#countDays').val();
@@ -285,4 +285,4 @@ app.checkUser();
 
 app.checkGraph();
 
-app.renderToday(); 
+app.renderToday();
