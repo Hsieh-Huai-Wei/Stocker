@@ -24,7 +24,7 @@ const filter = async (data) => {
   const result = await query(`SELECT stock.history_price.*, stock.information.code, stock.information.name, stock.information.industry, stock.legal.fi_count, stock.legal.sitc_count, stock.legal.dealers_count, stock.legal.total FROM stock.information
   INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id
   INNER JOIN stock.legal ON stock.legal.stock_id = stock.information.id AND stock.legal.date = stock.history_price.date
-  WHERE stock.information.id = ? AND stock.history_price.date BETWEEN ? AND ?;`, [data.id, data.start, data.end]);
+  WHERE stock.information.id in (?) AND stock.history_price.date BETWEEN ? AND ?  order by stock_id, date;`, data);
   return result;
 };
 

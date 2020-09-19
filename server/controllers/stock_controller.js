@@ -17,36 +17,24 @@ function dateCheck(start, end) {
 }
 
 function filterPricePair(graphPosition) {
-  // drop doesn`t match stock
   const finalStockPricePair = new Array;
-  graphPosition.forEach((position)=>{
-    const item = finalStockPricePair.find(
-      (item) => item.id === position.id
-    );
-    if (item) {
-      item['trend'].push({
-        startDate: position.startDate,
-        startPrice: position.startPrice,
-        endDate: position.endDate,
-        endPrice: position.endPrice,
-      });
-    } else {
-      const index = {
-        id: position.id,
-        trend: [
-          {
-            startDate: position.startDate,
-            startPrice: position.startPrice,
-            endDate: position.endDate,
-            endPrice: position.endPrice,
-          },
-        ],
-      };
-      if (Number(position.id) < 2833 && finalStockPricePair.length < 51) {
-          finalStockPricePair.push(index);
-      }
+  let obj = {};
+  for (let i = 0; i < graphPosition.length; i ++) {
+    if (finalStockPricePair.length > 50) break;
+    const currentId = graphPosition[i].id;
+    const nextId = graphPosition[i+1] ? graphPosition[i+1].id : '';
+    if(Number(currentId) > 2832) continue;
+    if (!obj.id) {
+      obj.id = currentId;
+      obj.trend = new Array;
     }
-  });
+    obj.trend.push(graphPosition[i]);
+
+    if (nextId !== currentId) {
+      finalStockPricePair.push(obj);
+      obj = new Object;
+    }
+  }
   return finalStockPricePair;
 }
 
@@ -429,50 +417,55 @@ const option = async (req, res, next) => {
   const filterCode = new Array;
   const result = new Object;
   result.data = new Array;
-  for (let g = 0; g < finalStockPricePair.length; g++) {
-    const searchCode = {
-      id: (finalStockPricePair[g].id).toString(),
-      start: userSearch.start,
-      end: userSearch.end,
-    };
-    const stockInf = await Product.filter(searchCode);
-
-    if (stockInf.length !== 0) {
-      const price = stockInf.map((inf) => {
-        const obj = new Object();
-        obj.date = inf.date; // date
-        obj.code = inf.code; // code
-        obj.name = inf.name; // name
-        obj.open = inf.open; // open
-        obj.high = inf.high; // high
-        obj.low = inf.low; // low
-        obj.close = inf.close; // close
-        if (inf.close - inf.open >= 0) {
-          obj.change = inf.changes; // changes
-        } else {
-          obj.change = '-' + String(inf.changes); // changes
-        }
-        obj.percentChange = String(
-          (((inf.close - inf.open) / inf.open) * 100).toFixed(2)
-        ); // changes %
-        const volumeSql = inf.volume.split(',');
-        let volumeNum = '';
-        volumeSql.forEach((item) => {
-          volumeNum += item;
-        });
-        obj.volume = Number(volumeNum); // volumn
-        obj.pe = inf.pe;
-        obj.fd = inf.fi_count;
-        obj.sitc = inf.sitc_count;
-        obj.dealers = inf.dealers_count;
-        obj.total = inf.total;
-        obj.industry = inf.industry;
-        return obj;
-      });
+  let obj = new Object;
+  let priceObj = new Object;
+  const idArr = finalStockPricePair.map((item) => {
+    return item.id.toString();
+  });
+  const searchCode = [idArr, userSearch.start, userSearch.end];
+  const stockInf = await Product.filter(searchCode);
+  for (let g = 0; g < stockInf.length; g++) {
+    const currentId = stockInf[g].code;
+    const nextId = stockInf[g + 1] ? stockInf[g + 1].code : "";
+    if (!obj.id) {
+      obj.id = currentId;
+      obj.price = new Array;
+    }
+    priceObj.date = stockInf[g].date; // date
+    priceObj.code = stockInf[g].code; // code
+    priceObj.name = stockInf[g].name; // name
+    priceObj.open = stockInf[g].open; // open
+    priceObj.high = stockInf[g].high; // high
+    priceObj.low = stockInf[g].low; // low
+    priceObj.close = stockInf[g].close; // close
+    if (stockInf[g].close - stockInf[g].open >= 0) {
+      priceObj.change = stockInf[g].changes; // changes
+    } else {
+      priceObj.change = "-" + String(stockInf[g].changes); // changes
+    }
+    priceObj.percentChange = String(
+      (((stockInf[g].close - stockInf[g].open) / stockInf[g].open) * 100).toFixed(2)
+    ); // changes %
+    const volumeSql = stockInf[g].volume.split(",");
+    let volumeNum = '';
+    volumeSql.forEach((item) => {
+      volumeNum += item;
+    });
+    priceObj.volume = Number(volumeNum); // volumn
+    priceObj.pe = stockInf[g].pe;
+    priceObj.fd = stockInf[g].fi_count;
+    priceObj.sitc = stockInf[g].sitc_count;
+    priceObj.dealers = stockInf[g].dealers_count;
+    priceObj.total = stockInf[g].total;
+    priceObj.industry = stockInf[g].industry;
+    obj.price.push(priceObj);
+    priceObj = new Object();
+    if (nextId !== currentId) {
       result.data.push({
-        id: price[0].code,
-        data: price,
+        id: obj.id,
+        data: obj.price,
       });
+      obj = new Object();
       if (stockInf[g] !== undefined) {
         filterCode.push({
           stock_code: stockInf[g].code,
@@ -497,7 +490,6 @@ const option = async (req, res, next) => {
     }
   }
   result.inf = userSearch;
-  console.log(result);
   res.send(result);
 };
 
