@@ -16,7 +16,7 @@ const option = async (data) => {
 };
 
 const filterInit = async (data) => {
-  const result = await query('SELECT * FROM stock.history_price WHERE(date between ? and ?) AND (close between ? and ?) ORDER BY stock_id desc, date asc;', [data.start, data.end, data.lower, data.upper]);
+  const result = await query('SELECT information.code, history_price.date, history_price.open, history_price.close, history_price.changes, history_price.trend_slope FROM information INNER JOIN history_price ON information.id = stock.history_price.stock_id WHERE(history_price.date between ? and ?) AND (stock.history_price.close between ? and ?) AND information.id < 2833 ORDER BY stock_id desc, date asc;', [data.start, data.end, data.lower, data.upper]);
   return result;
 };
 
@@ -24,7 +24,7 @@ const filter = async (data) => {
   const result = await query(`SELECT stock.history_price.*, stock.information.code, stock.information.name, stock.information.industry, stock.legal.fi_count, stock.legal.sitc_count, stock.legal.dealers_count, stock.legal.total FROM stock.information
   INNER JOIN stock.history_price ON stock.history_price.stock_id = stock.information.id
   INNER JOIN stock.legal ON stock.legal.stock_id = stock.information.id AND stock.legal.date = stock.history_price.date
-  WHERE stock.information.id in (?) AND stock.history_price.date BETWEEN ? AND ?  order by stock_id, date;`, data);
+  WHERE stock.information.code in (?) AND stock.history_price.date BETWEEN ? AND ?  order by stock_id, date;`, data);
   return result;
 };
 

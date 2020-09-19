@@ -23,7 +23,6 @@ function filterPricePair(graphPosition) {
     if (finalStockPricePair.length > 50) break;
     const currentId = graphPosition[i].id;
     const nextId = graphPosition[i+1] ? graphPosition[i+1].id : '';
-    if(Number(currentId) > 2832) continue;
     if (!obj.id) {
       obj.id = currentId;
       obj.trend = new Array;
@@ -346,6 +345,62 @@ const stock = async (req, res, next) => {
   }
 };
 
+function sortProductInf(stockInf) {
+  const result = new Object();
+  result.data = new Array();
+  let obj = new Object();
+  let priceObj = new Object();
+  for (let g = 0; g < stockInf.length; g++) {
+    const currentId = stockInf[g].code;
+    const nextId = stockInf[g + 1] ? stockInf[g + 1].code : '';
+    if (!obj.id) {
+      obj.id = currentId;
+      obj.price = new Array();
+    }
+    priceObj.date = stockInf[g].date; // date
+    priceObj.code = stockInf[g].code; // code
+    priceObj.name = stockInf[g].name; // name
+    priceObj.open = stockInf[g].open; // open
+    priceObj.high = stockInf[g].high; // high
+    priceObj.low = stockInf[g].low; // low
+    priceObj.close = stockInf[g].close; // close
+    if (stockInf[g].close - stockInf[g].open >= 0) {
+      priceObj.change = stockInf[g].changes; // changes
+    } else {
+      priceObj.change = '-' + String(stockInf[g].changes); // changes
+    }
+    priceObj.percentChange = String(
+      (
+        ((stockInf[g].close - stockInf[g].open) / stockInf[g].open) *
+        100
+      ).toFixed(2)
+    ); // changes %
+    const volumeSql = stockInf[g].volume.split(',');
+    let volumeNum = '';
+    volumeSql.forEach((item) => {
+      volumeNum += item;
+    });
+    priceObj.volume = Number(volumeNum); // volumn
+    priceObj.pe = stockInf[g].pe;
+    priceObj.fd = stockInf[g].fi_count;
+    priceObj.sitc = stockInf[g].sitc_count;
+    priceObj.dealers = stockInf[g].dealers_count;
+    priceObj.total = stockInf[g].total;
+    priceObj.industry = stockInf[g].industry;
+    obj.price.push(priceObj);
+    priceObj = new Object();
+
+    if (nextId !== currentId) {
+      result.data.push({
+        id: obj.id,
+        data: obj.price,
+      });
+      obj = new Object();
+    }
+  }
+  return result;
+}
+
 const option = async (req, res, next) => {
   const userSearch = {
     start: req.query.startDate,
@@ -367,7 +422,7 @@ const option = async (req, res, next) => {
   const stockPricePair = new Array; // id-[price] pair
   filterInit.forEach((init)=>{
     const item = stockPricePair.find(
-      (item) => item.id === init.stock_id
+      (item) => item.id === init.code
     );
     if (item) {
       item['data'].push({
@@ -379,7 +434,7 @@ const option = async (req, res, next) => {
       });
     } else {
       const index = {
-        id: init.stock_id,
+        id: init.code,
         data: [
           {
             date: init.date,
@@ -393,7 +448,6 @@ const option = async (req, res, next) => {
       stockPricePair.push(index);
     }
   });
-
   // define graph
   let finalStockPricePair;
   switch (userSearch.graph) {
@@ -414,73 +468,12 @@ const option = async (req, res, next) => {
       break;
   }
   // final stock
-  const filterCode = new Array;
-  const result = new Object;
-  result.data = new Array;
-  let obj = new Object;
-  let priceObj = new Object;
   const idArr = finalStockPricePair.map((item) => {
-    return item.id.toString();
+    return item.id;
   });
   const searchCode = [idArr, userSearch.start, userSearch.end];
   const stockInf = await Product.filter(searchCode);
-  for (let g = 0; g < stockInf.length; g++) {
-    const currentId = stockInf[g].code;
-    const nextId = stockInf[g + 1] ? stockInf[g + 1].code : "";
-    if (!obj.id) {
-      obj.id = currentId;
-      obj.price = new Array;
-    }
-    priceObj.date = stockInf[g].date; // date
-    priceObj.code = stockInf[g].code; // code
-    priceObj.name = stockInf[g].name; // name
-    priceObj.open = stockInf[g].open; // open
-    priceObj.high = stockInf[g].high; // high
-    priceObj.low = stockInf[g].low; // low
-    priceObj.close = stockInf[g].close; // close
-    if (stockInf[g].close - stockInf[g].open >= 0) {
-      priceObj.change = stockInf[g].changes; // changes
-    } else {
-      priceObj.change = "-" + String(stockInf[g].changes); // changes
-    }
-    priceObj.percentChange = String(
-      (((stockInf[g].close - stockInf[g].open) / stockInf[g].open) * 100).toFixed(2)
-    ); // changes %
-    const volumeSql = stockInf[g].volume.split(",");
-    let volumeNum = '';
-    volumeSql.forEach((item) => {
-      volumeNum += item;
-    });
-    priceObj.volume = Number(volumeNum); // volumn
-    priceObj.pe = stockInf[g].pe;
-    priceObj.fd = stockInf[g].fi_count;
-    priceObj.sitc = stockInf[g].sitc_count;
-    priceObj.dealers = stockInf[g].dealers_count;
-    priceObj.total = stockInf[g].total;
-    priceObj.industry = stockInf[g].industry;
-    obj.price.push(priceObj);
-    priceObj = new Object();
-    if (nextId !== currentId) {
-      result.data.push({
-        id: obj.id,
-        data: obj.price,
-      });
-      obj = new Object();
-      if (stockInf[g] !== undefined) {
-        filterCode.push({
-          stock_code: stockInf[g].code,
-          stock_id: stockInf[g].stock_id,
-        });
-      }
-    }
-  }
-  for (let i = 0; i < finalStockPricePair.length; i++) {
-    for (let j = 0; j < filterCode.length; j++) {
-      if (finalStockPricePair[i].id === filterCode[j].stock_id) {
-        finalStockPricePair[i].id = filterCode[j].stock_code;
-      }
-    }
-  }
+  const result = await sortProductInf(stockInf);
 
   for (let i = 0; i < result.data.length; i++) {
     for (let j = 0; j < finalStockPricePair.length; j++) {
